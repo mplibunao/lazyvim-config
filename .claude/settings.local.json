@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "additionalDirectories": [
+      "/Users/mp/.config/nvim",
+      "/Users/mp/.config/nvim-lua/"
+    ]
+  }
+}
