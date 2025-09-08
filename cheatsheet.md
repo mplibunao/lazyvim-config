@@ -106,3 +106,7 @@ t/T - before the char
 - `<space>fm` - root dir
 - `=` - **save**
   - make filesystem equal to what I've typed
+
+## Dashboard
+
+- shift + S = select from session
