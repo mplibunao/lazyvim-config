@@ -1,5 +1,9 @@
 # terminal
 
+## Status
+
+- <https://lazyvim-ambitious-devs.phillips.codes/course/chapter-6/#_changing_text>
+
 ## Zoxide
 
 - **`zi`** pipes to fzf.
@@ -65,12 +69,19 @@ t/T - before the char
 - **space + space** = picker
 - **space + f + f** = picker
 - **space + f + F** = find files (cwd)
+- Tip: press `/` in the picker to focus the list, then use normal Vim motions/y to yank paths
 - **alt + s** = seek inside file picker instead of pressing up/down or typing more
 - **tab instead of select** - opening multi-file
 - **ctrl + d** and **ctrl + u** = scroll results
   - down / up
 - **ctrl b** and **ctrl f** =
   - back and forward
+
+## AI
+
+- Group: `<space>a`
+- **space + a + w** = Wizy Prompts picker (at `/Users/mp/Projects/wizy/wizy-prompts`)
+- **space + a + W** = Grep in Wizy Prompts (picker)
 
 ## CWD & Root
 
@@ -110,3 +121,9 @@ t/T - before the char
 ## Dashboard
 
 - shift + S = select from session
+
+## Going beyond `<count><motion>`
+
+- The `<count><motion>` commands are great for navigation, which is all we’ve used them for so far, but they can also be combined with a _verb_ to do something to the text between the cursor and the location the motion would move you to.
+- Verbs come first, so the structure is always `<verb><count><motion>`
+- can theoretically do `<count><verb><count><motion>`
