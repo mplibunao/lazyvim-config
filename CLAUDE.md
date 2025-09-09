@@ -9,6 +9,7 @@ This is a LazyVim configuration repository - a modern Neovim setup built on the 
 ## Architecture
 
 ### Configuration Loading Order
+
 1. `init.lua` - Bootstraps lazy.nvim and loads the configuration
 2. `lua/config/lazy.lua` - Sets up lazy.nvim plugin manager and loads LazyVim
 3. `lua/config/options.lua` - Custom vim options (loaded before plugins)
@@ -17,6 +18,7 @@ This is a LazyVim configuration repository - a modern Neovim setup built on the 
 6. `lua/plugins/*.lua` - Plugin specifications automatically loaded by lazy.nvim
 
 ### Key Directories
+
 - `lua/config/` - Core configuration files (options, keymaps, autocmds, lazy setup)
 - `lua/plugins/` - Plugin specifications and overrides
 - `lazyvim.json` - LazyVim extras configuration
@@ -24,6 +26,7 @@ This is a LazyVim configuration repository - a modern Neovim setup built on the 
 ## Common Development Commands
 
 ### Plugin Management
+
 ```vim
 :Lazy               " Open lazy.nvim UI
 :Lazy sync          " Install, update and clean plugins
@@ -35,6 +38,7 @@ This is a LazyVim configuration repository - a modern Neovim setup built on the 
 ```
 
 ### LazyVim Commands
+
 ```vim
 :LazyExtras         " Manage LazyVim extras
 :LazyHealth         " Check LazyVim health
@@ -43,6 +47,7 @@ This is a LazyVim configuration repository - a modern Neovim setup built on the 
 ```
 
 ### LSP Commands (via LazyVim)
+
 ```vim
 <leader>cl          " LSP info
 <leader>cd          " Line diagnostics
@@ -57,12 +62,14 @@ K                   " Hover documentation
 ## LazyVim Extras Configuration
 
 Currently enabled extras (from `lazyvim.json`):
+
 - **AI**: Copilot integration
 - **Editor**: dial.nvim, inc-rename, mini.files
 - **Language Support**: JSON, Markdown, TOML, TypeScript
 - **Utilities**: dot files support, mini.hipatterns
 
 To add more extras:
+
 1. Run `:LazyExtras` to see available extras
 2. Select extras to enable/disable
 3. Changes are saved to `lazyvim.json`
@@ -70,7 +77,9 @@ To add more extras:
 ## Plugin Configuration
 
 ### Adding Custom Plugins
+
 Create a new file in `lua/plugins/` or add to an existing file:
+
 ```lua
 return {
   "author/plugin-name",
@@ -84,6 +93,7 @@ return {
 ```
 
 ### Overriding LazyVim Plugins
+
 ```lua
 return {
   "existing/plugin",
@@ -96,7 +106,9 @@ return {
 ```
 
 ### Disabling LazyVim Plugins
+
 Add to `lua/plugins/disabled.lua`:
+
 ```lua
 return {
   { "plugin/to-disable", enabled = false },
@@ -106,13 +118,17 @@ return {
 ## Current Customizations
 
 ### Disabled Plugins
+
 - `bufferline.nvim` - Tab/buffer line disabled
 
 ### Extended Plugins
+
 - `mini.files` - Custom keymaps added (<leader>e, <leader>E, <leader>fm)
 
 ### Plugin Examples
+
 The `lua/plugins/example.lua` file (currently disabled) contains comprehensive examples for:
+
 - Adding new plugins
 - Configuring colorschemes
 - Overriding plugin options
@@ -122,12 +138,15 @@ The `lua/plugins/example.lua` file (currently disabled) contains comprehensive e
 ## Code Style
 
 ### Lua Formatting
+
 Configured via `stylua.toml`:
+
 - Indent: 2 spaces
 - Column width: 120 characters
 - Use `stylua` for formatting Lua files
 
 ### File Conventions
+
 - Plugin specs go in `lua/plugins/*.lua`
 - Each file in `lua/plugins/` should return a table of plugin specs
 - Use descriptive filenames for plugin configurations
@@ -144,6 +163,7 @@ When modifying this configuration:
 5. **Managing LazyVim extras**: Use `:LazyExtras` command
 
 ### Testing Changes
+
 1. Save the file
 2. Run `:Lazy sync` if adding new plugins
 3. Restart Neovim or run `:source %` for config changes
@@ -152,18 +172,22 @@ When modifying this configuration:
 ## Important Settings
 
 ### lazy.nvim Configuration
+
 - Plugins are NOT lazy-loaded by default (`lazy = false`)
 - Version pinning disabled (`version = false`)
 - Auto-check for updates enabled with notifications disabled
 - Colorscheme fallbacks: tokyonight, habamax
 
 ### Performance Optimizations
+
 Disabled vim plugins:
+
 - gzip, tarPlugin, tohtml, tutor, zipPlugin
 
 ## Dependencies
 
 LazyVim automatically installs most dependencies, but ensure you have:
+
 - Neovim >= 0.9.0
 - Git (for plugin installation)
 - A Nerd Font (for icons)
@@ -174,6 +198,7 @@ LazyVim automatically installs most dependencies, but ensure you have:
 ## Working with this Config
 
 ### Quick Tips
+
 - LazyVim uses `<Space>` as the leader key by default
 - Press `<Space>` and wait to see available keybindings
 - Use `:Lazy` to manage plugins visually
@@ -181,7 +206,14 @@ LazyVim automatically installs most dependencies, but ensure you have:
 - The config is minimal by design - add only what you need
 
 ### Extending Functionality
+
 1. Browse available LazyVim extras: `:LazyExtras`
-2. Check LazyVim documentation: https://lazyvim.github.io/
+2. Check LazyVim documentation: <https://lazyvim.github.io/>
 3. Look at `lua/plugins/example.lua` for configuration patterns
 4. Keep customizations modular in separate files under `lua/plugins/`
+
+## References
+
+- <https://www.lazyvim.org/plugins> LazyVim plugins
+- <https://www.lazyvim.org/keymaps> - LazyVim keymaps
+
