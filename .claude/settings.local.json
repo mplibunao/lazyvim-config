@@ -1,8 +1,16 @@
 {
   "permissions": {
+    "allow": [
+      "Read(//Users/mp/.local/share/nvim-lazy/lazy/LazyVim/lua/lazyvim/config/**)",
+      "Read(//Users/mp/.local/share/nvim-lazy/lazy/LazyVim/lua/**)",
+      "Read(//Users/mp/.local/share/nvim-lazy/lazy/snacks.nvim/lua/snacks/**)",
+      "WebFetch(domain:linkarzu.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ],
     "additionalDirectories": [
       "/Users/mp/.config/nvim",
-      "/Users/mp/.config/nvim-lua/"
+      "/Users/mp/.config/nvim-lua/",
+      "/Users/mp/Projects/wizy/wizy-prompts/"
     ]
   }
 }
