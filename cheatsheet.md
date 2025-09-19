@@ -127,3 +127,48 @@ t/T - before the char
 - The `<count><motion>` commands are great for navigation, which is all we’ve used them for so far, but they can also be combined with a _verb_ to do something to the text between the cursor and the location the motion would move you to.
 - Verbs come first, so the structure is always `<verb><count><motion>`
 - can theoretically do `<count><verb><count><motion>`
+
+## Operating to end of line
+
+- `D`
+  - instead of `d$`
+- `C`
+  - instead of `c$`
+  - **can be more efficient if you need to go to insert mode**
+- `cc`
+  - **can be better than `dd`**
+- `X`
+  - **opposite of `x` for deleting**
+  - apparently it's op
+- `J`
+  - deleting newlines at the end of the current line
+  - **Join lines**
+  - Use with count
+  - Preferred
+- `gJ` - same as `J` but doesn't modify whitespace
+- `~` - toggles case
+
+## Recording
+
+- `qq` to start
+- `q` to stop recording
+- `qQ` to record in append mode
+- `Q` to playback recording
+
+## More motions
+
+- `(` and `)` to move by sentences
+- `{` and `}` for paragraphs
+
+## Unimpared mode
+
+- lazyvim
+- press `[` or `]` to see options
+- move to prev or next something, except the something depends what key you type after the square bracket
+- <https://lazyvim-ambitious-devs.phillips.codes/course/chapter-7/#_unimpaired_mode>
+  - refer back. didn't get it
+
+## Comments
+
+- `gc` comment
+- `gcc`
