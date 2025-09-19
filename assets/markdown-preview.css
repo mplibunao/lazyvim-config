@@ -1,5 +1,40 @@
 /* Markdown Preview CSS with Fixed Left Sidebar TOC
-   Designed for iamcco/markdown-preview.nvim */
+   Designed for iamcco/markdown-preview.nvim
+   Theme: Catppuccin Mocha */
+
+/* ============================================
+   Catppuccin Mocha Color Palette
+   ============================================ */
+
+:root {
+  /* Catppuccin Mocha Colors */
+  --cat-rosewater: #f5e0dc;
+  --cat-flamingo: #f2cdcd;
+  --cat-pink: #f5c2e7;
+  --cat-mauve: #cba6f7;
+  --cat-red: #f38ba8;
+  --cat-maroon: #eba0ac;
+  --cat-peach: #fab387;
+  --cat-yellow: #f9e2af;
+  --cat-green: #a6e3a1;
+  --cat-teal: #94e2d5;
+  --cat-sky: #89dceb;
+  --cat-sapphire: #74c7ec;
+  --cat-blue: #89b4fa;
+  --cat-lavender: #b4befe;
+  --cat-text: #cdd6f4;
+  --cat-subtext1: #bac2de;
+  --cat-subtext0: #a6adc8;
+  --cat-overlay2: #9399b2;
+  --cat-overlay1: #7f849c;
+  --cat-overlay0: #6c7086;
+  --cat-surface2: #585b70;
+  --cat-surface1: #45475a;
+  --cat-surface0: #313244;
+  --cat-base: #1e1e2e;
+  --cat-mantle: #181825;
+  --cat-crust: #11111b;
+}
 
 /* ============================================
    Base Reset and Dark Theme
@@ -13,8 +48,8 @@
 
 html, body {
   height: 100%;
-  background-color: #0d1117 !important;
-  color: #c9d1d9 !important;
+  background-color: var(--cat-base) !important;
+  color: var(--cat-text) !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
   line-height: 1.6;
   overflow-x: hidden;
@@ -59,8 +94,8 @@ nav.table-of-contents,
   top: 0 !important;
   width: 280px !important;
   height: 100vh !important;
-  background: linear-gradient(180deg, #161b22 0%, #0d1117 100%) !important;
-  border-right: 1px solid #30363d !important;
+  background: linear-gradient(180deg, var(--cat-mantle) 0%, var(--cat-crust) 100%) !important;
+  border-right: 1px solid var(--cat-surface0) !important;
   padding: 24px 16px 24px 20px !important; /* Reduced left padding */
   overflow-y: auto !important;
   overflow-x: hidden !important;
@@ -76,10 +111,10 @@ nav.table-of-contents,
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.08em !important;
-  color: #7d8590 !important;
+  color: var(--cat-overlay2) !important;
   margin-bottom: 20px !important;
   padding-bottom: 10px !important;
-  border-bottom: 2px solid #21262d !important;
+  border-bottom: 2px solid var(--cat-surface1) !important;
 }
 
 /* Custom Scrollbar for TOC */
@@ -88,17 +123,17 @@ nav.table-of-contents,
 }
 
 .table-of-contents::-webkit-scrollbar-track {
-  background: rgba(139, 148, 158, 0.1) !important;
+  background: var(--cat-surface0) !important;
   border-radius: 3px !important;
 }
 
 .table-of-contents::-webkit-scrollbar-thumb {
-  background: #30363d !important;
+  background: var(--cat-surface2) !important;
   border-radius: 3px !important;
 }
 
 .table-of-contents::-webkit-scrollbar-thumb:hover {
-  background: #484f58 !important;
+  background: var(--cat-overlay0) !important;
 }
 
 /* TOC List Styling */
@@ -129,7 +164,7 @@ nav.table-of-contents,
 
 /* TOC Links */
 .table-of-contents a {
-  color: #8b949e !important;
+  color: var(--cat-subtext0) !important;
   text-decoration: none !important;
   display: block !important;
   padding: 6px 10px !important;
@@ -144,15 +179,15 @@ nav.table-of-contents,
 }
 
 .table-of-contents a:hover {
-  color: #f0f6fc !important;
-  background-color: rgba(56, 139, 253, 0.1) !important;
+  color: var(--cat-text) !important;
+  background-color: rgba(137, 180, 250, 0.1) !important;
   transform: translateX(2px) !important;
 }
 
 .table-of-contents a:focus,
 .table-of-contents a.active {
-  color: #58a6ff !important;
-  background-color: rgba(56, 139, 253, 0.15) !important;
+  color: var(--cat-blue) !important;
+  background-color: rgba(137, 180, 250, 0.15) !important;
   font-weight: 500 !important;
 }
 
@@ -164,7 +199,7 @@ nav.table-of-contents,
   transform: translateY(-50%) !important;
   width: 3px !important;
   height: 60% !important;
-  background: #58a6ff !important;
+  background: var(--cat-blue) !important;
   border-radius: 0 2px 2px 0 !important;
 }
 
@@ -186,8 +221,8 @@ header {
   left: 280px !important;
   right: 0 !important;
   height: 50px !important;
-  background: #0d1117 !important;
-  border-bottom: 1px solid #21262d !important;
+  background: var(--cat-base) !important;
+  border-bottom: 1px solid var(--cat-surface0) !important;
   padding: 0 32px !important;
   display: flex !important;
   align-items: center !important;
@@ -198,7 +233,7 @@ header {
 header h3 {
   font-size: 14px !important;
   font-weight: 600 !important;
-  color: #7d8590 !important;
+  color: var(--cat-overlay1) !important;
   margin: 0 !important;
 }
 
@@ -231,41 +266,157 @@ td p {
 
 /* Headings */
 h1, h2, h3, h4, h5, h6 {
-  color: #f0f6fc !important;
+  color: var(--cat-text) !important;
   font-weight: 600 !important;
   margin-top: 32px !important;
   margin-bottom: 16px !important;
   line-height: 1.25 !important;
+  position: relative !important;
 }
+
+/* Heading Anchor Links - Enhanced styling */
+h1 a.anchor,
+h2 a.anchor,
+h3 a.anchor,
+h4 a.anchor,
+h5 a.anchor,
+h6 a.anchor {
+  position: absolute !important;
+  left: -30px !important;  /* Position in the left margin */
+  display: inline-flex !important;
+  align-items: center !important;
+  opacity: 0.3 !important;  /* Slightly visible by default */
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  padding: 4px !important;  /* Add some padding for easier clicking */
+  top: 50% !important;
+  transform: translateY(-50%) !important;  /* Vertically center with heading text */
+}
+
+/* Style the SVG icon itself */
+h1 a.anchor svg,
+h2 a.anchor svg,
+h3 a.anchor svg,
+h4 a.anchor svg,
+h5 a.anchor svg,
+h6 a.anchor svg,
+h1 .octicon-link,
+h2 .octicon-link,
+h3 .octicon-link,
+h4 .octicon-link,
+h5 .octicon-link,
+h6 .octicon-link {
+  width: 20px !important;
+  height: 20px !important;
+  vertical-align: middle !important;
+}
+
+/* Style the SVG path (the actual icon shape) */
+h1 a.anchor svg path,
+h2 a.anchor svg path,
+h3 a.anchor svg path,
+h4 a.anchor svg path,
+h5 a.anchor svg path,
+h6 a.anchor svg path {
+  fill: var(--cat-overlay1) !important;
+  transition: fill 0.2s ease !important;
+}
+
+/* Show on heading hover with enhanced visibility */
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+h5:hover a.anchor,
+h6:hover a.anchor {
+  opacity: 0.8 !important;
+}
+
+/* Full visibility on direct anchor hover */
+h1 a.anchor:hover,
+h2 a.anchor:hover,
+h3 a.anchor:hover,
+h4 a.anchor:hover,
+h5 a.anchor:hover,
+h6 a.anchor:hover {
+  opacity: 1 !important;
+}
+
+/* Change icon color on hover - each heading level gets its own accent */
+h1:hover a.anchor svg path {
+  fill: var(--cat-lavender) !important;
+}
+
+h2:hover a.anchor svg path {
+  fill: var(--cat-blue) !important;
+}
+
+h3:hover a.anchor svg path {
+  fill: var(--cat-sapphire) !important;
+}
+
+h4:hover a.anchor svg path {
+  fill: var(--cat-sky) !important;
+}
+
+h5:hover a.anchor svg path,
+h6:hover a.anchor svg path {
+  fill: var(--cat-teal) !important;
+}
+
+/* Direct hover on the anchor link for extra interactivity */
+h1 a.anchor:hover svg path,
+h2 a.anchor:hover svg path,
+h3 a.anchor:hover svg path,
+h4 a.anchor:hover svg path,
+h5 a.anchor:hover svg path,
+h6 a.anchor:hover svg path {
+  fill: var(--cat-peach) !important;
+  filter: drop-shadow(0 0 3px rgba(250, 179, 135, 0.5)) !important;
+}
+
+/* Subtle scale on direct anchor hover */
+h1 a.anchor:hover svg,
+h2 a.anchor:hover svg,
+h3 a.anchor:hover svg,
+h4 a.anchor:hover svg,
+h5 a.anchor:hover svg,
+h6 a.anchor:hover svg {
+  transform: scale(1.15) !important;
+}
+
 
 h1 {
   font-size: 36px !important;
   padding-bottom: 12px !important;
-  border-bottom: 2px solid #21262d !important;
+  border-bottom: 2px solid var(--cat-surface0) !important;
   margin-bottom: 24px !important;
+  color: var(--cat-lavender) !important;
 }
 
 h2 {
   font-size: 28px !important;
   padding-bottom: 8px !important;
-  border-bottom: 1px solid #21262d !important;
+  border-bottom: 1px solid var(--cat-surface0) !important;
   margin-top: 48px !important;
   margin-bottom: 20px !important;
+  color: var(--cat-blue) !important;
 }
 
 h3 {
   font-size: 22px !important;
   margin-top: 32px !important;
+  color: var(--cat-sapphire) !important;
 }
 
 h4 {
   font-size: 18px !important;
-  color: #c9d1d9 !important;
+  color: var(--cat-sky) !important;
 }
 
 h5, h6 {
   font-size: 16px !important;
-  color: #8b949e !important;
+  color: var(--cat-teal) !important;
 }
 
 /* First heading special treatment */
@@ -277,14 +428,14 @@ h1:first-of-type {
 p {
   margin-bottom: 16px !important;
   line-height: 1.7 !important;
-  color: #c9d1d9 !important;
+  color: var(--cat-text) !important;
 }
 
 /* Lists */
 ul:not(.table-of-contents ul),
 ol:not(.table-of-contents ol) {
   margin-bottom: 16px !important;
-  color: #c9d1d9 !important;
+  color: var(--cat-text) !important;
 }
 
 ul:not(.table-of-contents ul) li,
@@ -309,11 +460,11 @@ code:not(pre code) {
   padding: 3px 6px !important;
   margin: 0 2px !important;
   font-size: 85% !important;
-  background: rgba(110, 118, 129, 0.2) !important;
-  border: 1px solid #30363d !important;
+  background: var(--cat-surface0) !important;
+  border: 1px solid var(--cat-surface1) !important;
   border-radius: 6px !important;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace !important;
-  color: #79c0ff !important;
+  color: var(--cat-peach) !important;
   white-space: break-spaces !important;
 }
 
@@ -324,8 +475,8 @@ pre {
   overflow: auto !important;
   font-size: 85% !important;
   line-height: 1.45 !important;
-  background: #161b22 !important;
-  border: 1px solid #30363d !important;
+  background: var(--cat-mantle) !important;
+  border: 1px solid var(--cat-surface0) !important;
   border-radius: 6px !important;
 }
 
@@ -335,59 +486,76 @@ pre code {
   font-size: 100% !important;
   background: transparent !important;
   border: none !important;
-  color: #c9d1d9 !important;
+  color: var(--cat-text) !important;
 }
 
-/* Syntax Highlighting */
+/* Syntax Highlighting - Catppuccin */
 .hljs-keyword,
 .hljs-selector-tag,
 .hljs-title {
-  color: #ff7b72 !important;
+  color: var(--cat-mauve) !important;
 }
 
 .hljs-string,
 .hljs-doctag {
-  color: #a5d6ff !important;
+  color: var(--cat-green) !important;
 }
 
 .hljs-number,
 .hljs-literal {
-  color: #79c0ff !important;
+  color: var(--cat-peach) !important;
 }
 
 .hljs-built_in,
 .hljs-builtin-name {
-  color: #ffa657 !important;
+  color: var(--cat-blue) !important;
 }
 
 .hljs-comment,
 .hljs-quote {
-  color: #8b949e !important;
+  color: var(--cat-overlay0) !important;
   font-style: italic !important;
 }
 
 .hljs-variable,
 .hljs-template-variable {
-  color: #ffa657 !important;
+  color: var(--cat-flamingo) !important;
 }
 
 .hljs-attr,
 .hljs-attribute {
-  color: #79c0ff !important;
+  color: var(--cat-yellow) !important;
+}
+
+.hljs-function {
+  color: var(--cat-blue) !important;
+}
+
+.hljs-class,
+.hljs-type {
+  color: var(--cat-yellow) !important;
+}
+
+.hljs-tag {
+  color: var(--cat-red) !important;
+}
+
+.hljs-name {
+  color: var(--cat-mauve) !important;
 }
 
 /* ============================================
    Links
    ============================================ */
 
-a:not(.table-of-contents a) {
-  color: #58a6ff !important;
+a:not(.table-of-contents a):not(.anchor):not(.octicon-link) {
+  color: var(--cat-blue) !important;
   text-decoration: none !important;
   transition: all 0.2s ease !important;
 }
 
-a:not(.table-of-contents a):hover {
-  color: #79c0ff !important;
+a:not(.table-of-contents a):not(.anchor):not(.octicon-link):hover {
+  color: var(--cat-sky) !important;
   text-decoration: underline !important;
 }
 
@@ -398,9 +566,9 @@ a:not(.table-of-contents a):hover {
 blockquote {
   padding: 16px 20px !important;
   margin-bottom: 16px !important;
-  color: #8b949e !important;
-  background: rgba(139, 148, 158, 0.05) !important;
-  border-left: 4px solid #3fb950 !important;
+  color: var(--cat-subtext1) !important;
+  background: rgba(49, 50, 68, 0.5) !important;
+  border-left: 4px solid var(--cat-green) !important;
   border-radius: 0 6px 6px 0 !important;
 }
 
@@ -429,28 +597,28 @@ table {
 table th {
   font-weight: 600 !important;
   padding: 10px 16px !important;
-  background: #161b22 !important;
-  border: 1px solid #30363d !important;
-  color: #f0f6fc !important;
+  background: var(--cat-surface0) !important;
+  border: 1px solid var(--cat-surface1) !important;
+  color: var(--cat-text) !important;
   text-align: left !important;
 }
 
 table td {
   padding: 8px 16px !important;
-  border: 1px solid #30363d !important;
-  color: #c9d1d9 !important;
+  border: 1px solid var(--cat-surface0) !important;
+  color: var(--cat-text) !important;
 }
 
 table tr {
-  background: #0d1117 !important;
+  background: var(--cat-base) !important;
 }
 
 table tr:nth-child(2n) {
-  background: #161b22 !important;
+  background: var(--cat-mantle) !important;
 }
 
 table tr:hover {
-  background: rgba(56, 139, 253, 0.05) !important;
+  background: rgba(137, 180, 250, 0.1) !important;
 }
 
 /* ============================================
@@ -461,7 +629,7 @@ hr {
   height: 2px !important;
   padding: 0 !important;
   margin: 32px 0 !important;
-  background: #21262d !important;
+  background: var(--cat-surface0) !important;
   border: 0 !important;
 }
 
@@ -483,12 +651,12 @@ img {
    ============================================ */
 
 strong, b {
-  color: #f0f6fc !important;
+  color: var(--cat-flamingo) !important;
   font-weight: 600 !important;
 }
 
 em, i {
-  color: #c9d1d9 !important;
+  color: var(--cat-pink) !important;
   font-style: italic !important;
 }
 
@@ -629,7 +797,21 @@ button:focus,
 input:focus,
 textarea:focus,
 select:focus {
-  outline: 2px solid #58a6ff !important;
+  outline: 2px solid var(--cat-lavender) !important;
   outline-offset: 2px !important;
   border-radius: 3px !important;
+}
+
+/* ============================================
+   Selection Highlight
+   ============================================ */
+
+::selection {
+  background-color: rgba(203, 166, 247, 0.3) !important;
+  color: var(--cat-text) !important;
+}
+
+::-moz-selection {
+  background-color: rgba(203, 166, 247, 0.3) !important;
+  color: var(--cat-text) !important;
 }
