@@ -1,5 +1,5 @@
 return {
-  "echasnovski/mini.files",
+  "nvim-mini/mini.files",
   dependencies = { "snacks.nvim" }, -- Ensure it loads after snacks.nvim
   init = function()
     -- Clear any existing mappings for <leader>e to ensure mini.files takes precedence
