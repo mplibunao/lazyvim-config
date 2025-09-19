@@ -12,5 +12,6 @@
       "/Users/mp/.config/nvim-lua/",
       "/Users/mp/Projects/wizy/wizy-prompts/"
     ]
-  }
+  },
+  "outputStyle": "Explanatory"
 }
