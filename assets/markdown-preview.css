@@ -31,15 +31,21 @@ body {
   min-height: 100vh !important;
 }
 
-/* Main wrapper - push everything right */
-#page-ctn,
-main,
+/* Main wrapper - only adjust for TOC, preserve original centering */
+#page-ctn {
+  margin: 0 auto !important; /* Center in available space */
+  max-width: 900px !important; /* Content max width */
+  margin-left: calc(280px + (100vw - 280px - 900px) / 2) !important; /* Center accounting for TOC */
+  padding: 0 48px !important; /* Side padding */
+}
+
+/* Don't override main and .markdown-body to preserve their natural flow */
+main {
+  background: transparent !important;
+}
+
 .markdown-body {
-  width: 100% !important;
-  max-width: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  padding-left: 280px !important; /* Push entire container right */
+  padding: 32px 0 !important;
 }
 
 /* ============================================
@@ -200,15 +206,13 @@ header h3 {
    Main Content Area
    ============================================ */
 
-/* Remove individual element margins - already handled by container padding */
+/* Content styling - minimal overrides to preserve natural flow */
 h1, h2, h3, h4, h5, h6,
 p, ul:not(.table-of-contents ul), ol:not(.table-of-contents ol),
 pre, blockquote, table, hr, figure {
-  /* Remove the margin-left that was causing issues */
+  /* Remove excessive padding, let container handle it */
   margin-left: 0 !important;
-  padding-left: 48px !important;
-  padding-right: 48px !important;
-  max-width: 900px !important;
+  margin-right: 0 !important;
 }
 
 /* Reset for nested content that shouldn't have extra padding */
@@ -516,17 +520,9 @@ nav.table-of-contents:first-of-type,
     padding: 20px 12px 20px 16px !important;
   }
 
-  #page-ctn,
-  main,
-  .markdown-body {
-    padding-left: 250px !important;
-  }
-
-  h1, h2, h3, h4, h5, h6,
-  p, ul:not(.table-of-contents ul), ol:not(.table-of-contents ol),
-  pre, blockquote, table, hr, figure {
-    padding-left: 32px !important;
-    padding-right: 32px !important;
+  #page-ctn {
+    margin-left: calc(250px + (100vw - 250px - 900px) / 2) !important;
+    padding: 0 32px !important;
   }
 
   #page-header,
@@ -541,17 +537,9 @@ nav.table-of-contents:first-of-type,
     display: none !important;
   }
 
-  #page-ctn,
-  main,
-  .markdown-body {
-    padding-left: 0 !important;
-  }
-
-  h1, h2, h3, h4, h5, h6,
-  p, ul:not(.table-of-contents ul), ol:not(.table-of-contents ol),
-  pre, blockquote, table, hr, figure {
-    padding-left: 20px !important;
-    padding-right: 20px !important;
+  #page-ctn {
+    margin: 0 auto !important; /* Normal centering without TOC */
+    padding: 0 20px !important;
   }
 
   #page-header,
@@ -584,16 +572,13 @@ nav.table-of-contents:first-of-type,
     display: none !important;
   }
 
-  #page-ctn,
-  main,
-  .markdown-body {
-    padding-left: 0 !important;
+  #page-ctn {
+    margin: 0 auto !important;
+    padding: 0 !important;
   }
 
   h1, h2, h3, h4, h5, h6,
   p, ul, ol, pre, blockquote, table, hr, figure {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
     color: black !important;
   }
 
