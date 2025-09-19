@@ -1,6 +1,39 @@
 return {
   -- Extend Snacks configuration with a custom picker shortcut/command
   "snacks.nvim",
+  opts = {
+    picker = {
+      actions = {
+        -- Custom action to copy the absolute path of the selected file
+        copy_path = function(p, item)
+          if item and item.file then
+            -- Get the picker's cwd and construct the absolute path
+            local picker_cwd = p.opts.cwd or vim.fn.getcwd()
+            local path
+            -- Check if item.file is already absolute
+            if vim.fn.fnamemodify(item.file, ":p") == item.file then
+              path = item.file
+            else
+              -- Construct absolute path from picker's cwd
+              path = vim.fn.fnamemodify(picker_cwd .. "/" .. item.file, ":p")
+            end
+            vim.fn.setreg('+', path)
+            vim.notify("Path copied: " .. path, vim.log.levels.INFO)
+          else
+            vim.notify("No file to copy path from", vim.log.levels.WARN)
+          end
+        end,
+      },
+      win = {
+        input = {
+          keys = {
+            -- Add yp keybinding to copy absolute path (similar to ranger.nvim)
+            ["yp"] = { "copy_path", mode = { "n", "i" }, desc = "Copy absolute path" },
+          },
+        },
+      },
+    },
+  },
   init = function()
     -- Allow overriding from your `init.lua` or elsewhere
     vim.g.wizy_prompts_dir = vim.g.wizy_prompts_dir or "/Users/mp/Projects/wizy/wizy-prompts"
@@ -22,7 +55,37 @@ return {
       end
 
       if picker and picker.files then
-        picker.files({ cwd = dir, hidden = true })
+        picker.files({
+          cwd = dir,
+          hidden = true,
+          -- Add the same copy_path action for the WizyPrompts picker
+          actions = {
+            copy_path = function(p, item)
+              if item and item.file then
+                -- Use the configured wizy_prompts_dir to ensure correct absolute path
+                local path
+                -- Check if item.file is already absolute
+                if vim.fn.fnamemodify(item.file, ":p") == item.file then
+                  path = item.file
+                else
+                  -- Construct absolute path from the wizy prompts directory
+                  path = vim.fn.fnamemodify(dir .. "/" .. item.file, ":p")
+                end
+                vim.fn.setreg('+', path)
+                vim.notify("Path copied: " .. path, vim.log.levels.INFO)
+              else
+                vim.notify("No file to copy path from", vim.log.levels.WARN)
+              end
+            end,
+          },
+          win = {
+            input = {
+              keys = {
+                ["yp"] = { "copy_path", mode = { "n", "i" }, desc = "Copy absolute path" },
+              },
+            },
+          },
+        })
       else
         vim.notify("Snacks picker not available", vim.log.levels.ERROR)
       end
