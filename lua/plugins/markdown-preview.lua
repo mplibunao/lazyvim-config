@@ -1,6 +1,7 @@
 return {
   {
-    "iamcco/markdown-preview.nvim",
+    -- Using fork with admonition support
+    "UtkarshKunwar/markdown-preview.nvim",
     build = function()
       vim.fn["mkdp#util#install"]()
     end,
