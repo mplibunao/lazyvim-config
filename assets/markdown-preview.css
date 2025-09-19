@@ -882,106 +882,119 @@ ul.contains-task-list,
 li.task-list-item {
   position: relative !important;
   list-style: none !important;
-  margin-bottom: 8px !important;
-  padding-left: 32px !important;
+  margin-bottom: 12px !important;
+  padding-left: 28px !important;
 }
 
-/* Custom checkbox styling */
-li.task-list-item input[type="checkbox"],
-input[type="checkbox"].task-list-item-checkbox {
+/* Hide default checkbox but keep it functional */
+li.task-list-item > input[type="checkbox"],
+.task-list-item-checkbox {
   position: absolute !important;
   left: 0 !important;
   top: 3px !important;
   width: 18px !important;
   height: 18px !important;
   cursor: pointer !important;
-  opacity: 0 !important;  /* Hide default checkbox */
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  outline: none !important;
+  margin: 0 !important;
 }
 
-/* Custom checkbox design */
-li.task-list-item input[type="checkbox"]::before,
-input[type="checkbox"].task-list-item-checkbox::before {
+/* Custom checkbox box */
+li.task-list-item > input[type="checkbox"]:before,
+.task-list-item-checkbox:before {
   content: '' !important;
-  position: absolute !important;
-  left: 0 !important;
-  top: 0 !important;
-  width: 18px !important;
-  height: 18px !important;
-  border: 2px solid var(--cat-surface2) !important;
-  border-radius: 4px !important;
-  background: var(--cat-surface0) !important;
-  opacity: 1 !important;
-  transition: all 0.3s ease !important;
-}
-
-/* Checkbox hover state */
-li.task-list-item input[type="checkbox"]:hover::before,
-input[type="checkbox"].task-list-item-checkbox:hover::before {
-  border-color: var(--cat-blue) !important;
-  background: var(--cat-surface1) !important;
-  box-shadow: 0 0 5px rgba(137, 180, 250, 0.3) !important;
-}
-
-/* Checked state */
-li.task-list-item input[type="checkbox"]:checked::before,
-input[type="checkbox"].task-list-item-checkbox:checked::before {
-  background: var(--cat-green) !important;
-  border-color: var(--cat-green) !important;
-}
-
-/* Checkmark icon */
-li.task-list-item input[type="checkbox"]:checked::after,
-input[type="checkbox"].task-list-item-checkbox:checked::after {
-  content: '✓' !important;
-  position: absolute !important;
-  left: 4px !important;
-  top: -1px !important;
-  color: var(--cat-base) !important;
-  font-weight: bold !important;
-  font-size: 14px !important;
-  opacity: 1 !important;
-  animation: checkmarkPop 0.3s ease !important;
-}
-
-/* Alternative checkbox style with custom SVG checkmark */
-li.task-list-item::before {
-  content: '' !important;
-  position: absolute !important;
-  left: 0 !important;
-  top: 3px !important;
+  display: block !important;
   width: 18px !important;
   height: 18px !important;
   border: 2px solid var(--cat-overlay0) !important;
   border-radius: 4px !important;
   background: var(--cat-surface0) !important;
   transition: all 0.3s ease !important;
-  pointer-events: none !important;
 }
 
-/* Hover effect for list item */
-li.task-list-item:hover::before {
+/* Hover state */
+li.task-list-item > input[type="checkbox"]:hover:before,
+.task-list-item-checkbox:hover:before {
   border-color: var(--cat-blue) !important;
   background: var(--cat-surface1) !important;
+  box-shadow: 0 0 8px rgba(137, 180, 250, 0.4) !important;
   transform: scale(1.05) !important;
 }
 
-/* Checked state for custom design */
-li.task-list-item input[type="checkbox"]:checked ~ * {
+/* Checked state - box */
+li.task-list-item > input[type="checkbox"]:checked:before,
+li.task-list-item > input[type="checkbox"][checked]:before,
+.task-list-item-checkbox:checked:before,
+.task-list-item-checkbox[checked]:before {
+  background: linear-gradient(135deg, var(--cat-green) 0%, var(--cat-teal) 100%) !important;
+  border-color: var(--cat-green) !important;
+}
+
+/* Checkmark */
+li.task-list-item > input[type="checkbox"]:checked:after,
+li.task-list-item > input[type="checkbox"][checked]:after,
+.task-list-item-checkbox:checked:after,
+.task-list-item-checkbox[checked]:after {
+  content: '✓' !important;
+  position: absolute !important;
+  left: 5px !important;
+  top: 1px !important;
+  color: var(--cat-base) !important;
+  font-weight: bold !important;
+  font-size: 12px !important;
+  animation: checkmarkPop 0.3s ease !important;
+}
+
+/* Strikethrough for checked items */
+li.task-list-item:has(input[type="checkbox"]:checked) {
   color: var(--cat-subtext0) !important;
   text-decoration: line-through !important;
   opacity: 0.7 !important;
 }
 
-li.task-list-item input[type="checkbox"]:checked + *::before {
-  content: '' !important;
-  position: absolute !important;
-  left: 0 !important;
-  top: 3px !important;
-  width: 18px !important;
-  height: 18px !important;
+/* For older browsers that don't support :has() */
+li.task-list-item > input[type="checkbox"]:checked ~ * {
+  color: var(--cat-subtext0) !important;
+  text-decoration: line-through !important;
+  opacity: 0.7 !important;
+}
+
+/* Focus state for accessibility */
+li.task-list-item > input[type="checkbox"]:focus:before,
+.task-list-item-checkbox:focus:before {
+  box-shadow: 0 0 0 3px rgba(137, 180, 250, 0.3) !important;
+}
+
+/* Disabled state - markdown-preview.nvim sets disabled on checked boxes */
+li.task-list-item > input[type="checkbox"][disabled]:before,
+.task-list-item-checkbox[disabled]:before {
+  cursor: default !important;
+}
+
+/* Important: disabled AND checked state */
+li.task-list-item > input[type="checkbox"][disabled][checked]:before,
+li.task-list-item > input[type="checkbox"]:disabled:checked:before,
+.task-list-item-checkbox[disabled][checked]:before,
+.task-list-item-checkbox:disabled:checked:before {
   background: linear-gradient(135deg, var(--cat-green) 0%, var(--cat-teal) 100%) !important;
-  border: 2px solid var(--cat-green) !important;
-  border-radius: 4px !important;
+  border-color: var(--cat-green) !important;
+}
+
+/* Checkmark for disabled checked state */
+li.task-list-item > input[type="checkbox"][disabled][checked]:after,
+li.task-list-item > input[type="checkbox"]:disabled:checked:after,
+.task-list-item-checkbox[disabled][checked]:after,
+.task-list-item-checkbox:disabled:checked:after {
+  content: '✓' !important;
+  position: absolute !important;
+  left: 5px !important;
+  top: 1px !important;
+  color: var(--cat-base) !important;
+  font-weight: bold !important;
+  font-size: 12px !important;
 }
 
 /* Checkmark animation */
