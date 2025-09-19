@@ -1,25 +1,51 @@
-/* Custom Markdown Preview CSS with Left-side Sticky TOC */
-/* Using !important to override plugin defaults */
+/* Markdown Preview CSS with Fixed Left Sidebar TOC
+   Designed for iamcco/markdown-preview.nvim */
 
-/* Force layout restructure */
-body {
-  margin: 0 !important;
-  padding: 0 !important;
-  background-color: #0d1117 !important;
-  color: #c9d1d9 !important;
+/* ============================================
+   Base Reset and Dark Theme
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Try to restructure the main container */
-#page-ctn,
-.markdown-body {
+html, body {
+  height: 100%;
+  background-color: #0d1117 !important;
+  color: #c9d1d9 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ============================================
+   Main Layout Structure
+   ============================================ */
+
+/* Ensure the body uses full viewport */
+body {
   display: flex !important;
-  flex-direction: row !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  flex-direction: column !important;
   min-height: 100vh !important;
 }
 
-/* Force TOC to be a sidebar */
+/* Main wrapper - push everything right */
+#page-ctn,
+main,
+.markdown-body {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  padding-left: 280px !important; /* Push entire container right */
+}
+
+/* ============================================
+   Fixed Left Sidebar TOC
+   ============================================ */
+
 nav.table-of-contents,
 .table-of-contents {
   position: fixed !important;
@@ -27,118 +53,138 @@ nav.table-of-contents,
   top: 0 !important;
   width: 280px !important;
   height: 100vh !important;
-  background-color: #161b22 !important;
+  background: linear-gradient(180deg, #161b22 0%, #0d1117 100%) !important;
   border-right: 1px solid #30363d !important;
-  padding: 24px 16px !important;
+  padding: 24px 16px 24px 20px !important; /* Reduced left padding */
   overflow-y: auto !important;
+  overflow-x: hidden !important;
   z-index: 1000 !important;
-  box-sizing: border-box !important;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Add TOC title */
+/* TOC Title */
 .table-of-contents::before {
-  content: 'TABLE OF CONTENTS' !important;
+  content: '📚 TABLE OF CONTENTS' !important;
   display: block !important;
   font-size: 12px !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.03em !important;
-  color: #8b949e !important;
-  margin-bottom: 16px !important;
-  padding-bottom: 8px !important;
-  border-bottom: 1px solid #30363d !important;
+  letter-spacing: 0.08em !important;
+  color: #7d8590 !important;
+  margin-bottom: 20px !important;
+  padding-bottom: 10px !important;
+  border-bottom: 2px solid #21262d !important;
 }
 
-/* Style TOC scrollbar */
+/* Custom Scrollbar for TOC */
 .table-of-contents::-webkit-scrollbar {
-  width: 8px !important;
+  width: 6px !important;
 }
 
 .table-of-contents::-webkit-scrollbar-track {
-  background: #161b22 !important;
-  border-radius: 4px !important;
+  background: rgba(139, 148, 158, 0.1) !important;
+  border-radius: 3px !important;
 }
 
 .table-of-contents::-webkit-scrollbar-thumb {
   background: #30363d !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
 }
 
 .table-of-contents::-webkit-scrollbar-thumb:hover {
   background: #484f58 !important;
 }
 
-/* TOC list styling */
+/* TOC List Styling */
 .table-of-contents ol,
 .table-of-contents ul {
   list-style: none !important;
-  padding-left: 0 !important;
+  padding: 0 !important;
   margin: 0 !important;
 }
 
-.table-of-contents li {
-  margin-bottom: 4px !important;
+.table-of-contents > ol > li,
+.table-of-contents > ul > li {
+  margin-bottom: 6px !important;
 }
 
+.table-of-contents li {
+  position: relative !important;
+}
+
+/* Nested lists indentation */
 .table-of-contents ol ol,
-.table-of-contents ul ul {
+.table-of-contents ul ul,
+.table-of-contents ol ul,
+.table-of-contents ul ol {
   padding-left: 16px !important;
   margin-top: 4px !important;
 }
 
+/* TOC Links */
 .table-of-contents a {
   color: #8b949e !important;
   text-decoration: none !important;
   display: block !important;
-  padding: 6px 12px !important;
+  padding: 6px 10px !important;
   border-radius: 6px !important;
-  transition: all 0.2s ease !important;
   font-size: 14px !important;
   line-height: 1.4 !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }
 
 .table-of-contents a:hover {
   color: #f0f6fc !important;
-  background-color: rgba(139, 148, 158, 0.1) !important;
+  background-color: rgba(56, 139, 253, 0.1) !important;
+  transform: translateX(2px) !important;
 }
 
 .table-of-contents a:focus,
 .table-of-contents a.active {
   color: #58a6ff !important;
   background-color: rgba(56, 139, 253, 0.15) !important;
-  border-left: 3px solid #58a6ff !important;
-  padding-left: 9px !important;
+  font-weight: 500 !important;
 }
 
-/* Push main content to the right */
-.markdown-body > *:not(.table-of-contents),
-#write,
-.content,
-main > section,
-main > div:not(.table-of-contents) {
-  margin-left: 280px !important;
-  padding: 32px 48px !important;
-  max-width: calc(100vw - 280px) !important;
-  box-sizing: border-box !important;
+.table-of-contents a.active::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 3px !important;
+  height: 60% !important;
+  background: #58a6ff !important;
+  border-radius: 0 2px 2px 0 !important;
 }
 
-/* Ensure all content except TOC has left margin */
-body > *:not(.table-of-contents),
-#page-ctn > *:not(.table-of-contents),
-main > *:not(.table-of-contents) {
-  margin-left: 280px !important;
+/* Nested TOC link styles */
+.table-of-contents ol ol a,
+.table-of-contents ul ul a {
+  font-size: 13px !important;
+  padding: 5px 10px !important;
 }
 
-/* Header styling if present */
+/* ============================================
+   Page Header (if present)
+   ============================================ */
+
 #page-header,
 header {
   position: fixed !important;
   top: 0 !important;
   left: 280px !important;
   right: 0 !important;
-  background-color: #161b22 !important;
-  border-bottom: 1px solid #30363d !important;
-  padding: 12px 24px !important;
+  height: 50px !important;
+  background: #0d1117 !important;
+  border-bottom: 1px solid #21262d !important;
+  padding: 0 32px !important;
+  display: flex !important;
+  align-items: center !important;
   z-index: 100 !important;
 }
 
@@ -146,42 +192,84 @@ header {
 header h3 {
   font-size: 14px !important;
   font-weight: 600 !important;
-  color: #f0f6fc !important;
+  color: #7d8590 !important;
   margin: 0 !important;
 }
 
-/* Adjust content top padding if header exists */
-#page-header ~ *,
-header ~ * {
-  padding-top: 60px !important;
+/* ============================================
+   Main Content Area
+   ============================================ */
+
+/* Remove individual element margins - already handled by container padding */
+h1, h2, h3, h4, h5, h6,
+p, ul:not(.table-of-contents ul), ol:not(.table-of-contents ol),
+pre, blockquote, table, hr, figure {
+  /* Remove the margin-left that was causing issues */
+  margin-left: 0 !important;
+  padding-left: 48px !important;
+  padding-right: 48px !important;
+  max-width: 900px !important;
 }
 
-/* Heading styles */
+/* Reset for nested content that shouldn't have extra padding */
+li p,
+li ul,
+li ol,
+blockquote p,
+td p {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* ============================================
+   Typography Styles
+   ============================================ */
+
+/* Headings */
 h1, h2, h3, h4, h5, h6 {
   color: #f0f6fc !important;
   font-weight: 600 !important;
-  margin-top: 24px !important;
+  margin-top: 32px !important;
   margin-bottom: 16px !important;
   line-height: 1.25 !important;
 }
 
 h1 {
-  font-size: 2em !important;
-  padding-bottom: 0.3em !important;
-  border-bottom: 1px solid #30363d !important;
+  font-size: 36px !important;
+  padding-bottom: 12px !important;
+  border-bottom: 2px solid #21262d !important;
+  margin-bottom: 24px !important;
 }
 
 h2 {
-  font-size: 1.5em !important;
-  padding-bottom: 0.3em !important;
-  border-bottom: 1px solid #30363d !important;
+  font-size: 28px !important;
+  padding-bottom: 8px !important;
+  border-bottom: 1px solid #21262d !important;
+  margin-top: 48px !important;
+  margin-bottom: 20px !important;
 }
 
 h3 {
-  font-size: 1.25em !important;
+  font-size: 22px !important;
+  margin-top: 32px !important;
 }
 
-/* Paragraph and text styling */
+h4 {
+  font-size: 18px !important;
+  color: #c9d1d9 !important;
+}
+
+h5, h6 {
+  font-size: 16px !important;
+  color: #8b949e !important;
+}
+
+/* First heading special treatment */
+h1:first-of-type {
+  margin-top: 32px !important;
+}
+
+/* Paragraphs */
 p {
   margin-bottom: 16px !important;
   line-height: 1.7 !important;
@@ -191,183 +279,372 @@ p {
 /* Lists */
 ul:not(.table-of-contents ul),
 ol:not(.table-of-contents ol) {
-  padding-left: 2em !important;
   margin-bottom: 16px !important;
   color: #c9d1d9 !important;
 }
 
-li:not(.table-of-contents li) {
+ul:not(.table-of-contents ul) li,
+ol:not(.table-of-contents ol) li {
   margin-bottom: 8px !important;
-  color: #c9d1d9 !important;
+  line-height: 1.6 !important;
 }
 
-/* Code styling */
-code {
-  padding: 0.2em 0.4em !important;
-  margin: 0 !important;
+ul:not(.table-of-contents ul) ul,
+ol:not(.table-of-contents ol) ol {
+  margin-top: 8px !important;
+  margin-left: 20px !important;
+  padding-left: 0 !important;
+}
+
+/* ============================================
+   Code Blocks and Inline Code
+   ============================================ */
+
+/* Inline code */
+code:not(pre code) {
+  padding: 3px 6px !important;
+  margin: 0 2px !important;
   font-size: 85% !important;
-  background-color: rgba(110, 118, 129, 0.2) !important;
+  background: rgba(110, 118, 129, 0.2) !important;
+  border: 1px solid #30363d !important;
   border-radius: 6px !important;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace !important;
   color: #79c0ff !important;
+  white-space: break-spaces !important;
 }
 
+/* Code blocks */
 pre {
+  margin-bottom: 16px !important;
   padding: 16px !important;
   overflow: auto !important;
   font-size: 85% !important;
   line-height: 1.45 !important;
-  background-color: #161b22 !important;
-  border-radius: 6px !important;
-  margin-bottom: 16px !important;
+  background: #161b22 !important;
   border: 1px solid #30363d !important;
+  border-radius: 6px !important;
 }
 
 pre code {
   padding: 0 !important;
-  background-color: transparent !important;
+  margin: 0 !important;
+  font-size: 100% !important;
+  background: transparent !important;
+  border: none !important;
   color: #c9d1d9 !important;
 }
 
-/* Syntax highlighting */
-.hljs-keyword {
+/* Syntax Highlighting */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-title {
   color: #ff7b72 !important;
 }
 
-.hljs-string {
+.hljs-string,
+.hljs-doctag {
   color: #a5d6ff !important;
 }
 
-.hljs-number {
+.hljs-number,
+.hljs-literal {
   color: #79c0ff !important;
 }
 
-.hljs-built_in {
+.hljs-built_in,
+.hljs-builtin-name {
   color: #ffa657 !important;
 }
 
-.hljs-comment {
+.hljs-comment,
+.hljs-quote {
   color: #8b949e !important;
+  font-style: italic !important;
 }
 
-/* Links */
+.hljs-variable,
+.hljs-template-variable {
+  color: #ffa657 !important;
+}
+
+.hljs-attr,
+.hljs-attribute {
+  color: #79c0ff !important;
+}
+
+/* ============================================
+   Links
+   ============================================ */
+
 a:not(.table-of-contents a) {
   color: #58a6ff !important;
   text-decoration: none !important;
+  transition: all 0.2s ease !important;
 }
 
 a:not(.table-of-contents a):hover {
+  color: #79c0ff !important;
   text-decoration: underline !important;
 }
 
-/* Strong text */
-strong, b {
-  color: #f0f6fc !important;
-  font-weight: 600 !important;
+/* ============================================
+   Blockquotes
+   ============================================ */
+
+blockquote {
+  padding: 16px 20px !important;
+  margin-bottom: 16px !important;
+  color: #8b949e !important;
+  background: rgba(139, 148, 158, 0.05) !important;
+  border-left: 4px solid #3fb950 !important;
+  border-radius: 0 6px 6px 0 !important;
 }
 
-/* Tables */
+blockquote > :first-child {
+  margin-top: 0 !important;
+}
+
+blockquote > :last-child {
+  margin-bottom: 0 !important;
+}
+
+/* ============================================
+   Tables
+   ============================================ */
+
 table {
   border-spacing: 0 !important;
   border-collapse: collapse !important;
   margin-bottom: 16px !important;
-  width: 100% !important;
+  width: auto !important;
+  max-width: 100% !important;
+  overflow: auto !important;
+  display: block !important;
 }
 
 table th {
   font-weight: 600 !important;
-  padding: 6px 13px !important;
+  padding: 10px 16px !important;
+  background: #161b22 !important;
   border: 1px solid #30363d !important;
-  background-color: #161b22 !important;
   color: #f0f6fc !important;
+  text-align: left !important;
 }
 
 table td {
-  padding: 6px 13px !important;
+  padding: 8px 16px !important;
   border: 1px solid #30363d !important;
   color: #c9d1d9 !important;
 }
 
 table tr {
-  background-color: #0d1117 !important;
-  border-top: 1px solid #30363d !important;
+  background: #0d1117 !important;
 }
 
 table tr:nth-child(2n) {
-  background-color: #161b22 !important;
+  background: #161b22 !important;
 }
 
-/* Blockquotes */
-blockquote {
-  padding: 0 1em !important;
-  color: #8b949e !important;
-  border-left: 0.25em solid #30363d !important;
-  margin-bottom: 16px !important;
-  margin-left: 0 !important;
+table tr:hover {
+  background: rgba(56, 139, 253, 0.05) !important;
 }
 
-/* Horizontal rules */
+/* ============================================
+   Horizontal Rules
+   ============================================ */
+
 hr {
-  height: 0.25em !important;
+  height: 2px !important;
   padding: 0 !important;
-  margin: 24px 0 !important;
-  background-color: #30363d !important;
+  margin: 32px 0 !important;
+  background: #21262d !important;
   border: 0 !important;
 }
 
-/* Images */
+/* ============================================
+   Images
+   ============================================ */
+
 img {
   max-width: 100% !important;
   height: auto !important;
+  border-radius: 6px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  display: block !important;
+  margin: 16px auto !important;
 }
 
-/* Hide any potential duplicate TOCs */
+/* ============================================
+   Strong and Emphasis
+   ============================================ */
+
+strong, b {
+  color: #f0f6fc !important;
+  font-weight: 600 !important;
+}
+
+em, i {
+  color: #c9d1d9 !important;
+  font-style: italic !important;
+}
+
+/* ============================================
+   Hide Duplicate TOCs
+   ============================================ */
+
 .toc-container,
 #toc,
-.toc {
+.toc,
+.markdown-toc {
   display: none !important;
 }
 
 /* Only show our styled TOC */
-nav.table-of-contents,
+nav.table-of-contents:first-of-type,
 .table-of-contents:first-of-type {
   display: block !important;
 }
 
-/* Mobile responsive */
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+/* Tablet View */
+@media (max-width: 1024px) {
+  .table-of-contents {
+    width: 250px !important;
+    padding: 20px 12px 20px 16px !important;
+  }
+
+  #page-ctn,
+  main,
+  .markdown-body {
+    padding-left: 250px !important;
+  }
+
+  h1, h2, h3, h4, h5, h6,
+  p, ul:not(.table-of-contents ul), ol:not(.table-of-contents ol),
+  pre, blockquote, table, hr, figure {
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+  }
+
+  #page-header,
+  header {
+    left: 250px !important;
+  }
+}
+
+/* Mobile View */
 @media (max-width: 768px) {
   .table-of-contents {
     display: none !important;
   }
 
-  .markdown-body > *:not(.table-of-contents),
-  #write,
-  .content,
-  main > section,
-  main > div:not(.table-of-contents),
-  body > *:not(.table-of-contents),
-  #page-ctn > *:not(.table-of-contents),
-  main > *:not(.table-of-contents) {
-    margin-left: 0 !important;
-    padding: 24px !important;
-    max-width: 100% !important;
+  #page-ctn,
+  main,
+  .markdown-body {
+    padding-left: 0 !important;
+  }
+
+  h1, h2, h3, h4, h5, h6,
+  p, ul:not(.table-of-contents ul), ol:not(.table-of-contents ol),
+  pre, blockquote, table, hr, figure {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
   }
 
   #page-header,
   header {
     left: 0 !important;
+    padding: 0 20px !important;
+  }
+
+  h1 {
+    font-size: 28px !important;
+  }
+
+  h2 {
+    font-size: 24px !important;
+  }
+
+  h3 {
+    font-size: 20px !important;
   }
 }
 
-/* Print styles */
+/* ============================================
+   Print Styles
+   ============================================ */
+
 @media print {
-  .table-of-contents {
+  .table-of-contents,
+  #page-header,
+  header {
     display: none !important;
   }
 
-  .markdown-body > *,
-  body > *,
-  main > * {
-    margin-left: 0 !important;
+  #page-ctn,
+  main,
+  .markdown-body {
+    padding-left: 0 !important;
   }
+
+  h1, h2, h3, h4, h5, h6,
+  p, ul, ol, pre, blockquote, table, hr, figure {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    color: black !important;
+  }
+
+  body {
+    background: white !important;
+  }
+
+  pre {
+    background: #f6f8fa !important;
+    border: 1px solid #d1d5da !important;
+  }
+
+  table {
+    border: 1px solid #d1d5da !important;
+  }
+
+  table th,
+  table td {
+    border: 1px solid #d1d5da !important;
+  }
+}
+
+/* ============================================
+   Smooth Animations
+   ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+h1, h2, h3, p, ul, ol, pre, blockquote, table {
+  animation: fadeIn 0.5s ease-out !important;
+}
+
+/* ============================================
+   Focus Styles for Accessibility
+   ============================================ */
+
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #58a6ff !important;
+  outline-offset: 2px !important;
+  border-radius: 3px !important;
 }
