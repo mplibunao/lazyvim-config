@@ -217,3 +217,4 @@ LazyVim automatically installs most dependencies, but ensure you have:
 - <https://www.lazyvim.org/plugins> LazyVim plugins
 - <https://www.lazyvim.org/keymaps> - LazyVim keymaps
 
+Do not read the files in references unless told explicitly to
