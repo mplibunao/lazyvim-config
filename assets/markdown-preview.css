@@ -891,9 +891,9 @@ li.task-list-item > input[type="checkbox"],
 .task-list-item-checkbox {
   position: absolute !important;
   left: 0 !important;
-  top: 3px !important;
-  width: 18px !important;
-  height: 18px !important;
+  top: 2px !important;
+  width: 20px !important;
+  height: 20px !important;
   cursor: pointer !important;
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
@@ -907,8 +907,8 @@ li.task-list-item > input[type="checkbox"]:before,
 .task-list-item-checkbox:before {
   content: '' !important;
   display: block !important;
-  width: 18px !important;
-  height: 18px !important;
+  width: 20px !important;
+  height: 20px !important;
   border: 2px solid var(--cat-overlay0) !important;
   border-radius: 4px !important;
   background: var(--cat-surface0) !important;
@@ -938,13 +938,15 @@ li.task-list-item > input[type="checkbox"]:checked:after,
 li.task-list-item > input[type="checkbox"][checked]:after,
 .task-list-item-checkbox:checked:after,
 .task-list-item-checkbox[checked]:after {
-  content: '✓' !important;
+  content: '' !important;
   position: absolute !important;
-  left: 5px !important;
-  top: 1px !important;
-  color: var(--cat-base) !important;
-  font-weight: bold !important;
-  font-size: 12px !important;
+  left: 7px !important;
+  top: 3px !important;
+  width: 6px !important;
+  height: 11px !important;
+  border: solid var(--cat-base) !important;
+  border-width: 0 3px 3px 0 !important;
+  transform: rotate(45deg) !important;
   animation: checkmarkPop 0.3s ease !important;
 }
 
@@ -988,26 +990,28 @@ li.task-list-item > input[type="checkbox"][disabled][checked]:after,
 li.task-list-item > input[type="checkbox"]:disabled:checked:after,
 .task-list-item-checkbox[disabled][checked]:after,
 .task-list-item-checkbox:disabled:checked:after {
-  content: '✓' !important;
+  content: '' !important;
   position: absolute !important;
-  left: 5px !important;
-  top: 1px !important;
-  color: var(--cat-base) !important;
-  font-weight: bold !important;
-  font-size: 12px !important;
+  left: 7px !important;
+  top: 3px !important;
+  width: 6px !important;
+  height: 11px !important;
+  border: solid var(--cat-base) !important;
+  border-width: 0 3px 3px 0 !important;
+  transform: rotate(45deg) !important;
 }
 
 /* Checkmark animation */
 @keyframes checkmarkPop {
   0% {
-    transform: scale(0) rotate(-45deg);
+    transform: rotate(45deg) scale(0);
     opacity: 0;
   }
   50% {
-    transform: scale(1.2) rotate(0deg);
+    transform: rotate(45deg) scale(1.2);
   }
   100% {
-    transform: scale(1) rotate(0deg);
+    transform: rotate(45deg) scale(1);
     opacity: 1;
   }
 }
