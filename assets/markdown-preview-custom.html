@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Manual Test Plan - Custom Preview</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Main Container Layout */
+        #main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Page Header */
+        #page-header {
+            grid-column: 1 / -1;
+            background-color: #161b22;
+            border-bottom: 1px solid #30363d;
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        #page-header h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #f0f6fc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #page-header svg {
+            fill: #8b949e;
+        }
+
+        /* TOC Sidebar */
+        #toc-sidebar {
+            background-color: #0d1117;
+            border-right: 1px solid #30363d;
+            position: sticky;
+            top: 57px; /* Height of header */
+            height: calc(100vh - 57px);
+            overflow-y: auto;
+            padding: 24px 16px;
+        }
+
+        #toc-sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #toc-sidebar::-webkit-scrollbar-track {
+            background: #161b22;
+            border-radius: 4px;
+        }
+
+        #toc-sidebar::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 4px;
+        }
+
+        #toc-sidebar::-webkit-scrollbar-thumb:hover {
+            background: #484f58;
+        }
+
+        .toc-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #8b949e;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #21262d;
+        }
+
+        .table-of-contents {
+            font-size: 14px;
+        }
+
+        .table-of-contents ol {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .table-of-contents > ol > li {
+            margin-bottom: 8px;
+        }
+
+        .table-of-contents ol ol {
+            padding-left: 16px;
+            margin-top: 4px;
+        }
+
+        .table-of-contents a {
+            color: #8b949e;
+            text-decoration: none;
+            display: block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .table-of-contents a:hover {
+            color: #f0f6fc;
+            background-color: #161b22;
+        }
+
+        .table-of-contents a.active {
+            color: #58a6ff;
+            background-color: rgba(56, 139, 253, 0.1);
+        }
+
+        .table-of-contents a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 16px;
+            background-color: #58a6ff;
+            border-radius: 2px;
+        }
+
+        /* Content Area */
+        #content-wrapper {
+            padding: 32px 48px 64px;
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .markdown-body {
+            color: #c9d1d9;
+        }
+
+        /* Headings */
+        .markdown-body h1,
+        .markdown-body h2,
+        .markdown-body h3 {
+            font-weight: 600;
+            padding-bottom: 0.3em;
+            margin-top: 24px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .markdown-body h1 {
+            font-size: 2em;
+            border-bottom: 1px solid #21262d;
+            color: #f0f6fc;
+        }
+
+        .markdown-body h2 {
+            font-size: 1.5em;
+            border-bottom: 1px solid #21262d;
+            color: #f0f6fc;
+        }
+
+        .markdown-body h3 {
+            font-size: 1.25em;
+            color: #f0f6fc;
+        }
+
+        /* Anchor Links */
+        .anchor {
+            opacity: 0;
+            padding-right: 4px;
+            margin-left: -20px;
+            transition: opacity 0.2s;
+        }
+
+        h1:hover .anchor,
+        h2:hover .anchor,
+        h3:hover .anchor {
+            opacity: 1;
+        }
+
+        .anchor svg {
+            fill: #8b949e;
+            vertical-align: middle;
+        }
+
+        /* Paragraphs and Lists */
+        .markdown-body p {
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+
+        .markdown-body ul,
+        .markdown-body ol {
+            padding-left: 2em;
+            margin-bottom: 16px;
+        }
+
+        .markdown-body li {
+            margin-bottom: 8px;
+        }
+
+        .markdown-body li p {
+            margin-bottom: 4px;
+        }
+
+        /* Code Blocks */
+        .markdown-body code {
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            background-color: rgba(110, 118, 129, 0.2);
+            border-radius: 6px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            color: #f0f6fc;
+        }
+
+        .markdown-body pre {
+            padding: 16px;
+            overflow: auto;
+            font-size: 85%;
+            line-height: 1.45;
+            background-color: #161b22;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #30363d;
+        }
+
+        .markdown-body pre code {
+            padding: 0;
+            margin: 0;
+            background-color: transparent;
+            border-radius: 0;
+            font-size: 100%;
+        }
+
+        /* Syntax Highlighting */
+        .hljs-keyword {
+            color: #ff7b72;
+        }
+
+        .hljs-string {
+            color: #a5d6ff;
+        }
+
+        .hljs-number {
+            color: #79c0ff;
+        }
+
+        .hljs-built_in {
+            color: #ffa657;
+        }
+
+        .hljs-comment {
+            color: #8b949e;
+        }
+
+        /* Strong Text */
+        .markdown-body strong {
+            color: #f0f6fc;
+            font-weight: 600;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            #main-container {
+                grid-template-columns: 1fr;
+            }
+
+            #toc-sidebar {
+                display: none;
+            }
+
+            #content-wrapper {
+                padding: 24px;
+            }
+        }
+
+        /* TOC Active Section Tracking */
+        .in-view {
+            color: #58a6ff !important;
+        }
+
+        /* Smooth Transitions */
+        * {
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-container">
+        <header id="page-header">
+            <h3>
+                <svg viewBox="0 0 16 16" version="1.1" width="16" height="16">
+                    <path fill-rule="evenodd" d="M3 5h4v1H3V5zm0 3h4V7H3v1zm0 2h4V9H3v1zm11-5h-4v1h4V5zm0 2h-4v1h4V7zm0 2h-4v1h4V9zm2-6v9c0 .55-.45 1-1 1H9.5l-1 1-1-1H2c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h5.5l1 1 1-1H15c.55 0 1 .45 1 1zm-8 .5L7.5 3H2v9h6V3.5zm7-.5H9.5l-.5.5V12h6V3z"></path>
+                </svg>
+                manual-test-plan
+            </h3>
+        </header>
+
+        <aside id="toc-sidebar">
+            <div class="toc-title">Table of Contents</div>
+            <nav class="table-of-contents">
+                <ol>
+                    <li>
+                        <a href="#gw-1731-manual-red-green-test-plan">GW-1731 Manual Red/Green Test Plan</a>
+                        <ol>
+                            <li><a href="#overview">Overview</a></li>
+                            <li><a href="#pre-checks">Pre-Checks</a></li>
+                            <li><a href="#red-run-before-fix">Red Run (Before Fix)</a></li>
+                            <li><a href="#cleanup-between-runs">Cleanup Between Runs</a></li>
+                            <li><a href="#green-run-after-fix">Green Run (After Fix)</a></li>
+                            <li><a href="#optional-detailed-check">Optional Detailed Check</a></li>
+                            <li><a href="#deliverables">Deliverables</a></li>
+                        </ol>
+                    </li>
+                </ol>
+            </nav>
+        </aside>
+
+        <main id="content-wrapper">
+            <section class="markdown-body">
+                <h1 id="gw-1731-manual-red-green-test-plan">
+                    <a class="anchor" href="#gw-1731-manual-red-green-test-plan">
+                        <svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                        </svg>
+                    </a>
+                    GW-1731 Manual Red/Green Test Plan
+                </h1>
+
+                <h2 id="overview">
+                    <a class="anchor" href="#overview">
+                        <svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                        </svg>
+                    </a>
+                    Overview
+                </h2>
+                <p>Goal: reproduce the current CSV-import misassignment (red) and then confirm the fix (green) for textbook <code>Roofing 101 (how to read blueprints)</code> (textbookId 5, classId 2) using the sample CSV located at <code>Roofing 101 (how to read blueprints) - 20250919035444.csv</code>.</p>
+
+                <h2 id="pre-checks">
+                    <a class="anchor" href="#pre-checks">
+                        <svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                        </svg>
+                    </a>
+                    Pre-Checks
+                </h2>
+                <ul>
+                    <li>
+                        <p>Ensure you have trainer credentials with access to import textbooks for class "How to Read Roof Blueprints" in the dev/staging environment.</p>
+                    </li>
+                    <li>
+                        <p>Copy the CSV to your local machine; do <strong>not</strong> modify the contents between runs.</p>
+                    </li>
+                    <li>
+                        <p>Record the current timestamp for later cleanup: <code>SELECT NOW();</code>.</p>
+                    </li>
+                    <li>
+                        <p>Baseline the period ordering so you know which periods are currently "oldest":</p>
+                        <pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">id</span>, title, <span class="hljs-string">"startDate"</span>, <span class="hljs-string">"order"</span>
+<span class="hljs-keyword">FROM</span> dlsu.<span class="hljs-string">"EvaluationTemplates"</span>
+<span class="hljs-keyword">WHERE</span> <span class="hljs-string">"classId"</span> = <span class="hljs-number">2</span> <span class="hljs-keyword">AND</span> <span class="hljs-string">"type"</span> = <span class="hljs-string">'SCHOOL'</span>
+<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> <span class="hljs-string">"order"</span>;</code></pre>
+                    </li>
+                </ul>
+
+                <h2 id="red-run-before-fix">
+                    <a class="anchor" href="#red-run-before-fix">
+                        <svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                        </svg>
+                    </a>
+                    Red Run (Before Fix)
+                </h2>
+                <ol>
+                    <li>
+                        <p>In the UI, open Textbooks → Create/Import Textbook.</p>
+                    </li>
+                    <li>
+                        <p>Select class "How to Read Roof Blueprints" and upload the sample CSV.</p>
+                    </li>
+                    <li>
+                        <p>Complete the import and note the start timestamp (<code>import_start_time</code>).</p>
+                    </li>
+                    <li>
+                        <p>Verify the mis-assignment via SQL:</p>
+                        <pre class="hljs"><code><span class="hljs-keyword">SELECT</span> et.title,
+       et.<span class="hljs-string">"order"</span>,
+       <span class="hljs-keyword">COUNT</span>(t.id) <span class="hljs-keyword">AS</span> topics_added
+<span class="hljs-keyword">FROM</span> dlsu.<span class="hljs-string">"Topics"</span> t
+<span class="hljs-keyword">JOIN</span> dlsu.<span class="hljs-string">"EvaluationTemplates"</span> et
+  <span class="hljs-keyword">ON</span> et.id = t.<span class="hljs-string">"evaluationTemplateId"</span>
+<span class="hljs-keyword">WHERE</span> t.<span class="hljs-string">"textbookId"</span> = <span class="hljs-number">5</span>
+  <span class="hljs-keyword">AND</span> t.<span class="hljs-string">"createdAt"</span> >= <span class="hljs-built_in">TIMESTAMP</span> <span class="hljs-string">'<<import_start_time>>'</span>
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> et.title, et.<span class="hljs-string">"order"</span>
+<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> et.<span class="hljs-string">"order"</span>;</code></pre>
+                        <p>Expected red result: counts skewed to the lowest <code>order</code> periods (oldest school years).</p>
+                    </li>
+                    <li>
+                        <p>Capture the query output (screenshot or export) as evidence of the bug.</p>
+                    </li>
+                </ol>
+
+                <h2 id="cleanup-between-runs">
+                    <a class="anchor" href="#cleanup-between-runs">
+                        <svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                        </svg>
+                    </a>
+                    Cleanup Between Runs
+                </h2>
+                <ul>
+                    <li>
+                        <p>Remove the imported topics so the green run starts clean:</p>
+                        <pre class="hljs"><code><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> dlsu.<span class="hljs-string">"Topics"</span>
+<span class="hljs-keyword">WHERE</span> <span class="hljs-string">"textbookId"</span> = <span class="hljs-number">5</span>
+  <span class="hljs-keyword">AND</span> <span class="hljs-string">"createdAt"</span> >= <span class="hljs-built_in">TIMESTAMP</span> <span class="hljs-string">'<<import_start_time>>'</span>;</code></pre>
+                    </li>
+                    <li>
+                        <p>Confirm cleanup succeeded (<code>SELECT COUNT(*)</code> on the same filter returns 0).</p>
+                    </li>
+                </ul>
+
+                <h2 id="green-run-after-fix">
+                    <a class="anchor" href="#green-run-after-fix">
+                        <svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                        </svg>
+                    </a>
+                    Green Run (After Fix)
+                </h2>
+                <ol>
+                    <li>
+                        <p>Deploy/apply the code changes introducing the school-year filtering/sorting.</p>
+                    </li>
+                    <li>
+                        <p>Repeat the import using the same UI steps and CSV.</p>
+                    </li>
+                    <li>
+                        <p>Record the new <code>import_start_time</code>.</p>
+                    </li>
+                    <li>
+                        <p>Re-run the verification query:</p>
+                        <pre class="hljs"><code><span class="hljs-keyword">SELECT</span> et.title,
+       et.<span class="hljs-string">"order"</span>,
+       <span class="hljs-keyword">COUNT</span>(t.id) <span class="hljs-keyword">AS</span> topics_added
+<span class="hljs-keyword">FROM</span> dlsu.<span class="hljs-string">"Topics"</span> t
+<span class="hljs-keyword">JOIN</span> dlsu.<span class="hljs-string">"EvaluationTemplates"</span> et
+  <span class="hljs-keyword">ON</span> et.id = t.<span class="hljs-string">"evaluationTemplateId"</span>
+<span class="hljs-keyword">WHERE</span> t.<span class="hljs-string">"textbookId"</span> = <span class="hljs-number">5</span>
+  <span class="hljs-keyword">AND</span> t.<span class="hljs-string">"createdAt"</span> >= <span class="hljs-built_in">TIMESTAMP</span> <span class="hljs-string">'<<import_start_time>>'</span>
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> et.title, et.<span class="hljs-string">"order"</span>
+<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> et.<span class="hljs-string">"order"</span>;</code></pre>
+                        <p>Expected green result: counts appear first on the newest/current-year periods (highest <code>startDate</code>/<code>order</code>), with older periods untouched.</p>
+                    </li>
+                    <li>
+                        <p>Optionally confirm via UI by inspecting the textbook's period view.</p>
+                    </li>
+                    <li>
+                        <p>Clean up again if needed (same DELETE statement) or retain the data if desired.</p>
+                    </li>
+                </ol>
+
+                <h2 id="optional-detailed-check">
+                    <a class="anchor" href="#optional-detailed-check">
+                        <svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                        </svg>
+                    </a>
+                    Optional Detailed Check
+                </h2>
+                <p>If you need to inspect individual topics:</p>
+                <pre class="hljs"><code><span class="hljs-keyword">SELECT</span> t.title,
+       et.title <span class="hljs-keyword">AS</span> period_title,
+       et.<span class="hljs-string">"startDate"</span>,
+       t.<span class="hljs-string">"createdAt"</span>
+<span class="hljs-keyword">FROM</span> dlsu.<span class="hljs-string">"Topics"</span> t
+<span class="hljs-keyword">JOIN</span> dlsu.<span class="hljs-string">"EvaluationTemplates"</span> et <span class="hljs-keyword">ON</span> et.id = t.<span class="hljs-string">"evaluationTemplateId"</span>
+<span class="hljs-keyword">WHERE</span> t.<span class="hljs-string">"textbookId"</span> = <span class="hljs-number">5</span>
+  <span class="hljs-keyword">AND</span> t.<span class="hljs-string">"createdAt"</span> >= <span class="hljs-built_in">TIMESTAMP</span> <span class="hljs-string">'<<import_start_time>>'</span>
+<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> et.<span class="hljs-string">"order"</span>, t.<span class="hljs-string">"order"</span>;</code></pre>
+
+                <h2 id="deliverables">
+                    <a class="anchor" href="#deliverables">
+                        <svg class="octicon octicon-link" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                        </svg>
+                    </a>
+                    Deliverables
+                </h2>
+                <ul>
+                    <li>Red-run SQL evidence showing incorrect period assignment.</li>
+                    <li>Green-run SQL evidence showing correct/current period assignment.</li>
+                    <li>Notes on any anomalies or additional cleanup performed.</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Add active state to TOC based on scroll position
+        const tocLinks = document.querySelectorAll('.table-of-contents a');
+        const sections = document.querySelectorAll('h1, h2, h3');
+
+        function updateActiveLink() {
+            const scrollPosition = window.scrollY + 100;
+
+            sections.forEach((section, index) => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    tocLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveLink);
+        updateActiveLink(); // Initial check
+
+        // Smooth scroll behavior for TOC links
+        tocLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

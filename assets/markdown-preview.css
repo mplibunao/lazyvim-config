@@ -473,7 +473,6 @@ pre {
   position: relative !important;
   margin-bottom: 16px !important;
   padding: 16px !important;
-  padding-top: 36px !important;  /* Extra space for copy button */
   overflow: auto !important;
   font-size: 85% !important;
   line-height: 1.45 !important;
@@ -491,82 +490,6 @@ pre code {
   color: var(--cat-text) !important;
 }
 
-/* Copy button for code blocks */
-pre .copy-button,
-pre button.copy,
-.highlight-copy-btn,
-.code-copy-button {
-  position: absolute !important;
-  top: 8px !important;
-  right: 8px !important;
-  padding: 4px 10px !important;
-  background: var(--cat-surface0) !important;
-  color: var(--cat-subtext0) !important;
-  border: 1px solid var(--cat-surface1) !important;
-  border-radius: 4px !important;
-  font-size: 12px !important;
-  font-family: inherit !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
-  z-index: 10 !important;
-  opacity: 0.3 !important;
-}
-
-/* Show copy button on hover */
-pre:hover .copy-button,
-pre:hover button.copy,
-pre:hover .highlight-copy-btn,
-pre:hover .code-copy-button {
-  opacity: 1 !important;
-}
-
-/* Copy button hover state */
-pre .copy-button:hover,
-pre button.copy:hover,
-.highlight-copy-btn:hover,
-.code-copy-button:hover {
-  background: var(--cat-surface1) !important;
-  color: var(--cat-blue) !important;
-  border-color: var(--cat-blue) !important;
-  transform: scale(1.05) !important;
-}
-
-/* Copy button active/clicked state */
-pre .copy-button:active,
-pre button.copy:active,
-.highlight-copy-btn:active,
-.code-copy-button:active,
-pre .copy-button.copied,
-pre button.copy.copied,
-.highlight-copy-btn.copied,
-.code-copy-button.copied {
-  background: var(--cat-green) !important;
-  color: var(--cat-base) !important;
-  border-color: var(--cat-green) !important;
-}
-
-/* Success message after copying */
-pre .copy-button.copied::before,
-pre button.copy.copied::before,
-.highlight-copy-btn.copied::before,
-.code-copy-button.copied::before {
-  content: '✓ ' !important;
-}
-
-/* Language indicator for code blocks */
-pre::before,
-.highlight pre::before {
-  content: attr(data-language) !important;
-  position: absolute !important;
-  top: 8px !important;
-  left: 12px !important;
-  font-size: 11px !important;
-  color: var(--cat-overlay1) !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  font-weight: 600 !important;
-  opacity: 0.6 !important;
-}
 
 /* Syntax Highlighting - Catppuccin */
 .hljs-keyword,
