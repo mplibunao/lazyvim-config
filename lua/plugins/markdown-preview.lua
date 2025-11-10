@@ -45,6 +45,7 @@ return {
 
       -- Enable code block copy functionality (if supported)
       vim.g.mkdp_combine_preview = 1
+      vim.g.mkdp_combine_preview_auto_refresh = 0 -- Avoid auto-opening preview on BufEnter
       vim.g.mkdp_echo_preview_url = 0
 
       -- Additional markdown-preview settings

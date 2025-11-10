@@ -172,3 +172,7 @@ t/T - before the char
 
 - `gc` comment
 - `gcc`
+
+## Terminal
+
+<ctrl>/

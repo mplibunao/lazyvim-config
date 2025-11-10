@@ -20,3 +20,10 @@ vim.keymap.set("n", "<leader>yp", copy_current_file_path, {
 vim.api.nvim_create_user_command("CopyCurrentFilePath", copy_current_file_path, {
   desc = "Copy current buffer's absolute path",
 })
+
+for i = 1, 9 do
+  vim.keymap.set("n", ("<leader>%d"):format(i), string.format("%d<C-w>w", i), {
+    desc = "which_key_ignore",
+    silent = true,
+  })
+end

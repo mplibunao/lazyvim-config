@@ -101,6 +101,8 @@ nav.table-of-contents,
   overflow-x: hidden !important;
   z-index: 1000 !important;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
+  --toc-progress: 0; /* updated via JS */
+  --toc-highlight: var(--cat-blue);
 }
 
 /* TOC Title */
@@ -134,6 +136,23 @@ nav.table-of-contents,
 
 .table-of-contents::-webkit-scrollbar-thumb:hover {
   background: var(--cat-overlay0) !important;
+}
+
+/* Vertical progress indicator that grows with page scroll */
+.table-of-contents::after {
+  content: '' !important;
+  position: absolute !important;
+  left: 8px !important;
+  top: 72px !important;
+  width: 2px !important;
+  height: calc(100% - 96px) !important;
+  background: linear-gradient(180deg, rgba(137, 180, 250, 0.7) 0%, rgba(137, 180, 250, 0.1) 100%) !important;
+  transform-origin: top !important;
+  transform: scaleY(var(--toc-progress)) !important;
+  transition: transform 0.25s ease-out !important;
+  border-radius: 999px !important;
+  opacity: 0.9 !important;
+  pointer-events: none !important;
 }
 
 /* TOC List Styling */
@@ -176,6 +195,20 @@ nav.table-of-contents,
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
+  --toc-dot-size: 6px;
+}
+
+.table-of-contents a::after {
+  content: '' !important;
+  position: absolute !important;
+  left: -16px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: var(--toc-dot-size) !important;
+  height: var(--toc-dot-size) !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  transition: background 0.2s ease-out, transform 0.2s ease-out !important;
 }
 
 .table-of-contents a:hover {
@@ -185,12 +218,14 @@ nav.table-of-contents,
 }
 
 .table-of-contents a:focus,
-.table-of-contents a.active {
+.table-of-contents a.active,
+.table-of-contents a.is-active {
   color: var(--cat-blue) !important;
   background-color: rgba(137, 180, 250, 0.15) !important;
   font-weight: 500 !important;
 }
 
+.table-of-contents a.is-active::before,
 .table-of-contents a.active::before {
   content: '' !important;
   position: absolute !important;
@@ -201,6 +236,27 @@ nav.table-of-contents,
   height: 60% !important;
   background: var(--cat-blue) !important;
   border-radius: 0 2px 2px 0 !important;
+}
+
+.table-of-contents a.is-active::after {
+  background: var(--cat-blue) !important;
+  transform: translateY(-50%) scale(1.3) !important;
+}
+
+.table-of-contents a.is-past {
+  color: var(--cat-overlay2) !important;
+}
+
+.table-of-contents a.is-past::after {
+  background: rgba(137, 180, 250, 0.4) !important;
+}
+
+.table-of-contents a.is-upcoming::after {
+  background: rgba(137, 180, 250, 0.1) !important;
+}
+
+.table-of-contents a.is-upcoming {
+  opacity: 0.85 !important;
 }
 
 /* Nested TOC link styles */

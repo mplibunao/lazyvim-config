@@ -3,6 +3,11 @@ return {
   "snacks.nvim",
   opts = {
     picker = {
+      sources = {
+        files = {
+          hidden = true,
+        },
+      },
       actions = {
         -- Custom action to copy the absolute path of the selected file
         copy_path = function(p, item)
