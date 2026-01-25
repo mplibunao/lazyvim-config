@@ -176,3 +176,7 @@ t/T - before the char
 ## Terminal
 
 <ctrl>/
+
+# Git
+
+- **`<leader>ghB`** - Blame buffer (split with full file blame, scroll-synced)
