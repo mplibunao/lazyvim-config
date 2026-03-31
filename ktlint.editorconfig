@@ -1,0 +1,4 @@
+[*.{kt,kts}]
+# Disable noisy rules that conflict with project's existing style.
+# Add more rules as needed: ktlint_standard_<rule-name> = disabled
+ktlint_standard_indent = disabled
