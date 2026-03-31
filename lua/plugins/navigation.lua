@@ -1,3 +1,16 @@
+-- Single source of truth for mini.files open targets
+local function open_current_file()
+  require("mini.files").open(vim.api.nvim_buf_get_name(0), true)
+end
+
+local function open_cwd()
+  require("mini.files").open(vim.uv.cwd(), true)
+end
+
+local function open_root()
+  require("mini.files").open(LazyVim.root(), true)
+end
+
 return {
   -- Disable Snacks explorer and add dashboard session selector
   {
@@ -33,44 +46,16 @@ return {
         callback = function()
           pcall(vim.keymap.del, "n", "<leader>fe")
           pcall(vim.keymap.del, "n", "<leader>fE")
-          vim.keymap.set("n", "<leader>e", function()
-            require("mini.files").open(vim.api.nvim_buf_get_name(0), true)
-          end, { desc = "Open mini.files (directory of current file)" })
-          vim.keymap.set("n", "<leader>E", function()
-            require("mini.files").open(vim.uv.cwd(), true)
-          end, { desc = "Open mini.files (cwd)" })
+          vim.keymap.set("n", "<leader>e", open_current_file, { desc = "Open mini.files (directory of current file)" })
+          vim.keymap.set("n", "<leader>E", open_cwd, { desc = "Open mini.files (cwd)" })
         end,
       })
     end,
     keys = {
-      {
-        "<leader>e",
-        function()
-          require("mini.files").open(vim.api.nvim_buf_get_name(0), true)
-        end,
-        desc = "Open mini.files (directory of current file)",
-      },
-      {
-        "<leader>E",
-        function()
-          require("mini.files").open(vim.uv.cwd(), true)
-        end,
-        desc = "Open mini.files (cwd)",
-      },
-      {
-        "<leader>fm",
-        function()
-          require("mini.files").open(LazyVim.root(), true)
-        end,
-        desc = "Open mini.files (root)",
-      },
-      {
-        "<leader>fM",
-        function()
-          require("mini.files").open(vim.uv.cwd(), true)
-        end,
-        desc = "Open mini.files (cwd)",
-      },
+      { "<leader>e", open_current_file, desc = "Open mini.files (directory of current file)" },
+      { "<leader>E", open_cwd, desc = "Open mini.files (cwd)" },
+      { "<leader>fm", open_root, desc = "Open mini.files (root)" },
+      { "<leader>fM", open_cwd, desc = "Open mini.files (cwd)" },
     },
     opts = {
       options = {
