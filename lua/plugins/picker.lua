@@ -37,7 +37,7 @@ local function open_files_picker(dir, missing_msg, unavailable_msg)
       cwd = dir,
       hidden = true,
       actions = { copy_path = make_copy_path_action(dir) },
-      win = { input = { keys = { ["yp"] = { "copy_path", mode = { "n", "i" }, desc = "Copy absolute path" } } } },
+      win = { input = { keys = { ["yp"] = { "copy_path", mode = { "n" }, desc = "Copy absolute path" } } } },
     })
   else
     vim.notify(unavailable_msg, vim.log.levels.ERROR)
@@ -77,7 +77,7 @@ return {
         win = {
           input = {
             keys = {
-              ["yp"] = { "copy_path", mode = { "n", "i" }, desc = "Copy absolute path" },
+              ["yp"] = { "copy_path", mode = { "n" }, desc = "Copy absolute path" },
             },
           },
         },
