@@ -169,6 +169,24 @@ When modifying this configuration:
 3. Restart Neovim or run `:source %` for config changes
 4. Check `:Lazy` UI for any load errors
 
+### Verifying Config with tmux
+
+Use tmux to launch Neovim and verify config changes programmatically. This is the only reliable way for agents to test Neovim behavior.
+
+```bash
+# Launch nvim in a detached tmux session (use NVIM_APPNAME to target this config)
+tmux new-session -d -s nvim-check -x 120 -y 40 \
+  "NVIM_APPNAME=nvim-lazy nvim --headless -c '<lua commands>' 2>&1 | tee /tmp/nvim-check.log"
+
+# Read what rendered
+tmux capture-pane -p -t nvim-check
+
+# Clean up
+tmux kill-session -t nvim-check
+```
+
+Use `vim.defer_fn` with a delay (e.g., 3000ms) to let plugins load before checking values.
+
 ## Important Settings
 
 ### lazy.nvim Configuration
