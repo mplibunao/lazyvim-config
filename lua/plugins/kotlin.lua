@@ -1,11 +1,15 @@
--- Disable auto-formatting for Kotlin files on save.
--- The project doesn't have consistent formatting, so auto-format causes
--- large diffs on lines you didn't touch.
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "kotlin",
-  callback = function()
-    vim.b.autoformat = false
-  end,
-})
+-- Point ktlint at a custom editorconfig to globally disable noisy rules.
+-- Edit ~/.config/nvim-lazy/ktlint.editorconfig to add/remove rules.
+local ktlint_editorconfig = vim.fn.stdpath("config") .. "/ktlint.editorconfig"
 
-return {}
+return {
+  {
+    "mfussenegger/nvim-lint",
+    opts = function(_, opts)
+      local linters = require("lint").linters
+      linters.ktlint = linters.ktlint or {}
+      linters.ktlint.args = linters.ktlint.args or {}
+      table.insert(linters.ktlint.args, "--editorconfig=" .. ktlint_editorconfig)
+    end,
+  },
+}

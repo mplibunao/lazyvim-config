@@ -123,17 +123,9 @@ return {
 
 ### Extended Plugins
 
-- `mini.files` - Custom keymaps added (<leader>e, <leader>E, <leader>fm)
-
-### Plugin Examples
-
-The `lua/plugins/example.lua` file (currently disabled) contains comprehensive examples for:
-
-- Adding new plugins
-- Configuring colorschemes
-- Overriding plugin options
-- Setting up LSP servers
-- Configuring Treesitter parsers
+- `mini.files` - Custom keymaps added (<leader>e, <leader>E, <leader>fm, <leader>fM)
+- `blink.cmp` - Tab/Shift-Tab for completion accept and snippet navigation
+- `snacks.nvim` - Explorer disabled, AI picker commands (:WizyPrompts, :ClaudeToolkit)
 
 ## Code Style
 
@@ -227,7 +219,7 @@ LazyVim automatically installs most dependencies, but ensure you have:
 
 1. Browse available LazyVim extras: `:LazyExtras`
 2. Check LazyVim documentation: <https://lazyvim.github.io/>
-3. Look at `lua/plugins/example.lua` for configuration patterns
+3. Look at existing files in `lua/plugins/` for configuration patterns
 4. Keep customizations modular in separate files under `lua/plugins/`
 
 ## References

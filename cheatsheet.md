@@ -23,7 +23,8 @@ paste from registry = shift + =
 
 # Autocomplete
 
-ctrl + y = accept auto-complete
+tab = accept completion (menu open) → snippet forward → normal tab
+shift + tab = snippet backward
 
 # Sneak
 
