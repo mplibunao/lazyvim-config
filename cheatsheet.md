@@ -176,7 +176,10 @@ t/T - before the char
 
 ## Terminal
 
-<ctrl>/
+- **`<leader>ft`** - Terminal (root dir)
+- **`<leader>fT`** - Terminal (cwd)
+- **`<C-/>`** - Toggle terminal
+  - **Tip:** open with `<leader>ft` first, then `<C-/>` toggles cleanly. Pressing `<C-/>` cold can open duplicate terminals instead of toggling.
 
 # Git
 
