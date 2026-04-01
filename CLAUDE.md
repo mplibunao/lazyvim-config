@@ -42,6 +42,7 @@ LazyVim configuration repo. Plugins are managed by lazy.nvim, extras are declare
 | Go tooling setup | [docs/go.md](docs/go.md) |
 | Kotlin tooling and formatting | [docs/kotlin.md](docs/kotlin.md) |
 | Keymap and usage reference | [cheatsheet.md](cheatsheet.md) |
+| Visual keybinding cheatsheet | [~/.agent/diagrams/nvim-keybindings.html](~/.agent/diagrams/nvim-keybindings.html) |
 | Documentation catalog and placement rules | [docs/index.md](docs/index.md) |
 | Past implementation decisions | [exec-plans/](exec-plans/) |
 
