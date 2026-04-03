@@ -2,7 +2,7 @@
 
 ## Auto-format
 
-Disabled on save via `lua/config/autocmds.lua` (sets `vim.b.autoformat = false` for Kotlin buffers). LazyVim's Kotlin extra uses `ktlint` as the formatter (via conform.nvim), but the project doesn't have consistent formatting — auto-format causes noisy diffs on untouched lines.
+Disabled on save via `lua/plugins/kotlin.lua` (sets `vim.b.autoformat = false` for Kotlin buffers). LazyVim's Kotlin extra uses `ktlint` as the formatter (via conform.nvim), but the project doesn't have consistent formatting — auto-format causes noisy diffs on untouched lines.
 
 Manual format is still available with `<leader>cf`.
 

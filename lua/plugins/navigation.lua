@@ -18,11 +18,25 @@ return {
     opts = function(_, opts)
       opts.explorer = { enabled = false }
 
-      table.insert(
-        opts.dashboard.preset.keys,
-        7,
-        { icon = "S", key = "S", desc = "Select Session", action = require("persistence").select }
-      )
+      -- Insert session key only if S is not already present
+      opts.dashboard = opts.dashboard or {}
+      opts.dashboard.preset = opts.dashboard.preset or {}
+      opts.dashboard.preset.keys = opts.dashboard.preset.keys or {}
+      local has_session_key = false
+      for _, item in ipairs(opts.dashboard.preset.keys) do
+        if type(item) == "table" and item.key == "S" then
+          has_session_key = true
+          break
+        end
+      end
+      if not has_session_key then
+        local pos = math.min(7, #opts.dashboard.preset.keys + 1)
+        table.insert(
+          opts.dashboard.preset.keys,
+          pos,
+          { icon = "S", key = "S", desc = "Select Session", action = require("persistence").select }
+        )
+      end
 
       return opts
     end,

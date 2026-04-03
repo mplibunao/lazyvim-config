@@ -22,9 +22,9 @@ LazyVim extras are declared in `lazyvim.json` — that file is the canonical lis
 |---|---|
 | `lua/config/lazy.lua` | lazy.nvim bootstrap, plugin graph wiring, defaults, performance settings |
 | `lua/config/options.lua` | Editor-wide options, root detection patterns |
-| `lua/config/autocmds.lua` | Event-driven behavior (e.g., filetype-specific format overrides) |
+| `lua/config/autocmds.lua` | Cross-cutting event-driven behavior (global autocmds only) |
 | `lua/config/keymaps.lua` | Global keymaps and user commands (`<leader>yp`, `:CopyCurrentFilePath`, etc.) |
-| `lua/plugins/*.lua` | Plugin-specific overrides and feature modules |
+| `lua/plugins/*.lua` | Plugin-specific overrides and feature modules (may include feature-local commands and autocmds in `init` when tightly coupled to the plugin, e.g., `picker.lua` commands, `kotlin.lua` autoformat autocmd) |
 | `lazyvim.json` | Enabled LazyVim extras |
 | `stylua.toml` | Lua formatting rules |
 | `ktlint.editorconfig` | Kotlin formatting rules |
@@ -40,6 +40,6 @@ These are the main areas where this config diverges from stock LazyVim:
 | Completion | `lua/plugins/completion.lua` — Tab/Shift-Tab for blink.cmp |
 | Disabled plugins | `lua/plugins/disabled.lua` — bufferline.nvim |
 | Go support | `lua/plugins/go.lua` + `docs/go.md` |
-| Kotlin support | `lua/plugins/kotlin.lua` + `lua/config/autocmds.lua` + `docs/kotlin.md` |
+| Kotlin support | `lua/plugins/kotlin.lua` + `docs/kotlin.md` |
 | Markdown preview | `lua/plugins/markdown-preview.lua` + `assets/` |
 | Indentation | `lua/plugins/guess-indent.lua` |

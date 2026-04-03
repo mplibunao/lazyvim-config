@@ -1,6 +1,27 @@
--- Point ktlint at a custom editorconfig to globally disable noisy rules.
--- Edit ~/.config/nvim-lazy/ktlint.editorconfig to add/remove rules.
+-- Kotlin development: formatting policy, linting, and LSP tuning.
+-- Auto-format on save is disabled because the project lacks consistent
+-- formatting — auto-format causes large diffs on lines you didn't touch.
 local ktlint_editorconfig = vim.fn.stdpath("config") .. "/ktlint.editorconfig"
+
+local function disable_kotlin_autoformat()
+  local augroup = vim.api.nvim_create_augroup("custom_kotlin_format", { clear = true })
+  vim.api.nvim_create_autocmd("FileType", {
+    group = augroup,
+    pattern = "kotlin",
+    callback = function(args)
+      vim.b[args.buf].autoformat = false
+    end,
+  })
+  -- Backfill: apply to Kotlin buffers already open before this init ran
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].filetype == "kotlin" then
+      vim.b[buf].autoformat = false
+    end
+  end
+end
+
+-- Run immediately when lazy.nvim loads this spec file (during setup, before VeryLazy)
+disable_kotlin_autoformat()
 
 return {
   {
