@@ -44,6 +44,7 @@ LazyVim configuration repo. Plugins are managed by lazy.nvim, extras are declare
 | Keymap and usage reference | [cheatsheet.md](cheatsheet.md) |
 | Visual keybinding cheatsheet | [~/.agent/diagrams/nvim-keybindings.html](~/.agent/diagrams/nvim-keybindings.html) |
 | Documentation catalog and placement rules | [docs/index.md](docs/index.md) |
+| Plugin update validation and test fixtures | [docs/workflows.md](docs/workflows.md), [test-fixtures/](test-fixtures/) |
 | Past implementation decisions | [exec-plans/](exec-plans/) |
 
 ## Plugin patterns
