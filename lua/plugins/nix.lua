@@ -13,6 +13,50 @@ local function darwin_expr(suffix)
   return ('(builtins.getFlake "%s").darwinConfigurations."%s"%s'):format(dotfiles_flake, darwin_host, suffix)
 end
 
+-- nixd's completion settings point at an absolute flake path. On a host where
+-- nixd is on PATH but this flake is absent (a fresh or non-Nix machine), handing
+-- those exprs to nixd makes it throw on every evaluation. Gate them on the flake
+-- actually existing, so degradation stays clean: nixd still attaches, only
+-- without options/package completion, instead of erroring repeatedly. See
+-- docs/tooling-policy.md (graceful degradation).
+local has_dotfiles_flake = vim.fn.isdirectory(dotfiles_flake) == 1
+
+-- nixd is provided by Nix on PATH; never let Mason fetch a duplicate.
+local nixd_server = { mason = false }
+if has_dotfiles_flake then
+  nixd_server.settings = {
+    nixd = {
+      -- Package completion, flake-pinned to the same nixpkgs the system
+      -- evaluates: nix-darwin exposes `.pkgs` on the config, mirroring the
+      -- `.options` the home-manager expr uses.
+      -- Avoids a <nixpkgs> NIX_PATH lookup, which is unreliable under
+      -- Determinate's pure-flake mode and may resolve to a different nixpkgs.
+      nixpkgs = {
+        expr = darwin_expr(".pkgs"),
+      },
+      -- Module-options completion. The ABSOLUTE flake path is required:
+      -- `./.` resolves to nixd's cwd, which is rarely the flake dir.
+      options = {
+        -- nix-darwin top-level options (system.defaults.*, homebrew.*, ...).
+        darwin = {
+          expr = darwin_expr(".options"),
+        },
+        -- home-manager options, where MP mostly edits. HM is integrated as
+        -- a nix-darwin module here (no standalone homeConfigurations), so
+        -- its options nest under the darwin config. The attrsOf-submodule
+        -- element type is extracted with `users.type.getSubOptions []`
+        -- (nixd's documented NixOS-integrated pattern, adapted nixos->darwin).
+        -- Keep this suffix aligned with the home-manager option-tree shape.
+        ["home-manager"] = {
+          expr = darwin_expr(".options.home-manager.users.type.getSubOptions []"),
+        },
+      },
+      -- Formatting intentionally unset: conform.nvim owns format-on-save
+      -- with nixfmt. Setting formatting.command here would double-format.
+    },
+  }
+end
+
 return {
   {
     -- Add deadnix without dropping statix (wired by the lang.nix extra).
@@ -35,41 +79,7 @@ return {
         -- The extra enables nil_ls, but its binary (`nil`) was removed from Home
         -- Manager in favor of nixd. Disabling it avoids a failed attach attempt.
         nil_ls = { enabled = false },
-        nixd = {
-          -- nixd is provided by Nix on PATH; never let Mason fetch a duplicate.
-          mason = false,
-          settings = {
-            nixd = {
-              -- Package completion, flake-pinned to the same nixpkgs the system
-              -- evaluates: nix-darwin exposes `.pkgs` on the config, mirroring the
-              -- `.options` the home-manager expr uses.
-              -- Avoids a <nixpkgs> NIX_PATH lookup, which is unreliable under
-              -- Determinate's pure-flake mode and may resolve to a different nixpkgs.
-              nixpkgs = {
-                expr = darwin_expr(".pkgs"),
-              },
-              -- Module-options completion. The ABSOLUTE flake path is required:
-              -- `./.` resolves to nixd's cwd, which is rarely the flake dir.
-              options = {
-                -- nix-darwin top-level options (system.defaults.*, homebrew.*, ...).
-                darwin = {
-                  expr = darwin_expr(".options"),
-                },
-                -- home-manager options, where MP mostly edits. HM is integrated as
-                -- a nix-darwin module here (no standalone homeConfigurations), so
-                -- its options nest under the darwin config. The attrsOf-submodule
-                -- element type is extracted with `users.type.getSubOptions []`
-                -- (nixd's documented NixOS-integrated pattern, adapted nixos->darwin).
-                -- Keep this suffix aligned with the home-manager option-tree shape.
-                ["home-manager"] = {
-                  expr = darwin_expr(".options.home-manager.users.type.getSubOptions []"),
-                },
-              },
-              -- Formatting intentionally unset: conform.nvim owns format-on-save
-              -- with nixfmt. Setting formatting.command here would double-format.
-            },
-          },
-        },
+        nixd = nixd_server,
       },
     },
   },
