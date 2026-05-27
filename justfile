@@ -12,9 +12,9 @@
 #   just test    — Go tooling tests (scripts/)
 #   just vet     — Go tooling vet (scripts/)
 #
-# All tools come from Nix Home Manager (Item 0), never Mason.
+# Harness gate tools come from Nix Home Manager (Item 0); language-server ownership follows
+# docs/design-docs/tooling-policy.md, where Mason still owns selected language helpers.
 # If selene, stylua, vale, or just are absent, activate your Nix profile first.
-# See docs/design-docs/tooling-policy.md.
 
 # Full gate: format → lint → docs → guard → prose → Go tests/vet → headless nvim. Fail-fast.
 check: fmt lint docs guard prose test vet nvim

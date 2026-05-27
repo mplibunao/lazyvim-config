@@ -76,3 +76,12 @@ tradeoff while it's the only multi-step shell block in the file.
 A `commit-msg` hook should enforce conventional-commit shape and run Vale on commit messages, but this repo does not yet have a committed message-format convention or a `.vale.ini` `COMMIT_EDITMSG` mapping. Adding a hook now would create policy before the repo has documented the policy.
 
 **Trigger:** When this repo records its commit-message convention, add `.githooks/commit-msg`, wire the needed Vale `COMMIT_EDITMSG` config, and add valid and invalid temp-message tests to the hook verification path.
+
+## TD-006: Upstream doc-garden audit table newline rendering
+
+**Status:** Deferred; upstream shared-tool issue discovered during Item 9 verification.
+**Deferred from:** `exec-plans/active/harness-engineering-adoption-2026-05-27.md`, Item 9
+
+The generated Doc Garden Markdown audit table can break rows when a Vale token contains a newline, including a token spanning two wrapped words in a current-state doc. The JSON sidecar remains valid, and generated audit Markdown is not hand-edited in this repo. The durable fix belongs in the shared `claude-toolkit/packages/doc-garden` renderer, where table cells should sanitize embedded newlines before writing `docs/generated/doc-garden/audit-*.md`. The owning upstream tracker item is `claude-toolkit/docs/exec-plans/tech-debt-tracker.md` TD-058.
+
+**Trigger:** When updating the shared doc-garden package, sanitize multiline table cells in the renderer and rerun a consumer audit that includes a multiline Vale token.
