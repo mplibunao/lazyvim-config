@@ -25,20 +25,20 @@ instead:
 2. `vim.env.HOME` when the code needs to compose or compare the home directory
    separately from the rest of the path.
 
-A genuinely machine-specific path that cannot be expressed relative to `~`
+A machine-specific path that cannot be expressed relative to `~`
 should go in one sanctioned module, `lua/config/paths.lua`, so the exception has
 one owner. Do not create that module until such a path exists.
 
 ## Alternatives considered
 
-**Keep `/Users/mp/...` literals** — simple today, but breaks as soon as this
+**Keep `/Users/mp/...` literals.** Simple today, but breaks as soon as this
 config is reused under a different account name or on a Linux machine. Rejected.
 
-**Use environment variables for every external checkout** — flexible, but it
+**Use environment variables for every external checkout.** Flexible, but it
 turns common local defaults into setup burden. `vim.fn.expand("~/...")` keeps
 the current behavior while removing the brittle prefix. Rejected as the default.
 
-**Create `lua/config/paths.lua` immediately** — useful for non-home-relative
+**Create `lua/config/paths.lua` immediately.** Useful for non-home-relative
 machine-specific values, but unnecessary indirection for the current paths. The
 current values are all under `$HOME`, so `~` expansion is enough. Deferred until
 a non-`~` path appears.

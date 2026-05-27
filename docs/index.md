@@ -27,7 +27,7 @@ Maps harness-engineering doc concepts to where they live in this repo:
 - If it records a **single architectural decision** with context and alternatives, it belongs in `docs/decisions/`.
 - If it just restates what a code file already says, **delete it**: the code is the source of truth.
 - Every hand-authored doc must be linked from this index or from a directory-level `index.md`.
-  Artifact directories (`docs/generated/`, `docs/reviews/`) are excluded — see taxonomy above.
+  Artifact directories (`docs/generated/`, `docs/reviews/`) are excluded; see the taxonomy above.
 
 ## Docs
 

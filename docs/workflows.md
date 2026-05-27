@@ -41,7 +41,7 @@ Use `vim.defer_fn` with a delay (e.g., 3000ms) to let plugins load before checki
 | `lua/config/*.lua` or `lua/plugins/*.lua` (existing plugins) | `just fmt` + `just nvim` |
 | New/removed plugins or extras (any file) | `just nvim` + `:Lazy sync` + lockfile review |
 | `lazyvim.json` changes | `just nvim` + `:Lazy sync` + lockfile review |
-| Markdown docs or routing files only (e.g. `docs/**`, `CLAUDE.md`, `ARCHITECTURE.md`, `exec-plans/**`) | `just docs` for docs coverage and local links; manually spot-check claim accuracy against source files |
+| Any tracked hand-authored Markdown | `just docs` + `just prose`; the justfile owns exact prose-scope exclusions. Manually spot-check claim accuracy against source files. |
 | Interactive UI / plugin behavior | tmux-backed visual validation |
 
 ## Plugin update validation

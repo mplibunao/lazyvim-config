@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 This file is a **router, not a manual**. It points to where information lives.
-Do not add reference material here — if it would push this file past ~100 lines, it belongs in `docs/`.
+Do not add reference material here; if it would push this file past ~100 lines, it belongs in `docs/`.
 
 `AGENTS.md` is a symlink to this file. Edit here, not there.
 
@@ -13,7 +13,7 @@ LazyVim configuration repo. Plugins are managed by lazy.nvim, extras are declare
 
 - **Code is the source of truth.** Do not restate behavior that is visible by reading the relevant Lua file or config. Point to the file instead.
 - **One plugin per concern.** Each file in `lua/plugins/` should return a table of plugin specs for a coherent feature area.
-- **Format with `stylua`.** Settings are in `stylua.toml` — do not duplicate them here.
+- **Format with `stylua`.** Settings are in `stylua.toml`. Do not duplicate them here.
 - **No manual AGENTS.md edits.** It is a symlink to `CLAUDE.md`.
 - **Topic docs go in `docs/`.** Per-area design and policy go in `docs/design-docs/`; architecture notes go in `ARCHITECTURE.md`; single decisions go in `docs/decisions/`.
 - **Implementation plans go in `exec-plans/`.** Use `exec-plans/active/` for in-progress plans, `exec-plans/completed/` for finished ones. Deferred work items go in `exec-plans/tech-debt-tracker.md`. Architectural decisions (ADRs) go in `docs/decisions/`.
@@ -51,13 +51,13 @@ LazyVim configuration repo. Plugins are managed by lazy.nvim, extras are declare
 ## Plugin patterns
 
 Adding, overriding, and disabling plugins all follow standard LazyVim conventions.
-See existing files in `lua/plugins/` for working examples — they are the best reference.
+See existing files in `lua/plugins/` for working examples; they are the best reference.
 
 To disable a LazyVim plugin, add it to `lua/plugins/disabled.lua` with `enabled = false`.
 
 ## References
 
-- <https://www.lazyvim.org/plugins> — LazyVim plugins
-- <https://www.lazyvim.org/keymaps> — LazyVim keymaps
+- LazyVim plugins: <https://www.lazyvim.org/plugins>
+- LazyVim keymaps: <https://www.lazyvim.org/keymaps>
 
 Do not read the files in references unless told explicitly to.
