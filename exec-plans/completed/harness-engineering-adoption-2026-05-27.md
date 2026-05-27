@@ -1,5 +1,7 @@
 # Harness-Engineering Adoption for nvim-lazy: Plan
 
+**Status: Complete.** All items implemented. Moved to `exec-plans/completed/` 2026-05-28.
+
 > Plan location note: rp-deep-plan defaults to `docs/plans/`, but this repo's CLAUDE.md makes `exec-plans/active/` the home for in-progress plans (matching `exec-plans/completed/nix-neovim-tooling-2026-05-27.md`, `plugin-update-infra.md`). Repo convention wins.
 
 ## Goal
@@ -194,7 +196,7 @@ Add a **full mechanical-enforcement harness**, sharing one runner across a local
 **Goal:** Add cheap agent-legibility docs and re-point the workflow docs at the new gate.
 **What it does:** `docs/references/harness-engineering.md`, a local copy of the article (from `claude-toolkit/docs/references/harness-engineering.md`) with the "external reference" framing (this is the file the original task pointed at, which does not yet exist). `docs/workflows.md` leads with `just check` as the default validation command and demotes the inline tmux/headless snippets to a manual/debugging deep-dive section (the plugin-update smoke checklist stays). `CLAUDE.md` gets router links only (core-beliefs, `just check` workflow, tracker, design-docs/, decisions/) and must not grow into a manual. Update this active plan with resolved decisions. All new docs must pass `just docs` plus `just prose`.
 **Done when:** the article copy exists and is linked; `docs/workflows.md` leads with `just check`; `CLAUDE.md` references the new surfaces without expanding into reference content; `just check` passes with all new docs present.
-**Key files:** `docs/references/harness-engineering.md`, `docs/workflows.md`, `docs/index.md`, `CLAUDE.md`, `exec-plans/active/harness-engineering-adoption-2026-05-27.md`
+**Key files:** `docs/references/harness-engineering.md`, `docs/workflows.md`, `docs/index.md`, `CLAUDE.md`, `exec-plans/completed/harness-engineering-adoption-2026-05-27.md`
 **Dependencies:** Items 3, 4, 7, 9, 10 (new docs/dirs must satisfy the validator and be indexed; finalizes the CI decision).
 **Size:** Medium.
 
