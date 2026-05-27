@@ -84,8 +84,8 @@ return {
       },
     },
     init = function()
-      vim.g.wizy_prompts_dir = vim.g.wizy_prompts_dir or "/Users/mp/Projects/wizy/wizy-prompts"
-      vim.g.claude_toolkit_dir = vim.g.claude_toolkit_dir or "/Users/mp/Projects/personal/ai/claude-toolkit"
+      vim.g.wizy_prompts_dir = vim.g.wizy_prompts_dir or vim.fn.expand("~/Projects/wizy/wizy-prompts")
+      vim.g.claude_toolkit_dir = vim.g.claude_toolkit_dir or vim.fn.expand("~/Projects/personal/ai/claude-toolkit")
 
       vim.api.nvim_create_user_command("WizyPrompts", function()
         open_files_picker(vim.g.wizy_prompts_dir, "Wizy prompts directory not found: ", "Snacks picker not available")

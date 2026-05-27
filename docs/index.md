@@ -36,7 +36,7 @@ Maps harness-engineering doc concepts to where they live in this repo:
 | [`../ARCHITECTURE.md`](../ARCHITECTURE.md) | Load chain, file ownership, customization clusters |
 | [`workflows.md`](workflows.md) | Agent validation conventions (tmux, headless checks) |
 | [`design-docs/`](design-docs/index.md) | Per-area design and policy (tooling, core beliefs, language docs) |
-| [`decisions/`](decisions/index.md) | Architecture Decision Records |
+| [`decisions/`](decisions/index.md) | Architecture Decision Records, including the home-path literal policy |
 
 ## Related resources
 

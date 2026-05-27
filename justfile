@@ -1,9 +1,11 @@
 # nvim-lazy harness runner.
 #
 # Usage:
-#   just check   — full gate, fail-fast (fmt → lint → test → vet → nvim)
+#   just check   — full gate, fail-fast (fmt → lint → docs → guard → test → vet → nvim)
 #   just fmt     — format check only (stylua + gofmt)
 #   just lint    — Selene Lua lint only
+#   just docs    — deterministic docs coverage and local-link validation
+#   just guard   — ast-grep structural guardrails
 #   just nvim    — headless Neovim: config load + fixture filetypes + Nix invariants
 #   just test    — Go tooling tests (scripts/)
 #   just vet     — Go tooling vet (scripts/)
@@ -12,11 +14,10 @@
 # If selene, stylua, or just are absent, activate your Nix profile first.
 # See docs/design-docs/tooling-policy.md.
 #
-# Recipes for docs (Item 4), guard (Item 5), and prose (Item 7) are
-# reserved stubs; they land in later harness items.
+# Prose (Item 7) lands in a later harness item.
 
-# Full gate: format → lint → Go tests/vet → headless nvim. Fail-fast.
-check: fmt lint test vet nvim
+# Full gate: format → lint → docs → guard → Go tests/vet → headless nvim. Fail-fast.
+check: fmt lint docs guard test vet nvim
 
 # Format check: stylua (Lua) and gofmt (Go tooling scripts). Does not modify files.
 # To fix: stylua init.lua lua/ scripts/check-nvim.lua  OR  cd scripts && gofmt -w .
@@ -40,6 +41,14 @@ fmt:
 # Globals covered: vim.* (built-in vim std), LazyVim.* + Snacks.* (lazyvim_extras.toml).
 lint:
     selene --config selene.toml init.lua lua/
+
+# Docs validation: hand-authored docs are indexed, and local Markdown links resolve.
+docs:
+    cd scripts && go run .
+
+# Guardrails: ast-grep structural checks for repo invariants.
+guard:
+    sg scan --config guardrails/ast-grep/sgconfig.yml
 
 # Headless Neovim: config load + per-fixture filetype assertions + Nix invariants.
 # Optional LSP checks skip gracefully when the binary is absent (tooling-policy.md).

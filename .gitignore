@@ -7,5 +7,5 @@ foo.*
 *.log
 data
 .DS_Store
-references/
+/references/
 kls_database.db

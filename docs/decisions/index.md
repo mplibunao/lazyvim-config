@@ -8,6 +8,7 @@ sections. See [`template.md`](template.md) for the blank form.
 | ADR | Title | Status |
 |---|---|---|
 | [001](001-harness-enforcement-substrate.md) | Harness enforcement substrate | accepted |
+| [002](002-home-path-literals.md) | Home path literals | accepted |
 
 ## Historical / superseded
 

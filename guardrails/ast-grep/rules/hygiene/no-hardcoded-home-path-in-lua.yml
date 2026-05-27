@@ -1,0 +1,12 @@
+id: no-hardcoded-home-path-in-lua
+language: Lua
+severity: error
+category: hygiene
+message: |
+  Lua config must not hardcode home-directory prefixes such as /Users/... or /home/....
+  Remediation: use vim.fn.expand("~/...") or vim.env.HOME; see docs/decisions/002-home-path-literals.md.
+files:
+  - 'lua/**/*.lua'
+rule:
+  kind: string
+  regex: '^(?:["'']|\[=*\[)(?:/Users/|/home/)'

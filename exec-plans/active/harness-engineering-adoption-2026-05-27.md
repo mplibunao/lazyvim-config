@@ -21,6 +21,9 @@ Build out the **mechanical-enforcement harness** that the OpenAI "harness engine
 - **Item 0 complete:** dotfiles prerequisite committed on branch `doc-garden-setup-vale-v111` as `c2da93c` (`selene`, Go toolchain, and global Vale vocab terms).
 - **Items 1 and 3 complete:** nvim-lazy docs foundation landed in the docs-foundation commit: tech-debt tracker, root `ARCHITECTURE.md`, `docs/design-docs/`, `docs/decisions/`, and router/index link updates.
 - **Item 2 complete:** just + Go runner spine landed: `justfile` (check/fmt/lint/nvim/test/vet), `selene.toml` + `lazyvim_extras.toml` (vim+lazyvim_extras std covering LazyVim/Snacks globals), `scripts/go.mod` + `scripts/tooling.go` + `scripts/tooling_test.go` (stdlib-only Go module at scripts/), `scripts/check-nvim.lua` (data-driven headless checker with 5-fixture table, Nix invariants, bounded LSP timeouts, graceful binary-absent skips). `docs/workflows.md` updated with quick-validation block.
+- **Item 4 complete:** deterministic docs validation landed in `scripts/check-docs.go` with unit coverage in `scripts/check-docs_test.go`; `just docs` validates hand-authored docs coverage through `docs/index.md` or directory indexes, excludes `docs/generated/` and `docs/reviews/`, and checks local Markdown links while ignoring external URLs, `mailto:`, bare anchors, and `~` home paths.
+- **Item 5 complete:** ast-grep guardrail infra landed under `guardrails/ast-grep/`, with `just guard` wired into `just check`; the first hygiene rule keeps LazyVim plugin disables in `lua/plugins/disabled.lua` with `enabled = false`.
+- **Item 6 complete:** ADR-002 records the home-path literal policy; `lua/plugins/nix.lua` and `lua/plugins/picker.lua` now use `vim.fn.expand("~/...")`; ast-grep bans hardcoded `/Users/...` and `/home/...` Lua string literals with remediation pointing at ADR-002.
 
 ## Background
 
@@ -192,7 +195,7 @@ Add a **full mechanical-enforcement harness**, sharing one runner across a local
 Task-specific checks the implementer runs before declaring done (beyond "it runs"):
 1. **Positive full gate:** `just check` from a clean shell runs format, lint, docs, guard, prose, `go test`/`go vet`, and nvim, and exits `0`.
 2. **Docs negative test:** add a temporary unlinked `docs/*.md` and a broken relative link; confirm `just docs` fails with remediation pointing at the offending file; remove them; confirm pass.
-3. **Absolute-path negative test (Item 6):** after migration, add a temporary `/Users/...` literal in a `lua/` file outside `lua/config/paths.lua`; confirm `just guard` fails with remediation pointing at the ADR/pattern; confirm a `vim.fn.expand("~/...")` equivalent passes; confirm `lua/config/paths.lua` is allowed.
+3. **Absolute-path negative test (Item 6):** after migration, add a temporary `/Users/...` literal in a `lua/` file; confirm `just guard` fails with remediation pointing at the ADR/pattern; confirm a `vim.fn.expand("~/...")` equivalent passes. If `lua/config/paths.lua` is introduced later for non-`~` machine-specific paths, add and test the explicit exemption then.
 4. **Hook parity test:** run `.githooks/pre-commit` directly with staged Lua/doc changes; confirm it produces the same failure text as `just check`.
 5. **Graceful-degradation test:** run `just nvim` with an optional binary (for example `gopls`) absent from PATH; confirm a skip per `tooling-policy.md` while a genuine config-load error still fails.
 6. **CI parity:** the CI job's chosen gate passes on a clean tree and fails on the same negative tests as local (at least docs plus guard).

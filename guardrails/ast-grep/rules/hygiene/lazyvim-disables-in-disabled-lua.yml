@@ -1,0 +1,23 @@
+id: lazyvim-disables-in-disabled-lua
+language: Lua
+severity: error
+category: hygiene
+message: |
+  LazyVim plugin disables belong in lua/plugins/disabled.lua with enabled = false.
+  Remediation: move the disable spec to lua/plugins/disabled.lua so agents and humans have one owner path for disabled plugins.
+files:
+  - 'lua/plugins/**/*.lua'
+ignores:
+  - 'lua/plugins/disabled.lua'
+rule:
+  all:
+    - kind: table_constructor
+    - has:
+        # A LazyVim plugin spec's first array field is the plugin string.
+        kind: field
+        regex: '^\s*["''][^"'']+["'']'
+    - has:
+        # Default neighbor traversal keeps this at the plugin table's own fields,
+        # so nested option flags like opts = { feature = { enabled = false } } pass.
+        kind: field
+        regex: '^\s*enabled\s*=\s*false\s*,?\s*$'

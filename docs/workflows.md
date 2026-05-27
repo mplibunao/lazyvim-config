@@ -3,8 +3,8 @@
 ## Quick validation
 
 ```bash
-just check   # full gate: fmt → lint → test → vet → nvim (fail-fast)
-just --list  # authoritative recipe list
+just check   # full gate, fail-fast; the justfile owns the current recipe sequence
+just --list  # authoritative recipe list and available targeted checks
 ```
 
 Tools come from Nix Home Manager. If `just` is missing, activate your Nix profile first (see `docs/design-docs/tooling-policy.md`).
@@ -41,7 +41,7 @@ Use `vim.defer_fn` with a delay (e.g., 3000ms) to let plugins load before checki
 | `lua/config/*.lua` or `lua/plugins/*.lua` (existing plugins) | `just fmt` + `just nvim` |
 | New/removed plugins or extras (any file) | `just nvim` + `:Lazy sync` + lockfile review |
 | `lazyvim.json` changes | `just nvim` + `:Lazy sync` + lockfile review |
-| Markdown docs or routing files only (e.g. `docs/**`, `CLAUDE.md`, `ARCHITECTURE.md`, `exec-plans/**`) | Manually verify referenced paths exist and spot-check claims against source files (`just docs` lands in Item 4) |
+| Markdown docs or routing files only (e.g. `docs/**`, `CLAUDE.md`, `ARCHITECTURE.md`, `exec-plans/**`) | `just docs` for docs coverage and local links; manually spot-check claim accuracy against source files |
 | Interactive UI / plugin behavior | tmux-backed visual validation |
 
 ## Plugin update validation
