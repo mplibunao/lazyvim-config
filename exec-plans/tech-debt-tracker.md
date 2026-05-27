@@ -67,3 +67,12 @@ tradeoff while it's the only multi-step shell block in the file.
 
 **Trigger:** If Item 4 adds more shell-heavy Go checks, revisit extracting a
 `scripts/check-gofmt.sh` helper to avoid recipe bloat.
+
+## TD-005: Commit-message hook for conventional commits and Vale
+
+**Status:** Deferred; Item 8 added only the pre-commit gate.
+**Deferred from:** `exec-plans/active/harness-engineering-adoption-2026-05-27.md`, Item 8
+
+A `commit-msg` hook should enforce conventional-commit shape and run Vale on commit messages, but this repo does not yet have a committed message-format convention or a `.vale.ini` `COMMIT_EDITMSG` mapping. Adding a hook now would create policy before the repo has documented the policy.
+
+**Trigger:** When this repo records its commit-message convention, add `.githooks/commit-msg`, wire the needed Vale `COMMIT_EDITMSG` config, and add valid and invalid temp-message tests to the hook verification path.

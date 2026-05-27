@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REPO_ROOT="$(git --no-pager -c color.ui=false rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+exec just check

@@ -1,8 +1,9 @@
 # nvim-lazy harness runner.
 #
 # Usage:
-#   just check   — full gate, fail-fast (fmt → lint → docs → guard → prose → test → vet → nvim)
-#   just fmt     — format check only (stylua + gofmt)
+#   just check         — full gate, fail-fast (fmt → lint → docs → guard → prose → test → vet → nvim)
+#   just install-hooks — set repo-local Git hooks to .githooks
+#   just fmt           — format check only (stylua + gofmt)
 #   just lint    — Selene Lua lint only
 #   just docs    — deterministic docs coverage and local-link validation
 #   just guard   — ast-grep structural guardrails
@@ -17,6 +18,13 @@
 
 # Full gate: format → lint → docs → guard → prose → Go tests/vet → headless nvim. Fail-fast.
 check: fmt lint docs guard prose test vet nvim
+
+# Install repo-local hooks. This writes only .git/config, never global Git config.
+install-hooks:
+    @test -f .githooks/pre-commit || { printf 'Missing .githooks/pre-commit; refusing to install hooks.\n' >&2; exit 1; }
+    @test -x .githooks/pre-commit || { printf '.githooks/pre-commit is not executable; run chmod +x .githooks/pre-commit.\n' >&2; exit 1; }
+    git config --local core.hooksPath .githooks
+    @printf 'Git hooks installed: core.hooksPath=%s\n' "$(git config --local core.hooksPath)"
 
 # Format check: stylua (Lua) and gofmt (Go tooling scripts). Does not modify files.
 # To fix: stylua init.lua lua/ scripts/check-nvim.lua  OR  cd scripts && gofmt -w .

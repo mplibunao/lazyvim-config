@@ -25,6 +25,7 @@ Build out the **mechanical-enforcement harness** that the OpenAI "harness engine
 - **Item 5 complete:** ast-grep guardrail infra landed under `guardrails/ast-grep/`, with `just guard` wired into `just check`; the first hygiene rule keeps LazyVim plugin disables in `lua/plugins/disabled.lua` with `enabled = false`.
 - **Item 6 complete:** ADR-002 records the home-path literal policy; `lua/plugins/nix.lua` and `lua/plugins/picker.lua` now use `vim.fn.expand("~/...")`; ast-grep bans hardcoded `/Users/...` and `/home/...` Lua string literals with remediation pointing at ADR-002.
 - **Item 7 complete:** Vale prose lane landed. `.vale.ini` is authoritative via `--no-global`; `just prose` owns file discovery over tracked hand-authored Markdown; explicit error pins for AI-tells and em-dashes are intentional. Prose-scope exclusions are generated/review output, legacy plans, fixtures, demos, and the `AGENTS.md` symlink.
+- **Item 8 complete:** local hook gate landed. `.githooks/pre-commit` resolves the repo root and delegates directly to `just check`; `just install-hooks` sets local `core.hooksPath` to `.githooks`; `docs/workflows.md` covers fresh-clone setup. Optional `commit-msg` validation is deferred to TD-005 until this repo records its commit-message policy and the needed Vale `COMMIT_EDITMSG` mapping.
 
 ## Background
 
@@ -159,11 +160,12 @@ Add a **full mechanical-enforcement harness**, sharing one runner across a local
 **Dependencies:** Item 2 (runner), Item 3 (final doc paths). Cross-repo E-Prime coordination is bypassed by `--no-global`.
 **Size:** Small-Medium.
 
-### Item 8: Add the pre-commit hook gate (full) plus optional commit-msg hook
+### Item 8: Add the pre-commit hook gate (full)
+**Status:** Complete; commit-message validation is out of scope and deferred to TD-005.
 **Goal:** Make the full local gate automatic at commit time.
-**What it does:** `.githooks/pre-commit` resolves repo root and delegates to `just check` with no independent logic (cannot drift from manual). A `just install-hooks` recipe runs `git config core.hooksPath .githooks` (local only, never global) and prints confirmation. Per MP's decision the hook runs the full gate (format, lint, docs, guard, prose, test/vet, headless nvim). Optionally also install a **commit-msg hook** for conventional-commit shape plus Vale AI-tells on the message (mirrors claude-toolkit/surf-cli; MP uses conventional commits). `docs/workflows.md` documents that fresh clones run `just install-hooks`.
+**What it does:** `.githooks/pre-commit` resolves repo root and delegates to `just check` with no independent logic (cannot drift from manual). A `just install-hooks` recipe validates that `.githooks/pre-commit` exists and is executable, then runs `git config --local core.hooksPath .githooks` and prints confirmation. Per MP's decision the hook runs the full gate (format, lint, docs, guard, prose, test/vet, headless nvim). Commit-message validation is not part of Item 8; TD-005 tracks a future `commit-msg` hook once this repo records its commit-message policy and Vale `COMMIT_EDITMSG` mapping. `docs/workflows.md` documents that fresh clones run `just install-hooks`.
 **Done when:** `.githooks/pre-commit` delegates to `just check`; `just install-hooks` sets `core.hooksPath`; workflow doc covers setup.
-**Key files:** `.githooks/pre-commit`, `.githooks/commit-msg` (optional), `justfile`, `docs/workflows.md`
+**Key files:** `.githooks/pre-commit`, `justfile`, `docs/workflows.md`
 **Dependencies:** Items 2 to 7 (the checks it gates).
 **Size:** Small.
 
