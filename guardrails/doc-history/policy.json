@@ -1,0 +1,41 @@
+{
+  "scanner_path": "scripts/guardrails/doc-history-check.cjs",
+  "vale_config_path": ".vale.ini",
+  "scope": {
+    "include": [
+      "CLAUDE.md",
+      "ARCHITECTURE.md",
+      "README.md",
+      "cheatsheet.md",
+      "docs/**/*.md"
+    ],
+    "exclude": [
+      "docs/decisions/**",
+      "docs/reviews/**",
+      "docs/generated/**",
+      "docs/references/**"
+    ],
+    "changed_base": "main"
+  },
+  "path_classes": {
+    "router-docs": [
+      "CLAUDE.md"
+    ],
+    "architecture-docs": [
+      "ARCHITECTURE.md"
+    ],
+    "user-docs": [
+      "README.md",
+      "cheatsheet.md"
+    ],
+    "current-state-docs": [
+      "docs/index.md",
+      "docs/workflows.md",
+      "docs/design-docs/**/*.md"
+    ]
+  },
+  "exceptions": [],
+  "rule_review": {
+    "history_days": 90
+  }
+}

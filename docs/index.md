@@ -17,7 +17,7 @@ Maps harness-engineering doc concepts to where they live in this repo:
 | Implementation history | `exec-plans/` | Active plans and completed plans |
 | Deferred work | [`exec-plans/tech-debt-tracker.md`](../exec-plans/tech-debt-tracker.md) | Items deferred at plan-write time, with reasoning |
 | Design review artifacts | `docs/reviews/` | Agent/design-review output; excluded from hand-authored doc coverage |
-| Generated doc audits | `docs/generated/` *(reserved)* | Machine-generated output (doc-garden, etc.); excluded from index coverage |
+| Generated doc audits | `docs/generated/doc-garden/` | Machine-generated doc-garden output; excluded from index coverage |
 
 ## Placement rules
 
@@ -48,3 +48,4 @@ Maps harness-engineering doc concepts to where they live in this repo:
 | `exec-plans/tech-debt-tracker.md` | Durable home for deferred work items |
 | `lazyvim.json` | Canonical list of enabled LazyVim extras |
 | `stylua.toml` | Canonical Lua formatting settings |
+| `guardrails/doc-history/policy.json` | Doc Garden consumer scope for recurring documentation audits |
