@@ -85,3 +85,22 @@ A `commit-msg` hook should enforce conventional-commit shape and run Vale on com
 The generated Doc Garden Markdown audit table can break rows when a Vale token contains a newline, including a token spanning two wrapped words in a current-state doc. The JSON sidecar remains valid, and generated audit Markdown is not hand-edited in this repo. The durable fix belongs in the shared `claude-toolkit/packages/doc-garden` renderer, where table cells should sanitize embedded newlines before writing `docs/generated/doc-garden/audit-*.md`. The owning upstream tracker item is `claude-toolkit/docs/exec-plans/tech-debt-tracker.md` TD-058.
 
 **Trigger:** When updating the shared doc-garden package, sanitize multiline table cells in the renderer and rerun a consumer audit that includes a multiline Vale token.
+
+## TD-007: CI Vale vocab parity with dotfiles Nix Home Manager
+
+**Status:** Deferred; maintenance contract until a single-source solution exists.
+**Deferred from:** `exec-plans/active/harness-engineering-adoption-2026-05-27.md`, Item 10
+
+CI uses `vale-config/vocabularies/` (committed to this repo) as its vocabulary
+source, mirroring `dotfiles/nix/home/mp/modules/vale.nix`. Local runs use the
+vocab installed by Nix Home Manager at `~/.local/share/vale/styles/config/vocabularies/`.
+If `vale.nix` adds or removes accepted terms, CI disagrees with local until
+`vale-config/` is updated. Root cause: Vale 3.x has no env-var override for
+`StylesPath`, so sharing a single vocab source requires either committing the
+files (current approach) or installing them at a known CI path at runtime.
+
+**Trigger:** Whenever `vale.nix` vocab entries change (any of the Base, Nix,
+JVM, Go, or TypeScript accept.txt blocks), mirror the change in
+`vale-config/vocabularies/` in the same PR. Failure symptom: `just prose` passes
+locally but CI flags a technical term (or vice versa) on a file that did not
+otherwise change.

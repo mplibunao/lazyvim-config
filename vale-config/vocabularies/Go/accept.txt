@@ -1,0 +1,10 @@
+gopls
+gofmt
+gofumpt
+goimports
+golangci-lint
+delve
+dlv
+gotestsum
+gomodifytags
+impl

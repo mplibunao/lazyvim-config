@@ -1,0 +1,19 @@
+mp
+MP
+Mark Paolo Libunao
+nvim
+Neovim
+tmux
+LSP
+CLI
+repos?
+dotfiles
+fish
+RepoPrompt
+MCP
+Codex
+Claude
+READMEs?
+ast-grep
+sg
+just

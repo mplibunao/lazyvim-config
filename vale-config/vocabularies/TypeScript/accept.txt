@@ -1,0 +1,10 @@
+tsserver
+vtsls
+biome
+oxlint
+eslint
+pnpm
+vite
+Bun
+tsx
+tsconfig
