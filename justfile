@@ -65,6 +65,8 @@ guard:
 
 # Prose: Vale over tracked hand-authored Markdown.
 # Exact exclusions avoid generated/review output, legacy plans, fixtures, demos, and the AGENTS symlink.
+# Verbatim external payload files are excluded one by one; see docs/references/index.md for policy.
+# Currently excluded: docs/references/harness-engineering.md. Each new payload needs its own line.
 # Rule policy lives in .vale.ini; --no-global makes it authoritative.
 # VALE_CONFIG: override the config path in environments where StylesPath cannot be /Users/mp
 # (e.g., CI). See .github/workflows/ci.yml for how CI generates .vale.ci.ini.
@@ -79,6 +81,7 @@ prose:
         ':(exclude)exec-plans/completed/**' \
         ':(exclude)test-fixtures/**' \
         ':(exclude)test-preview.md' \
+        ':(exclude)docs/references/harness-engineering.md' \
         ':(exclude)AGENTS.md' \
         | xargs -0 vale --no-global --config "$_vale_cfg" --minAlertLevel=error
 
