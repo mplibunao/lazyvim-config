@@ -1,5 +1,16 @@
 # Workflows
 
+## Quick validation
+
+```bash
+just check   # full gate: fmt → lint → test → vet → nvim (fail-fast)
+just --list  # authoritative recipe list
+```
+
+Tools come from Nix Home Manager. If `just` is missing, activate your Nix profile first (see `docs/design-docs/tooling-policy.md`).
+
+---
+
 ## Targeting this config
 
 This config uses `NVIM_APPNAME=nvim-lazy`. Always set this when launching Neovim programmatically so you hit this config instead of the default.
@@ -27,10 +38,10 @@ Use `vim.defer_fn` with a delay (e.g., 3000ms) to let plugins load before checki
 
 | Change type | What to check |
 |---|---|
-| `lua/config/*.lua` or `lua/plugins/*.lua` (existing plugins) | Format with `stylua` + headless startup check |
-| New/removed plugins or extras (any file) | `:Lazy sync` + lockfile review + startup check |
-| `lazyvim.json` changes | `:Lazy sync` + lockfile review + startup check |
-| Markdown docs or routing files only (e.g. `docs/**`, `CLAUDE.md`, `ARCHITECTURE.md`, `exec-plans/**`) | Verify referenced paths exist and spot-check claims against source files |
+| `lua/config/*.lua` or `lua/plugins/*.lua` (existing plugins) | `just fmt` + `just nvim` |
+| New/removed plugins or extras (any file) | `just nvim` + `:Lazy sync` + lockfile review |
+| `lazyvim.json` changes | `just nvim` + `:Lazy sync` + lockfile review |
+| Markdown docs or routing files only (e.g. `docs/**`, `CLAUDE.md`, `ARCHITECTURE.md`, `exec-plans/**`) | Manually verify referenced paths exist and spot-check claims against source files (`just docs` lands in Item 4) |
 | Interactive UI / plugin behavior | tmux-backed visual validation |
 
 ## Plugin update validation
@@ -61,7 +72,9 @@ Open each fixture and verify the relevant plugin chain loads:
 | Any file (optional, requires auth) | Copilot suggestions appear (skip if not authenticated) |
 | `:checkhealth` | General sweep for errors |
 
-### Headless validation (for agents)
+### Headless validation (ad hoc debugging)
+
+These snippets are for one-off investigation. For routine validation, use `just check`. The authoritative fixture list and exit-code harness are in `scripts/check-nvim.lua`.
 
 ```bash
 # Quick startup check: exits 0 if no errors

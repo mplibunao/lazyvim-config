@@ -3,8 +3,8 @@ local function resolve_picker()
   if ok and snacks and snacks.picker then
     return snacks.picker
   end
-  if _G.Snacks and _G.Snacks.picker then
-    return _G.Snacks.picker
+  if Snacks and Snacks.picker then
+    return Snacks.picker
   end
   return nil
 end

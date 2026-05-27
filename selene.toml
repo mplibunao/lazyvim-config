@@ -1,0 +1,10 @@
+# lua51: built-in base (LuaJIT is Lua 5.1 compatible); lazyvim_extras adds
+# vim.*, LazyVim.*, and Snacks.* globals (lazyvim_extras.toml, flat-header format).
+std = "lua51+lazyvim_extras"
+
+# test-fixtures/ is not Neovim Lua.
+exclude = ["test-fixtures/**"]
+
+[lints]
+# LazyVim plugin specs intentionally mix positional + named fields: { "plugin", opts = {} }.
+mixed_table = "allow"
