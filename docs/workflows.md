@@ -9,6 +9,14 @@ just --list  # authoritative recipe list and available targeted checks
 
 Tools come from Nix Home Manager. If `just` is missing, activate your Nix profile first (see `docs/design-docs/tooling-policy.md`).
 
+Fresh clones should enable the repo-local Git hook once:
+
+```bash
+just install-hooks
+```
+
+The installed pre-commit hook delegates to `just check`, so manual and commit-time validation use the same gate.
+
 ---
 
 ## Targeting this config
