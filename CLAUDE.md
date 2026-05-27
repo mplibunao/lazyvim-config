@@ -41,6 +41,8 @@ LazyVim configuration repo. Plugins are managed by lazy.nvim, extras are declare
 | Agent validation workflows (tmux, headless checks) | [docs/workflows.md](docs/workflows.md) |
 | Go tooling setup | [docs/go.md](docs/go.md) |
 | Kotlin tooling and formatting | [docs/kotlin.md](docs/kotlin.md) |
+| Nix tooling and LSP setup | [docs/nix.md](docs/nix.md) |
+| Tool provisioning policy (Nix vs Mason) | [docs/tooling-policy.md](docs/tooling-policy.md) |
 | Keymap and usage reference | [cheatsheet.md](cheatsheet.md) |
 | Visual keybinding cheatsheet | [~/.agent/diagrams/nvim-keybindings.html](~/.agent/diagrams/nvim-keybindings.html) |
 | Documentation catalog and placement rules | [docs/index.md](docs/index.md) |

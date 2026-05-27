@@ -45,7 +45,7 @@ Plugins form two coupled clusters. Keep each cluster internally consistent when 
 - **Treesitter cluster**: `nvim-treesitter`, `nvim-treesitter-textobjects`, `render-markdown.nvim`, `neotest`, `neotest-golang`
 - **Independent** (safe anytime): `copilot.lua`, `gitsigns.nvim`, `SchemaStore.nvim`
 
-Updating `LazyVim` itself should trigger the full smoke-test path — it can change how all clusters are wired.
+Updating `LazyVim` itself should trigger the full smoke-test path: it can change how all clusters are wired.
 
 ### Smoke-test checklist
 
@@ -56,14 +56,15 @@ Open each fixture and verify the relevant plugin chain loads:
 | `test-fixtures/go/math_test.go` | gopls attaches (`:LspInfo`), treesitter highlights, `<leader>tt` discovers `TestAdd` |
 | `test-fixtures/kotlin/src/main/kotlin/Fixture.kt` | kotlin_language_server attaches, inlay hints visible |
 | `test-fixtures/json/tsconfig.json` | JSON LSP attaches, completion offers `compilerOptions` fields (verifies JSON schema/completion works) |
-| `test-fixtures/markdown/sample.md` | `render-markdown.nvim` renders headings and code blocks (this does not cover `markdown-preview.nvim` browser preview — test that separately with `:MarkdownPreview` on any `.md` file if that plugin was updated) |
-| Any file (optional, requires auth) | Copilot suggestions appear — skip if not authenticated |
+| `test-fixtures/markdown/sample.md` | `render-markdown.nvim` renders headings and code blocks (this does not cover `markdown-preview.nvim` browser preview, so test that separately with `:MarkdownPreview` on any `.md` file if that plugin was updated) |
+| `test-fixtures/nix/default.nix` | `nixd` attaches (NOT `nil_ls`) via `:LspInfo`, treesitter highlights, nvim-lint lists `statix` and `deadnix` for `nix`, and `<leader>cf` formats with `nixfmt` (confirm via `:ConformInfo`) |
+| Any file (optional, requires auth) | Copilot suggestions appear (skip if not authenticated) |
 | `:checkhealth` | General sweep for errors |
 
 ### Headless validation (for agents)
 
 ```bash
-# Quick startup check — exits 0 if no errors
+# Quick startup check: exits 0 if no errors
 NVIM_APPNAME=nvim-lazy nvim --headless \
   -c "lua vim.defer_fn(function() vim.cmd('qa!') end, 5000)" \
   test-fixtures/go/math_test.go
@@ -81,3 +82,22 @@ tmux new-session -d -s nvim-check -x 120 -y 40 \
 sleep 8 && tmux capture-pane -p -t nvim-check
 tmux kill-session -t nvim-check 2>/dev/null
 ```
+
+For the Nix fixture, confirm `nixd` (not `nil_ls`) attaches and that both linters are wired. Expect `lsp: nixd` and `linters: statix,deadnix`:
+
+```bash
+tmux new-session -d -s nvim-nix -x 120 -y 40 \
+  "NVIM_APPNAME=nvim-lazy nvim \
+  -c 'lua vim.defer_fn(function() \
+    local names = {} \
+    for _, c in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do names[#names+1] = c.name end \
+    print(\"lsp: \" .. table.concat(names, \",\")) \
+    print(\"linters: \" .. table.concat(require(\"lint\").linters_by_ft.nix or {}, \",\")) \
+    vim.cmd(\"qa!\") \
+  end, 5000)' \
+  test-fixtures/nix/default.nix 2>&1 | tee /tmp/nvim-nix.log"
+sleep 8 && tmux capture-pane -p -t nvim-nix
+tmux kill-session -t nvim-nix 2>/dev/null
+```
+
+`nixd` only attaches on a machine where the Nix-provided binary is on PATH (see [tooling-policy.md](tooling-policy.md)); without it the line reads `lsp:` empty, which is the expected degraded state, not a failure. The `nixfmt` formatter is best confirmed interactively with `:ConformInfo` or `<leader>cf` on the fixture.
