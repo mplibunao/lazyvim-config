@@ -7,4 +7,4 @@ Refer to the [documentation](https://lazyvim.github.io/installation) to get star
 
 ## Custom Keymaps
 
-- `<leader>yp` — copy the current buffer's absolute path to the system clipboard. The same logic is available as `:CopyCurrentFilePath` if you prefer a command.
+- `<leader>yp`: copy the current buffer's absolute path to the system clipboard. The same logic is available as `:CopyCurrentFilePath` if you prefer a command.

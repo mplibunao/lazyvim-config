@@ -1,13 +1,13 @@
 # Core beliefs
 
-Operating principles for this repo. These are not aspirations — they are
+Operating principles for this repo. These are not aspirations; they are
 constraints that shape every tooling decision and should be tested against
 before adding new machinery.
 
 ## This is a config repo, not a product
 
-No ports-and-adapters domain architecture, no observability stack, no runtime
-boot machinery, no per-worktree services. The complexity ceiling is: "does this
+This repo excludes ports-and-adapters domain architecture, observability
+stacks, runtime boot machinery, and per-worktree services. The complexity ceiling is: "does this
 help a single user edit code faster and more reliably?" If the answer requires a
 services architecture, the answer is no.
 
@@ -29,7 +29,7 @@ says, delete the doc. Progressive disclosure: CLAUDE.md → docs/ → source fil
 
 ## Mechanical rules carry remediation and ship with a sanctioned pattern
 
-Every failing check prints what to fix, where, and why — the fix is injected
+Every failing check prints what to fix, where, and why; the fix is injected
 into agent context automatically. A mechanical ban ships only when a sanctioned
 alternative pattern exists and existing violations are migrated. "No rule
 without a solution" prevents rules that just bounce the problem back to the
@@ -45,6 +45,6 @@ machines without the full Nix profile.
 
 Enforcement belongs in: formatters, linters, structural validators, prose
 checks, and headless editor startup. Adding beyond this needs a concrete problem
-this repo actually has — not a pattern borrowed from a product-scale codebase.
+this repo actually has, not a pattern borrowed from a product-scale codebase.
 What is currently in the gate is in ADR-001; this principle governs what is ever
 considered.

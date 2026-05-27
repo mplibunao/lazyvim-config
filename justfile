@@ -1,23 +1,22 @@
 # nvim-lazy harness runner.
 #
 # Usage:
-#   just check   — full gate, fail-fast (fmt → lint → docs → guard → test → vet → nvim)
+#   just check   — full gate, fail-fast (fmt → lint → docs → guard → prose → test → vet → nvim)
 #   just fmt     — format check only (stylua + gofmt)
 #   just lint    — Selene Lua lint only
 #   just docs    — deterministic docs coverage and local-link validation
 #   just guard   — ast-grep structural guardrails
+#   just prose   — Vale AI-tells and em-dash check over all tracked hand-authored Markdown
 #   just nvim    — headless Neovim: config load + fixture filetypes + Nix invariants
 #   just test    — Go tooling tests (scripts/)
 #   just vet     — Go tooling vet (scripts/)
 #
 # All tools come from Nix Home Manager (Item 0), never Mason.
-# If selene, stylua, or just are absent, activate your Nix profile first.
+# If selene, stylua, vale, or just are absent, activate your Nix profile first.
 # See docs/design-docs/tooling-policy.md.
-#
-# Prose (Item 7) lands in a later harness item.
 
-# Full gate: format → lint → docs → guard → Go tests/vet → headless nvim. Fail-fast.
-check: fmt lint docs guard test vet nvim
+# Full gate: format → lint → docs → guard → prose → Go tests/vet → headless nvim. Fail-fast.
+check: fmt lint docs guard prose test vet nvim
 
 # Format check: stylua (Lua) and gofmt (Go tooling scripts). Does not modify files.
 # To fix: stylua init.lua lua/ scripts/check-nvim.lua  OR  cd scripts && gofmt -w .
@@ -49,6 +48,22 @@ docs:
 # Guardrails: ast-grep structural checks for repo invariants.
 guard:
     sg scan --config guardrails/ast-grep/sgconfig.yml
+
+# Prose: Vale over tracked hand-authored Markdown.
+# Exact exclusions avoid generated/review output, legacy plans, fixtures, demos, and the AGENTS symlink.
+# Rule policy lives in .vale.ini; --no-global makes it authoritative.
+prose:
+    #!/usr/bin/env sh
+    set -e
+    git ls-files -z -- '*.md' \
+        ':(exclude)docs/reviews/**' \
+        ':(exclude)docs/generated/**' \
+        ':(exclude)exec-plans/active/**' \
+        ':(exclude)exec-plans/completed/**' \
+        ':(exclude)test-fixtures/**' \
+        ':(exclude)test-preview.md' \
+        ':(exclude)AGENTS.md' \
+        | xargs -0 vale --no-global --minAlertLevel=error
 
 # Headless Neovim: config load + per-fixture filetype assertions + Nix invariants.
 # Optional LSP checks skip gracefully when the binary is absent (tooling-policy.md).

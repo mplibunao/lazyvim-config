@@ -24,6 +24,7 @@ Build out the **mechanical-enforcement harness** that the OpenAI "harness engine
 - **Item 4 complete:** deterministic docs validation landed in `scripts/check-docs.go` with unit coverage in `scripts/check-docs_test.go`; `just docs` validates hand-authored docs coverage through `docs/index.md` or directory indexes, excludes `docs/generated/` and `docs/reviews/`, and checks local Markdown links while ignoring external URLs, `mailto:`, bare anchors, and `~` home paths.
 - **Item 5 complete:** ast-grep guardrail infra landed under `guardrails/ast-grep/`, with `just guard` wired into `just check`; the first hygiene rule keeps LazyVim plugin disables in `lua/plugins/disabled.lua` with `enabled = false`.
 - **Item 6 complete:** ADR-002 records the home-path literal policy; `lua/plugins/nix.lua` and `lua/plugins/picker.lua` now use `vim.fn.expand("~/...")`; ast-grep bans hardcoded `/Users/...` and `/home/...` Lua string literals with remediation pointing at ADR-002.
+- **Item 7 complete:** Vale prose lane landed. `.vale.ini` is authoritative via `--no-global`; `just prose` owns file discovery over tracked hand-authored Markdown; explicit error pins for AI-tells and em-dashes are intentional. Prose-scope exclusions are generated/review output, legacy plans, fixtures, demos, and the `AGENTS.md` symlink.
 
 ## Background
 
@@ -150,11 +151,12 @@ Add a **full mechanical-enforcement harness**, sharing one runner across a local
 **Size:** Small-Medium.
 
 ### Item 7: Add the Vale AI-tells prose lane plus one-pass cleanup
-**Goal:** Mechanically catch AI-tells and em-dashes in docs (a standing MP preference), the deterministic counterpart to the agent-driven doc-garden audit (Item 9).
-**What it does:** Vale is **already global and Nix-managed** (`dotfiles/nix/home/mp/modules/vale.nix` renders `~/.config/vale/.vale.ini` with the `ai-tells` package; it applies in every repo, and repo-local config layers over it). So this item does **not** author repo-local styles: it adds a `just prose` recipe (`vale docs/`) folded into `just check`, plus a thin repo-local `.vale.ini` that layers over the global config for nvim-lazy-specific bits: a Microsoft opt-out (as other personal dev-tooling repos do) and a small repo-local accept vocab for Lua tooling names (`selene`, `stylua`). This is the surf-cli `doc-prose` lane, kept separate from the heavier `/doc-garden audit` (Item 9). **Hard coordination dependency:** the global Vale config is mid-improvement (`dotfiles/.plans/vale-config-improvements.md`, owned by the doc-garden flow): E-Prime is to be turned off and a named-vocab accept list added. Until that lands, the prose lane drowns in E-Prime plus domain-spelling noise unrelated to AI-tells. So (a) land Item 7's gate and the **one-pass cleanup over all docs** only after the global E-Prime-off plus vocab change, and (b) place the new tool terms per the dotfiles doc's shareability axis: cross-repo tools (`ast-grep`/`sg`, `just`, `gofmt`) go in the **global** named vocab (MP's action in the dotfiles Vale work; already added to its seed lists), while nvim-lazy-specific Lua tooling (`selene`, `stylua`) goes in the **repo-local** vocab in nvim-lazy's `.vale.ini` (owned by this item, since the repo gets a `.vale.ini` anyway). Error on AI-tells/em-dashes; treat spelling/E-Prime as config noise per MP's vale-prose-handling convention.
-**Done when:** `just prose` runs Vale over `docs/**` (via the global config), is in `just check`, errors on AI-tells/em-dashes, and all repo docs pass after the one-pass cleanup (run after the global Vale improvements land).
-**Key files:** `justfile`, repo-local `.vale.ini` (Microsoft opt-out plus a Lua-tooling accept vocab for `selene`/`stylua`), `docs/**`; cross-repo: `dotfiles/nix/home/mp/modules/vale.nix`, the doc-garden `vale-config-template.ini`
-**Dependencies:** Item 2 (runner), Item 3 (cleanup over final doc paths); **cross-repo: the global Vale E-Prime-off plus vocab change (`dotfiles/.plans/vale-config-improvements.md`)**. Vale itself is already provisioned globally (see Item 0).
+**Status:** Complete; this as-built contract supersedes the original global-config layering plan.
+**Goal:** Mechanically catch AI-tells and em-dashes in tracked hand-authored Markdown.
+**What it does:** `.vale.ini` is authoritative because `just prose` invokes Vale with `--no-global`. `just prose` owns file discovery with `git ls-files -z -- '*.md'` and exact exclusions for generated/review output, legacy plans, fixtures, demos, and the `AGENTS.md` symlink. Explicit `error` pins for `EmDashUsage`, `OverusedVocabulary`, and `OverusedVocabularyVerbs` are intentional so upstream default severity drift cannot weaken the gate.
+**Done when:** `just prose` runs in `just check`, scans tracked hand-authored Markdown, and passes after the one-pass cleanup.
+**Key files:** `justfile`, `.vale.ini`, `docs/**`
+**Dependencies:** Item 2 (runner), Item 3 (final doc paths). Cross-repo E-Prime coordination is bypassed by `--no-global`.
 **Size:** Small-Medium.
 
 ### Item 8: Add the pre-commit hook gate (full) plus optional commit-msg hook
