@@ -14,7 +14,7 @@ Runtime load order:
      lua/config/keymaps.lua     keymaps and user commands (loaded on VeryLazy event)
 ```
 
-LazyVim extras are declared in `lazyvim.json` — that file is the canonical list.
+LazyVim extras are declared in `lazyvim.json`, the canonical list.
 
 ## File ownership
 
@@ -35,10 +35,10 @@ These are the main areas where this config diverges from stock LazyVim:
 
 | Area | Primary file(s) |
 |---|---|
-| Navigation / explorer | `lua/plugins/navigation.lua` — disables Snacks explorer, uses mini.files |
-| Picker / AI shortcuts | `lua/plugins/picker.lua` — Snacks picker config, `:WizyPrompts`, `:ClaudeToolkit` |
-| Completion | `lua/plugins/completion.lua` — Tab/Shift-Tab for blink.cmp |
-| Disabled plugins | `lua/plugins/disabled.lua` — bufferline.nvim |
+| Navigation / explorer | `lua/plugins/navigation.lua` (disables Snacks explorer, uses mini.files) |
+| Picker / AI shortcuts | `lua/plugins/picker.lua` (Snacks picker config, `:WizyPrompts`, `:ClaudeToolkit`) |
+| Completion | `lua/plugins/completion.lua` (Tab/Shift-Tab for blink.cmp) |
+| Disabled plugins | `lua/plugins/disabled.lua` (bufferline.nvim) |
 | Go support | `lua/plugins/go.lua` + `docs/go.md` |
 | Kotlin support | `lua/plugins/kotlin.lua` + `docs/kotlin.md` |
 | Markdown preview | `lua/plugins/markdown-preview.lua` + `assets/` |

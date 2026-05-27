@@ -2,7 +2,7 @@
 
 ## Auto-format
 
-Disabled on save via `lua/plugins/kotlin.lua` (sets `vim.b.autoformat = false` for Kotlin buffers). LazyVim's Kotlin extra uses `ktlint` as the formatter (via conform.nvim), but the project doesn't have consistent formatting — auto-format causes noisy diffs on untouched lines.
+Disabled on save via `lua/plugins/kotlin.lua` (sets `vim.b.autoformat = false` for Kotlin buffers). LazyVim's Kotlin extra uses `ktlint` as the formatter (via conform.nvim), but the project doesn't have consistent formatting, so auto-format causes noisy diffs on untouched lines.
 
 Manual format is still available with `<leader>cf`.
 
@@ -39,7 +39,7 @@ The diagnostic message in Neovim shows the rule ID in brackets, e.g. `[standard:
 
 Configured in `lua/plugins/kotlin.lua`. Uses `kotlin-language-server` (not the official `kotlin-lsp` which is still pre-alpha).
 
-- **JVM target:** Set to `17` — change if your project targets a different version
+- **JVM target:** Set to `17`. Change it if your project targets a different version
 - **Inlay hints:** Parameter hints and type hints enabled as a learning aid while ramping up on Kotlin. Disable `typeHints` later if they become noisy
 
 ### Switching JVM target
@@ -51,8 +51,8 @@ Edit `lua/plugins/kotlin.lua` and change `target = "17"` to match your project (
 Requires `dap.core` extra (enabled in `lazyvim.json`) and `kotlin-debug-adapter` (auto-installed via Mason).
 
 LazyVim's Kotlin extra provides two DAP configs:
-- **"Kotlin: This file"** — run/debug the current file
-- **"Kotlin: Attach"** — attach to a running JVM debug port
+- **"Kotlin: This file"** (run/debug the current file)
+- **"Kotlin: Attach"** (attach to a running JVM debug port)
 
 ### Debugging tests with Maven
 
