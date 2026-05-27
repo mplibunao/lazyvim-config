@@ -1,18 +1,12 @@
 -- Go development: formatting, linting, testing, and LSP tuning.
+--
+-- Tool sourcing: goimports/gofumpt/golangci-lint/delve (plus gomodifytags/impl)
+-- come from the LazyVim lang.go extra via Mason, so they are not listed here.
+-- gopls comes from Nix Home Manager (dotfiles tier2.nix) and is fenced from
+-- Mason below, so Mason cannot install a second, version-drifting copy.
+-- See docs/tooling-policy.md.
 -- Lint policy should live in the project's .golangci.yml, not here.
 return {
-  {
-    "mason-org/mason.nvim",
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, {
-        "goimports",
-        "gofumpt",
-        "golangci-lint",
-        "delve",
-      })
-    end,
-  },
   {
     "stevearc/conform.nvim",
     optional = true,
@@ -49,6 +43,7 @@ return {
     opts = {
       servers = {
         gopls = {
+          mason = false, -- use the Nix gopls (see header + docs/tooling-policy.md)
           settings = {
             gopls = {
               vulncheck = "Imports",
