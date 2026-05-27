@@ -1,11 +1,10 @@
-package tooling_test
+package main
 
 import "testing"
 
-// TestGoSubstrate proves the Go tooling module compiles and go test ./...
-// completes clean. This is a placeholder; concrete check implementations
-// (doc validator, etc.) land in later harness items.
+// TestGoSubstrate proves the stdlib-only harness package compiles alongside
+// the docs validator tests.
 func TestGoSubstrate(t *testing.T) {
-	// Nothing to assert yet. The value is that go test ./... exits 0,
+	// Nothing to assert here. The value is that go test ./... exits 0,
 	// proving the module structure and toolchain integration work.
 }

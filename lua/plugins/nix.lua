@@ -7,7 +7,7 @@
 
 -- The dotfiles flake and host key, reused by all three nixd exprs below. One
 -- source of truth: change here if the flake path or host key ever moves.
-local dotfiles_flake = "/Users/mp/Projects/personal/dotfiles/nix"
+local dotfiles_flake = vim.fn.expand("~/Projects/personal/dotfiles/nix")
 local darwin_host = "m5-mbp"
 local function darwin_expr(suffix)
   return ('(builtins.getFlake "%s").darwinConfigurations."%s"%s'):format(dotfiles_flake, darwin_host, suffix)
