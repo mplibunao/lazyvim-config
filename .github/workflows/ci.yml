@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# CI tool version pins. Bump here when upgrading; local versions are managed by Nix (dotfiles).
+env:
+  STYLUA_VERSION: "0.20.0"
+  SELENE_VERSION: "0.27.1"
+  VALE_VERSION: "3.14.1"
+  SG_VERSION: "0.36.0"
+  # ai-tells is a GitHub release zip; pin alongside VALE_VERSION when upgrading prose rules.
+  AI_TELLS_VERSION: "1.11.0"
+
+jobs:
+  gate:
+    name: Gate (just ci)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Go tooling (scripts/check-docs.go etc). stdlib-only module: no go.sum.
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: scripts/go.mod
+          # No go.sum (stdlib-only): skip the module cache to avoid a cache-miss warning.
+          cache: false
+
+      # just runner — the single entrypoint for all gate recipes.
+      - name: Install just
+        uses: extractions/setup-just@v2
+
+      # StyLua: Lua formatter (just fmt).
+      - name: Install StyLua
+        run: |
+          curl -sLf \
+            "https://github.com/JohnnyMorganz/StyLua/releases/download/v${STYLUA_VERSION}/stylua-linux-x86_64.zip" \
+            -o /tmp/stylua.zip
+          unzip -q /tmp/stylua.zip -d /tmp/stylua
+          sudo mv /tmp/stylua/stylua /usr/local/bin/stylua
+
+      # Selene: Lua linter (just lint).
+      # Asset format: selene-{VERSION}-linux.zip (single binary at zip root).
+      # Verified against 0.27.1 release; re-verify asset name when bumping SELENE_VERSION.
+      - name: Install Selene
+        run: |
+          curl -sLf \
+            "https://github.com/Kampfkarren/selene/releases/download/${SELENE_VERSION}/selene-${SELENE_VERSION}-linux.zip" \
+            -o /tmp/selene.zip
+          unzip -q /tmp/selene.zip -d /tmp/selene
+          sudo mv /tmp/selene/selene /usr/local/bin/selene
+          selene --version
+
+      # ast-grep (sg): structural Lua guardrails (just guard).
+      # Installed via the official npm package to avoid guessing binary asset names.
+      - name: Install ast-grep (sg)
+        run: npm install -g "@ast-grep/cli@${SG_VERSION}"
+
+      # Vale: prose AI-tells and em-dash gate (just prose).
+      - name: Install Vale
+        run: |
+          curl -sLf \
+            "https://github.com/errata-ai/vale/releases/download/v${VALE_VERSION}/vale_${VALE_VERSION}_Linux_64-bit.tar.gz" \
+            -o /tmp/vale.tar.gz
+          tar -xzf /tmp/vale.tar.gz -C /tmp vale
+          sudo mv /tmp/vale /usr/local/bin/vale
+
+      # Cache downloaded Vale style packages. config/vocabularies/ is excluded:
+      # setup-vale.sh copies it from vale-config/ on every run.
+      - name: Cache Vale style packages
+        id: cache-vale
+        uses: actions/cache@v4
+        with:
+          path: |
+            .vale-styles/ai-tells
+            .vale-styles/write-good
+            .vale-styles/alex
+            .vale-styles/Vale
+          # Key includes VALE_VERSION and AI_TELLS_VERSION so a version bump
+          # invalidates the cache even if .vale.ini content is unchanged.
+          # setup-vale.sh owns the Packages line, so changes to it must also bust the cache.
+          key: vale-styles-${{ env.VALE_VERSION }}-${{ env.AI_TELLS_VERSION }}-${{ hashFiles('.vale.ini', 'scripts/ci/setup-vale.sh') }}
+          restore-keys: |
+            vale-styles-${{ env.VALE_VERSION }}-${{ env.AI_TELLS_VERSION }}-
+            vale-styles-
+
+      # Generate .vale.ci.ini, copy vocab, and optionally sync style packages.
+      # See scripts/ci/setup-vale.sh and vale-config/README.md for the contract.
+      - name: Set up Vale for CI
+        run: |
+          if [ "${{ steps.cache-vale.outputs.cache-hit }}" != "true" ]; then
+            sh scripts/ci/setup-vale.sh --sync
+          else
+            sh scripts/ci/setup-vale.sh
+          fi
+
+      # VALE_CONFIG directs just prose to .vale.ci.ini. just nvim is excluded (ADR-001).
+      - name: Run CI gate
+        env:
+          VALE_CONFIG: .vale.ci.ini
+        run: just ci

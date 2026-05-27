@@ -1,0 +1,11 @@
+nixd
+nil
+nixfmt
+statix
+deadnix
+nixpkgs
+mkShell
+flakes?
+devShell
+home-manager
+nix-darwin

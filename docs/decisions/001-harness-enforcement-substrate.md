@@ -95,10 +95,10 @@ of scope; not deferred.
 - Per-domain recipes (`just lint`, `just docs`, etc.) let agents and humans run
   fast subsets while iterating; `just check` remains the final local gate.
 - All future checks wire into `just check` first; the hook inherits them
-  automatically. CI runs a deliberate subset and must explicitly include any new
-  check that belongs in it. A future `just ci` recipe (not yet implemented)
-  would make that subset declaration explicit rather than requiring a manual
-  update to the CI workflow.
+  automatically. CI runs a deliberate subset via `just ci` (`fmt lint docs guard
+  prose test vet`); any new check that belongs in CI must be added to that
+  recipe deliberately, keeping the subset declaration in the justfile rather
+  than duplicated in the workflow YAML.
 
 ## Migration
 
