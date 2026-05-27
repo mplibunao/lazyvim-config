@@ -1,7 +1,7 @@
 -- Nix development: LSP, linting, and formatting integration.
 --
 -- Binaries come from Nix Home Manager (on PATH), never Mason; see
--- docs/tooling-policy.md. The lang.nix extra supplies the baseline (treesitter,
+-- docs/design-docs/tooling-policy.md. The lang.nix extra supplies the baseline (treesitter,
 -- nixfmt via conform, statix via nvim-lint, and nil_ls). This file swaps the LSP
 -- to nixd (for module-options completion) and adds deadnix alongside statix.
 
@@ -18,7 +18,7 @@ end
 -- those exprs to nixd makes it throw on every evaluation. Gate them on the flake
 -- actually existing, so degradation stays clean: nixd still attaches, only
 -- without options/package completion, instead of erroring repeatedly. See
--- docs/tooling-policy.md (graceful degradation).
+-- docs/design-docs/tooling-policy.md (graceful degradation).
 local has_dotfiles_flake = vim.fn.isdirectory(dotfiles_flake) == 1
 
 -- nixd is provided by Nix on PATH; never let Mason fetch a duplicate.

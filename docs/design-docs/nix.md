@@ -41,4 +41,4 @@ Two linters run via nvim-lint:
 `test-fixtures/nix/default.nix` is the smoke-test fixture. It triggers filetype
 detection, treesitter highlighting, and a `nixd` attach, and deliberately
 carries one `statix` finding and two `deadnix` findings so both linters can be
-confirmed wired. See [workflows.md](workflows.md) for the checklist.
+confirmed wired. See [workflows.md](../workflows.md) for the checklist.

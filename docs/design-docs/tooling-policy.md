@@ -79,7 +79,7 @@ Committed languages and where each tool comes from today:
 | Go | goimports, gofumpt | Formatter | Mason |
 | Go | golangci-lint | Linter | Mason |
 | Go | delve | DAP | Mason |
-| Go | gotestsum | Test runner | Nix `tier2.nix` (per `docs/go.md`) |
+| Go | gotestsum | Test runner | Nix `tier2.nix` (per `go.md`) |
 | Kotlin | kotlin_language_server | LSP | Mason (via `lang.kotlin`) |
 | Kotlin | ktlint | Formatter and linter | Mason (via `lang.kotlin`) |
 | Kotlin | kotlin-debug-adapter | DAP | Mason |
@@ -90,31 +90,18 @@ Committed languages and where each tool comes from today:
 The JSON, Markdown, Terraform, TOML, and TypeScript extras are enabled but carry
 no local tool overrides; their tooling comes from Mason via the stock extras.
 
-## Resolved: gopls duplicate (2026-05-27)
+## Go: a sanctioned partial
 
-`gopls` was provisioned twice: LazyVim's `lang.go` extra auto-installed it via
-Mason, and it was also declared in the dotfiles flake
-(`nix/home/mp/packages/tier2.nix`, alongside `gotestsum`). Inspecting both repos
-confirmed the duplicate.
+Go's LSP (gopls) is Nix-provisioned with Mason fenced (`mason = false`). Its
+helper tools (`goimports`, `gofumpt`, `golangci-lint`, `delve`, plus
+`gomodifytags` and `impl`) stay on Mason, installed by the `lang.go` extra.
+This is a deliberate exception, not an oversight: those tools are not duplicated,
+they work fine from Mason, and the only way to fence non-LSP tools is a hardcoded
+filter on the extra's `ensure_installed` list that fails silently if it goes
+stale across LazyVim updates. All six exist in nixpkgs, so a full move is a
+low-effort follow-up if cross-machine reproducibility later warrants it.
 
-Resolved by fencing Mason. `lua/plugins/go.lua` now sets `mason = false` on the
-gopls server, the redundant Mason tool list was removed from that file, and the
-orphaned Mason copy was uninstalled. Neovim resolves the Nix `gopls` at
-`/etc/profiles/per-user/mp/bin/gopls`, verified with `vim.fn.exepath`.
-
-### Go: a sanctioned partial
-
-Go's LSP follows the policy (Nix, fenced). Its helper tools (`goimports`,
-`gofumpt`, `golangci-lint`, `delve`, plus `gomodifytags` and `impl`) stay on
-Mason, installed by the `lang.go` extra. This is a deliberate exception, not an
-oversight. Those tools are not duplicated, they work fine from Mason, and the
-only way to fence non-LSP tools is a hardcoded filter on the extra's
-`ensure_installed` list that fails silently if it goes stale across LazyVim
-updates. Paying that permanent cost to fix a non-problem was judged not worth it.
-
-All six helper tools do exist in nixpkgs (`gofumpt`, `golangci-lint`, `delve`,
-`gotools` for goimports, `gomodifytags`, `impl`), so a full move stays a
-low-effort follow-up if cross-machine reproducibility later makes it worthwhile.
+Resolution history and deferred follow-ups: `exec-plans/completed/nix-neovim-tooling-2026-05-27.md`.
 
 ## Applying the policy to a new language
 
