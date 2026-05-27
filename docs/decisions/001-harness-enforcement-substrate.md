@@ -30,9 +30,11 @@ recipes (`just fmt`, `just lint`, `just docs`, `just guard`, `just prose`,
 tool-wrappers are inline recipes; only logic-heavy checks get their own files
 under `scripts/`.
 
-**Logic checks: Go (stdlib-only).** Checks with real parsing logic (the doc
-validator, future structural checks) are written in Go. A `go.mod` at repo root,
-no external deps, no `go.sum`. `gofmt`, `go vet`, and `go test` are bundled in
+**Logic checks: Go (stdlib-only), module at `scripts/`.** Checks with real
+parsing logic (the doc validator, future structural checks) are written in Go.
+`go.mod` lives under `scripts/` — not at repo root — keeping the root clean
+and separating harness tooling from the `test-fixtures/go/` fixture module.
+No external deps, no `go.sum`. `gofmt`, `go vet`, and `go test` are bundled in
 the toolchain — the logic layer is formatted, linted, and tested with zero
 additional tooling. Validator `_test.go` files wire into `just test`, so the
 harness tests its own tooling.

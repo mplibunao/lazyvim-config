@@ -20,6 +20,7 @@ Build out the **mechanical-enforcement harness** that the OpenAI "harness engine
 
 - **Item 0 complete:** dotfiles prerequisite committed on branch `doc-garden-setup-vale-v111` as `c2da93c` (`selene`, Go toolchain, and global Vale vocab terms).
 - **Items 1 and 3 complete:** nvim-lazy docs foundation landed in the docs-foundation commit: tech-debt tracker, root `ARCHITECTURE.md`, `docs/design-docs/`, `docs/decisions/`, and router/index link updates.
+- **Item 2 complete:** just + Go runner spine landed: `justfile` (check/fmt/lint/nvim/test/vet), `selene.toml` + `lazyvim_extras.toml` (vim+lazyvim_extras std covering LazyVim/Snacks globals), `scripts/go.mod` + `scripts/tooling.go` + `scripts/tooling_test.go` (stdlib-only Go module at scripts/), `scripts/check-nvim.lua` (data-driven headless checker with 5-fixture table, Nix invariants, bounded LSP timeouts, graceful binary-absent skips). `docs/workflows.md` updated with quick-validation block.
 
 ## Background
 
@@ -221,7 +222,7 @@ Task-specific checks the implementer runs before declaring done (beyond "it runs
 - **Selene std strictness and provenance:** a community neovim selene std versus a hand-rolled one, and which globals to include. Tactical; resolve when wiring `selene.toml`.
 - **Vale style strictness:** which AI-tell/em-dash rules error versus warn, and whether to reuse MP's existing Vale styles from dotfiles/claude-toolkit or keep a nvim-lazy-local config. Tactical; decide at implementation.
 - **`workflows.md` placement:** move into `design-docs/` (design) or keep at `docs/` root (operational runbook). Lean: keep at root as a runbook; confirm during Item 3.
-- **Go module location:** a `go.mod` at repo root versus under `scripts/` or `tooling/` (keeps the root clean and separate from the `test-fixtures/go` fixture module). Tactical; decide at implementation.
+- **Go module location:** resolved — `scripts/go.mod`. Keeps root clean; separates harness tooling from `test-fixtures/go/`. Recorded in ADR-001.
 
 ## References
 - Article: <https://openai.com/index/harness-engineering/> (local copy: `/Users/mp/Projects/personal/ai/claude-toolkit/docs/references/harness-engineering.md`)

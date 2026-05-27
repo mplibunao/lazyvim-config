@@ -1,0 +1,12 @@
+# Extra globals for selene.toml std = "lua51+lazyvim_extras".
+# Selene 0.30.x: top-level section headers are global names ([vim] = vim global).
+# any = true on all three: the full API surface is too large to type precisely.
+
+[vim]
+any = true
+
+[LazyVim]
+any = true
+
+[Snacks]
+any = true

@@ -56,3 +56,14 @@ is already covered:
   layer.
 
 **Trigger:** Only if a JS/TS layer is introduced to this repo.
+
+## TD-004: Extract gofmt check to a helper script
+
+**Status:** Deferred — inline is fine while the `fmt` recipe is the only shell-heavy check.
+**Deferred from:** `exec-plans/active/harness-engineering-adoption-2026-05-27.md`, Item 2
+
+The gofmt check in the `fmt` justfile recipe is inline shell. This is the right
+tradeoff while it's the only multi-step shell block in the file.
+
+**Trigger:** If Item 4 adds more shell-heavy Go checks, revisit extracting a
+`scripts/check-gofmt.sh` helper to avoid recipe bloat.

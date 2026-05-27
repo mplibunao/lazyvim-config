@@ -36,7 +36,7 @@ return {
   {
     "mfussenegger/nvim-lint",
     optional = true,
-    opts = function(_, opts)
+    opts = function(_, _opts)
       local linters = require("lint").linters
       linters.ktlint = linters.ktlint or {}
       linters.ktlint.args = linters.ktlint.args or {}
