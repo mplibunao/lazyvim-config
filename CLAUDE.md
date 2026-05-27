@@ -38,7 +38,7 @@ LazyVim configuration repo. Plugins are managed by lazy.nvim, extras are declare
 |---|---|
 | Load chain and file ownership | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | Customization clusters (what diverges from stock LazyVim) | [ARCHITECTURE.md](ARCHITECTURE.md) |
-| Agent validation workflows (tmux, headless checks) | [docs/workflows.md](docs/workflows.md) |
+| Agent validation workflows (`just check` and manual probes) | [docs/workflows.md](docs/workflows.md) |
 | Per-area design docs (tooling, language setup, operating principles) | [docs/design-docs/](docs/design-docs/index.md) |
 | Architecture decisions (ADRs) | [docs/decisions/](docs/decisions/) |
 | Deferred work items | [exec-plans/tech-debt-tracker.md](exec-plans/tech-debt-tracker.md) |
@@ -47,6 +47,7 @@ LazyVim configuration repo. Plugins are managed by lazy.nvim, extras are declare
 | Documentation catalog and placement rules | [docs/index.md](docs/index.md) |
 | Plugin update validation and test fixtures | [docs/workflows.md](docs/workflows.md), [test-fixtures/](test-fixtures/) |
 | Past implementation decisions | [exec-plans/](exec-plans/) |
+| External reference material | [docs/references/](docs/references/index.md) |
 
 ## Plugin patterns
 

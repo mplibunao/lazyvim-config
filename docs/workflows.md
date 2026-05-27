@@ -23,25 +23,6 @@ The installed pre-commit hook delegates to `just check`, so manual and commit-ti
 
 This config uses `NVIM_APPNAME=nvim-lazy`. Always set this when launching Neovim programmatically so you hit this config instead of the default.
 
-## Verifying changes with tmux
-
-tmux is the only reliable way for agents to test Neovim behavior. Launch a detached session, run the check, capture the output:
-
-```bash
-# Headless Lua check
-tmux new-session -d -s nvim-check -x 120 -y 40 \
-  "NVIM_APPNAME=nvim-lazy nvim --headless \
-  -c '<lua commands>' 2>&1 | tee /tmp/nvim-check.log"
-
-# Read output
-tmux capture-pane -p -t nvim-check
-
-# Clean up
-tmux kill-session -t nvim-check
-```
-
-Use `vim.defer_fn` with a delay (e.g., 3000ms) to let plugins load before checking values.
-
 ## Validation by change type
 
 | Change type | What to check |
@@ -80,45 +61,30 @@ Open each fixture and verify the relevant plugin chain loads:
 | Any file (optional, requires auth) | Copilot suggestions appear (skip if not authenticated) |
 | `:checkhealth` | General sweep for errors |
 
-### Headless validation (ad hoc debugging)
+---
 
-These snippets are for one-off investigation. For routine validation, use `just check`. The authoritative fixture list and exit-code harness are in `scripts/check-nvim.lua`.
+## Manual debugging (ad hoc only)
+
+The snippets below are for one-off investigation when `just check` output needs more context. The authoritative fixture list and exit-code harness are in `scripts/check-nvim.lua`.
+
+### Verifying changes with tmux
+
+tmux is the only reliable way for agents to test Neovim behavior interactively. Launch a detached session, run the check, capture the output:
 
 ```bash
-# Quick startup check: exits 0 if no errors
-NVIM_APPNAME=nvim-lazy nvim --headless \
-  -c "lua vim.defer_fn(function() vim.cmd('qa!') end, 5000)" \
-  test-fixtures/go/math_test.go
-
-# Check LSP attached to a fixture
+# Headless Lua check
 tmux new-session -d -s nvim-check -x 120 -y 40 \
-  "NVIM_APPNAME=nvim-lazy nvim \
-  -c 'lua vim.defer_fn(function() \
-    local clients = vim.lsp.get_clients({ bufnr = 0 }) \
-    for _, c in ipairs(clients) do print(c.name) end \
-    if #clients == 0 then print(\"NO LSP ATTACHED\") end \
-    vim.cmd(\"qa!\") \
-  end, 5000)' \
-  test-fixtures/go/math_test.go 2>&1 | tee /tmp/nvim-check.log"
-sleep 8 && tmux capture-pane -p -t nvim-check
-tmux kill-session -t nvim-check 2>/dev/null
+  "NVIM_APPNAME=nvim-lazy nvim --headless \
+  -c '<lua commands>' 2>&1 | tee /tmp/nvim-check.log"
+
+# Read output
+tmux capture-pane -p -t nvim-check
+
+# Clean up
+tmux kill-session -t nvim-check
 ```
 
-For the Nix fixture, confirm `nixd` (not `nil_ls`) attaches and that both linters are wired. Expect `lsp: nixd` and `linters: statix,deadnix`:
+Use `vim.defer_fn` with a delay (e.g., 3000ms) to let plugins load before checking values.
 
-```bash
-tmux new-session -d -s nvim-nix -x 120 -y 40 \
-  "NVIM_APPNAME=nvim-lazy nvim \
-  -c 'lua vim.defer_fn(function() \
-    local names = {} \
-    for _, c in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do names[#names+1] = c.name end \
-    print(\"lsp: \" .. table.concat(names, \",\")) \
-    print(\"linters: \" .. table.concat(require(\"lint\").linters_by_ft.nix or {}, \",\")) \
-    vim.cmd(\"qa!\") \
-  end, 5000)' \
-  test-fixtures/nix/default.nix 2>&1 | tee /tmp/nvim-nix.log"
-sleep 8 && tmux capture-pane -p -t nvim-nix
-tmux kill-session -t nvim-nix 2>/dev/null
-```
-
-`nixd` only attaches on a machine where the Nix-provided binary is on PATH (see [tooling-policy.md](design-docs/tooling-policy.md)); without it the line reads `lsp:` empty, which is the expected degraded state, not a failure. The `nixfmt` formatter is best confirmed interactively with `:ConformInfo` or `<leader>cf` on the fixture.
+For assertion patterns (filetype, LSP attach, linter wiring), `scripts/check-nvim.lua` is the
+reference; `just nvim` runs the full harness and covers all current fixtures.
