@@ -15,8 +15,8 @@ LazyVim configuration repo. Plugins are managed by lazy.nvim, extras are declare
 - **One plugin per concern.** Each file in `lua/plugins/` should return a table of plugin specs for a coherent feature area.
 - **Format with `stylua`.** Settings are in `stylua.toml` — do not duplicate them here.
 - **No manual AGENTS.md edits.** It is a symlink to `CLAUDE.md`.
-- **Topic docs go in `docs/`.** Language-specific guidance, workflow conventions, and architecture notes each get their own file.
-- **Decision history goes in `exec-plans/`.** Use `exec-plans/active/` for in-progress plans, `exec-plans/completed/` for finished ones.
+- **Topic docs go in `docs/`.** Per-area design and policy go in `docs/design-docs/`; architecture notes go in `ARCHITECTURE.md`; single decisions go in `docs/decisions/`.
+- **Implementation plans go in `exec-plans/`.** Use `exec-plans/active/` for in-progress plans, `exec-plans/completed/` for finished ones. Deferred work items go in `exec-plans/tech-debt-tracker.md`. Architectural decisions (ADRs) go in `docs/decisions/`.
 
 ## Repo map
 
@@ -36,13 +36,12 @@ LazyVim configuration repo. Plugins are managed by lazy.nvim, extras are declare
 
 | For... | See |
 |---|---|
-| Load chain and file ownership | [docs/architecture.md](docs/architecture.md) |
-| Customization clusters (what diverges from stock LazyVim) | [docs/architecture.md](docs/architecture.md) |
+| Load chain and file ownership | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| Customization clusters (what diverges from stock LazyVim) | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | Agent validation workflows (tmux, headless checks) | [docs/workflows.md](docs/workflows.md) |
-| Go tooling setup | [docs/go.md](docs/go.md) |
-| Kotlin tooling and formatting | [docs/kotlin.md](docs/kotlin.md) |
-| Nix tooling and LSP setup | [docs/nix.md](docs/nix.md) |
-| Tool provisioning policy (Nix vs Mason) | [docs/tooling-policy.md](docs/tooling-policy.md) |
+| Per-area design docs (tooling, language setup, operating principles) | [docs/design-docs/](docs/design-docs/index.md) |
+| Architecture decisions (ADRs) | [docs/decisions/](docs/decisions/) |
+| Deferred work items | [exec-plans/tech-debt-tracker.md](exec-plans/tech-debt-tracker.md) |
 | Keymap and usage reference | [cheatsheet.md](cheatsheet.md) |
 | Visual keybinding cheatsheet | [~/.agent/diagrams/nvim-keybindings.html](~/.agent/diagrams/nvim-keybindings.html) |
 | Documentation catalog and placement rules | [docs/index.md](docs/index.md) |

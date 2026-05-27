@@ -4,7 +4,7 @@
 -- come from the LazyVim lang.go extra via Mason, so they are not listed here.
 -- gopls comes from Nix Home Manager (dotfiles tier2.nix) and is fenced from
 -- Mason below, so Mason cannot install a second, version-drifting copy.
--- See docs/tooling-policy.md.
+-- See docs/design-docs/tooling-policy.md.
 -- Lint policy should live in the project's .golangci.yml, not here.
 return {
   {
@@ -43,7 +43,7 @@ return {
     opts = {
       servers = {
         gopls = {
-          mason = false, -- use the Nix gopls (see header + docs/tooling-policy.md)
+          mason = false, -- use the Nix gopls (see header + docs/design-docs/tooling-policy.md)
           settings = {
             gopls = {
               vulncheck = "Imports",

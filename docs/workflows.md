@@ -30,7 +30,7 @@ Use `vim.defer_fn` with a delay (e.g., 3000ms) to let plugins load before checki
 | `lua/config/*.lua` or `lua/plugins/*.lua` (existing plugins) | Format with `stylua` + headless startup check |
 | New/removed plugins or extras (any file) | `:Lazy sync` + lockfile review + startup check |
 | `lazyvim.json` changes | `:Lazy sync` + lockfile review + startup check |
-| `docs/*.md` or `CLAUDE.md` only | Verify referenced paths exist and spot-check claims against source files |
+| Markdown docs or routing files only (e.g. `docs/**`, `CLAUDE.md`, `ARCHITECTURE.md`, `exec-plans/**`) | Verify referenced paths exist and spot-check claims against source files |
 | Interactive UI / plugin behavior | tmux-backed visual validation |
 
 ## Plugin update validation
@@ -100,4 +100,4 @@ sleep 8 && tmux capture-pane -p -t nvim-nix
 tmux kill-session -t nvim-nix 2>/dev/null
 ```
 
-`nixd` only attaches on a machine where the Nix-provided binary is on PATH (see [tooling-policy.md](tooling-policy.md)); without it the line reads `lsp:` empty, which is the expected degraded state, not a failure. The `nixfmt` formatter is best confirmed interactively with `:ConformInfo` or `<leader>cf` on the fixture.
+`nixd` only attaches on a machine where the Nix-provided binary is on PATH (see [tooling-policy.md](design-docs/tooling-policy.md)); without it the line reads `lsp:` empty, which is the expected degraded state, not a failure. The `nixfmt` formatter is best confirmed interactively with `:ConformInfo` or `<leader>cf` on the fixture.
