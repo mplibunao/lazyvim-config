@@ -16,7 +16,7 @@ Build out the **mechanical-enforcement harness** that the OpenAI "harness engine
 > - Absolute paths: only add the ban once a sanctioned pattern and migration exist (Item 6). A rule without a solution just bounces the problem back to the maintainer.
 > - Prose: one cleanup pass over all docs when the Vale lane lands (little documentation today).
 > - CI: kept; best-practice regardless of repo size.
-> - Knip: declined (tracker TD-003, with reasoning).
+> - Knip: declined as the wrong tool for this Lua/Go repo; rationale kept in the considered-but-not-adopted section, not the debt tracker.
 
 ## Implementation progress
 
@@ -108,8 +108,8 @@ Add a **full mechanical-enforcement harness**, sharing one runner across a local
 
 ### Item 1: Seed the tech-debt tracker plus core-beliefs doc plus doc taxonomy
 **Goal:** Stand up the durable "later" home and the operating-principles doc before implementation leans on them. (Closes a standing gap: MP's global convention mandates a tracker for deferrals; the repo has none.)
-**What it does:** New `exec-plans/tech-debt-tracker.md` (claude-toolkit style: one subsection per item, deferrals added at plan-write time). Seed: **TD-001** interactive tmux/visual smoke harness (headless first; automate visual checks only if headless misses a plugin-update regression); **TD-002** ast-grep rule-catalog growth plus the `sg test`/`__snapshots__` harness (start with a flat scan; add the snapshot apparatus when the catalog grows beyond a couple of rules); **TD-003** Knip dead-code analysis (declined: Knip only analyzes JS/TS, but this repo is Lua plus a tiny Go tooling layer with no JS/TS; Selene covers Lua unused-bindings, `go vet`/the compiler cover the Go side, and LazyVim auto-loads every `lua/plugins/` file so there are no orphan modules. Trigger: only if a JS/TS layer is ever introduced). Also add `core-beliefs.md` (this is a config repo not a product; one check command over scattered snippets; docs are maps not duplicated code; mechanical rules carry remediation and ship only with a sanctioned pattern; optional tools degrade gracefully; no runtime/CI machinery beyond this harness unless scale changes). It lands at `docs/design-docs/core-beliefs.md` after the Item 3 restructure (or move it there as part of Item 3). Add a short **doc taxonomy** to `docs/index.md` mapping harness-engineering doc concepts to where they live here: root `ARCHITECTURE.md` is the top-level map (separate from design docs, per the article), `docs/design-docs/` is per-area design/policy plus core-beliefs, `decisions/` is ADRs, `references/` is external distillations, `exec-plans/` is plans plus tech-debt.
-**Done when:** `exec-plans/tech-debt-tracker.md` (seeded TD-001 to TD-003) and the core-beliefs doc exist; the doc-taxonomy note is in `docs/index.md`; both linked.
+**What it does:** New `exec-plans/tech-debt-tracker.md` (claude-toolkit style: one subsection per deferred item, deferrals added at plan-write time). Seed: **TD-001** interactive/visual smoke automation (after headless harness), **TD-002** ast-grep `sg test`/snapshot harness (after rule catalog grows). New `docs/design-docs/core-beliefs.md` captures the article's reusable harness principles in this repo's language. `docs/index.md` gains a doc-taxonomy note mapping: root `ARCHITECTURE.md` = current-state map, `design-docs/` = topic design docs, `decisions/` = ADRs, `references/` = external material, `exec-plans/` = implementation plans and debt.
+**Done when:** `exec-plans/tech-debt-tracker.md` (seeded with deferred work only) and the core-beliefs doc exist; the doc-taxonomy note is in `docs/index.md`; both link cleanly from `CLAUDE.md`/`docs/index.md`.
 **Key files:** `exec-plans/tech-debt-tracker.md`, `docs/design-docs/core-beliefs.md`, `docs/index.md`, `CLAUDE.md`
 **Dependencies:** None (core-beliefs final location coordinates with Item 3).
 **Size:** Small.
@@ -223,7 +223,7 @@ Task-specific checks the implementer runs before declaring done (beyond "it runs
 - **Vale and doc-garden are mid-refactor cross-repo** (`dotfiles/.plans/vale-config-improvements.md`): Item 7's prose lane and one-pass cleanup must land after the global E-Prime-off plus vocab change (else noise drowns the AI-tells signal), and Item 9's consumer contract must be confirmed against the post-refactor doc-garden skill. Mitigation: sequence Items 7 and 9 after that work; cross-repo tool terms (`ast-grep`/`sg`, `just`, `gofmt`) go to the global named vocab (dotfiles), and nvim-lazy-specific Lua terms (`selene`, `stylua`) go in nvim-lazy's repo-local vocab.
 
 ## Considered from the reference repos, not adopted (with why)
-- **Knip dead-code analysis:** declined; tracked TD-003. Knip only analyzes JS/TS, but the repo is Lua with a near-zero TS tooling layer; Selene plus LazyVim's auto-loader already cover the real dead-code surface.
+- **Knip dead-code analysis:** declined and intentionally not tracked as debt. Knip only analyzes JS/TS, but the repo is Lua plus a small Go tooling layer; Selene, LazyVim's auto-loader, `go vet`, and the Go compiler already cover the real dead-code surface.
 - **Secret scanning (gitleaks):** skipped; a Neovim config holds no secrets (the hardcoded paths are not secrets). Revisit only if that changes.
 - **Quality-score doc grading domains:** skipped; the article's per-domain quality grades assume many product domains, which a flat config repo lacks.
 - **File-size / structured-logging "taste" lints:** skipped for now; low yield on a small Lua tree. A file-size hygiene check could be a future ast-grep/shell rule (folds under TD-002) if a `lua/plugins/*.lua` bloats.

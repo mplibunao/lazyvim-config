@@ -40,23 +40,6 @@ the snapshot harness adds regression protection for rule-match accuracy.
 **Trigger:** When `guardrails/ast-grep/rules/` grows beyond ~5 rules, or any
 rule has produced false positives requiring refinement.
 
-## TD-003: Knip dead-code analysis
-
-**Status:** Declined; wrong tool for this repo's language mix. Re-evaluate only if a JS/TS layer is introduced.
-**Declined from:** `exec-plans/active/harness-engineering-adoption-2026-05-27.md`, Item 1
-
-Knip only analyzes JavaScript/TypeScript. This repo is primarily Lua with a
-small Go tooling layer and no JS/TS source files. The actual dead-code surface
-is already covered:
-
-- **Lua:** Selene (Item 2) flags unused bindings; LazyVim's auto-loader means
-  every `lua/plugins/*.lua` file is intentionally loaded, so there are no
-  orphan modules.
-- **Go:** `go vet` and the compiler catch unused identifiers in the tooling
-  layer.
-
-**Trigger:** Only if a JS/TS layer is introduced to this repo.
-
 ## TD-004: Extract gofmt check to a helper script
 
 **Status:** Deferred; inline is fine while the `fmt` recipe is the only shell-heavy check.
