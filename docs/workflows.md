@@ -15,7 +15,7 @@ Fresh clones should enable the repo-local Git hook once:
 just install-hooks
 ```
 
-The installed pre-commit hook delegates to `just check`, so manual and commit-time validation use the same gate.
+The installed pre-commit hook delegates to `just check`, so manual and commit-time validation use the same gate. The installed commit-message hook delegates policy to `scripts/commitmsg`, which enforces conventional commit subjects without emoji and runs Vale on the message text.
 
 ---
 
@@ -60,6 +60,18 @@ Open each fixture and verify the relevant plugin chain loads:
 | `test-fixtures/nix/default.nix` | `nixd` attaches (NOT `nil_ls`) via `:LspInfo`, treesitter highlights, nvim-lint lists `statix` and `deadnix` for `nix`, and `<leader>cf` formats with `nixfmt` (confirm via `:ConformInfo`) |
 | Any file (optional, requires auth) | Copilot suggestions appear (skip if not authenticated) |
 | `:checkhealth` | General sweep for errors |
+
+---
+
+## Doc garden
+
+Before running `/doc-garden audit` against this repo, ensure Vale style packages are present:
+
+```bash
+just setup-vale
+```
+
+The audit uses `.vale.ini` directly (via `guardrails/doc-history/policy.json`) but does not run setup automatically. Packages live in `styles/` and are not committed. A fresh clone or missing `styles/` will cause Vale to fail silently or error.
 
 ---
 

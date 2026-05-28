@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+msg_file="${1:?commit message file required}"
+case "$msg_file" in
+    /*) ;;
+    *) msg_file="$PWD/$msg_file" ;;
+esac
+
+repo_root="$(git --no-pager -c color.ui=false rev-parse --show-toplevel)"
+cd "$repo_root/scripts"
+
+exec go run ./commitmsg "$repo_root" "$msg_file"

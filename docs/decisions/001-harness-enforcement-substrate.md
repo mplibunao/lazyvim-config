@@ -39,8 +39,8 @@ the toolchain, so the logic layer is formatted, linted, and tested with zero
 additional tooling. Validator `_test.go` files wire into `just test`, so the
 harness tests its own tooling.
 
-**Hook: full gate, every commit.** `.githooks/pre-commit` delegates to
-`just check` with no independent logic. The hook runs every named recipe on every commit. The no-drift guarantee is structural: both
+**Hooks: full gate plus commit-message policy.** `.githooks/pre-commit` delegates to
+`just check` with no independent logic. `.githooks/commit-msg` enforces conventional commit subjects without emoji and runs Vale on the message text. The pre-commit hook runs every named recipe on every commit. The no-drift guarantee is structural: both
 local and CI invoke the same `just` recipe definitions. CI may omit `just nvim`
 by deliberate scoping (see CI decision below and Risks); that is an explicit
 subset choice, not silent parity drift.
@@ -88,7 +88,8 @@ of scope; not deferred.
 - `gofmt`, `go vet`, and `go test` are all built-in; the logic layer's quality
   bar is enforced without adding tools.
 - The full pre-commit gate adds per-commit latency (especially the headless nvim
-  check). Accepted cost for complete local validation on every commit.
+  check). The commit-message hook adds a smaller Vale pass over the message text.
+  Accepted cost for complete local validation on every commit.
 - CI deliberately omits `just nvim` until a cached lazy.nvim bootstrap is
   stable in CI. This is an explicit scope decision recorded here; both surfaces
   use the same named recipe definitions.
@@ -106,9 +107,9 @@ Rollout sequence is owned by the adoption plan
 (`exec-plans/active/harness-engineering-adoption-2026-05-27.md`).
 
 Shape in brief: toolchain provisioned first; `justfile` and `go.mod` added as
-the runner spine; per-gate recipes wired in one at a time; pre-commit hook
-added locally; CI added as the push backstop. Each step is independently
-reversible.
+the runner spine; per-gate recipes wired in one at a time; pre-commit and
+commit-message hooks added locally; CI added as the push backstop. Each step is
+independently reversible.
 
 ## Risks
 
