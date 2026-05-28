@@ -20,14 +20,14 @@ Build out the **mechanical-enforcement harness** that the OpenAI "harness engine
 
 ## Implementation progress
 
-- **Item 0 complete:** dotfiles prerequisite committed on branch `doc-garden-setup-vale-v111` as `c2da93c` (`selene`, Go toolchain, and global Vale vocab terms).
+- **Item 0 complete:** dotfiles prerequisite committed on branch `doc-garden-setup-vale-v111` as `c2da93c` (`selene`, Go toolchain, and shared Vale vocab terms for other repos) and `5f263d6` (`just` in tier1 packages). MP ran Nix apply twice; `just`, `selene`, `sg`, `vale`, and Go are available in the activated profile. nvim-lazy now owns its Vale accepted terms in `styles/config/vocabularies/`.
 - **Items 1 and 3 complete:** nvim-lazy docs foundation landed in the docs-foundation commit: tech-debt tracker, root `ARCHITECTURE.md`, `docs/design-docs/`, `docs/decisions/`, and router/index link updates.
 - **Item 2 complete:** just + Go runner spine landed: `justfile` (check/fmt/lint/nvim/test/vet), `selene.toml` + `lazyvim_extras.toml` (vim+lazyvim_extras std covering LazyVim/Snacks globals), `scripts/go.mod` + `scripts/tooling.go` + `scripts/tooling_test.go` (stdlib-only Go module at scripts/), `scripts/check-nvim.lua` (data-driven headless checker with 5-fixture table, Nix invariants, bounded LSP timeouts, graceful binary-absent skips). `docs/workflows.md` updated with quick-validation block.
 - **Item 4 complete:** deterministic docs validation landed in `scripts/check-docs.go` with unit coverage in `scripts/check-docs_test.go`; `just docs` validates hand-authored docs coverage through `docs/index.md` or directory indexes, excludes `docs/generated/` and `docs/reviews/`, and checks local Markdown links while ignoring external URLs, `mailto:`, bare anchors, and `~` home paths.
 - **Item 5 complete:** ast-grep guardrail infra landed under `guardrails/ast-grep/`, with `just guard` wired into `just check`; the first hygiene rule keeps LazyVim plugin disables in `lua/plugins/disabled.lua` with `enabled = false`.
 - **Item 6 complete:** ADR-002 records the home-path literal policy; `lua/plugins/nix.lua` and `lua/plugins/picker.lua` now use `vim.fn.expand("~/...")`; ast-grep bans hardcoded `/Users/...` and `/home/...` Lua string literals with remediation pointing at ADR-002.
 - **Item 7 complete:** Vale prose lane landed. `.vale.ini` is authoritative via `--no-global`; `just prose` owns file discovery over tracked hand-authored Markdown; explicit error pins for AI-tells and em-dashes are intentional. Prose-scope exclusions are generated/review output, legacy plans, fixtures, demos, and the `AGENTS.md` symlink.
-- **Item 8 complete:** local hook gate landed. `.githooks/pre-commit` resolves the repo root and delegates directly to `just check`; `just install-hooks` sets local `core.hooksPath` to `.githooks`; `docs/workflows.md` covers fresh-clone setup. Optional `commit-msg` validation is deferred to TD-005 until this repo records its commit-message policy and the needed Vale `COMMIT_EDITMSG` mapping.
+- **Item 8 complete:** local hook gate landed. `.githooks/pre-commit` resolves the repo root and delegates directly to `just check`; `.githooks/commit-msg` enforces conventional commits without emoji and runs Vale over the message; `just install-hooks` sets local `core.hooksPath` to `.githooks`; `docs/workflows.md` covers fresh-clone setup.
 - **Item 9 complete:** nvim-lazy is wired as a doc-garden consumer with `guardrails/doc-history/policy.json`, `scripts/guardrails/doc-history-check.cjs`, and `docs/generated/doc-garden/.gitkeep`. The policy scopes only current-state Markdown surfaces, excludes generated/review/historical surfaces, and defines no repo-specific `forbidden_tokens` yet. The scanner intentionally returns zero regex findings while the policy has no tokens, and fails closed if future policy adds tokens before scanner support exists. Verification ran the deterministic Doc Garden audit plus RepoPrompt review; generated audit/review outputs are ignored under `docs/generated/doc-garden/`, so only the directory placeholder and local ignore rule are commit candidates.
 
 ## Background
@@ -164,11 +164,11 @@ Add a **full mechanical-enforcement harness**, sharing one runner across a local
 **Size:** Small-Medium.
 
 ### Item 8: Add the pre-commit hook gate (full)
-**Status:** Complete; commit-message validation is out of scope and deferred to TD-005.
+**Status:** Complete.
 **Goal:** Make the full local gate automatic at commit time.
-**What it does:** `.githooks/pre-commit` resolves repo root and delegates to `just check` with no independent logic (cannot drift from manual). A `just install-hooks` recipe validates that `.githooks/pre-commit` exists and is executable, then runs `git config --local core.hooksPath .githooks` and prints confirmation. Per MP's decision the hook runs the full gate (format, lint, docs, guard, prose, test/vet, headless nvim). Commit-message validation is not part of Item 8; TD-005 tracks a future `commit-msg` hook once this repo records its commit-message policy and Vale `COMMIT_EDITMSG` mapping. `docs/workflows.md` documents that fresh clones run `just install-hooks`.
-**Done when:** `.githooks/pre-commit` delegates to `just check`; `just install-hooks` sets `core.hooksPath`; workflow doc covers setup.
-**Key files:** `.githooks/pre-commit`, `justfile`, `docs/workflows.md`
+**What it does:** `.githooks/pre-commit` resolves repo root and delegates to `just check` with no independent logic (cannot drift from manual). `.githooks/commit-msg` enforces conventional commit subjects without emoji and runs Vale over the message. A `just install-hooks` recipe checks both hook files and sets `core.hooksPath=.githooks`. Per MP's decision the pre-commit hook runs the full gate (format, lint, docs, guard, prose, test/vet, headless nvim).
+**Done when:** `.githooks/pre-commit` delegates to `just check`; `.githooks/commit-msg` rejects invalid subjects and emoji; `just install-hooks` sets `core.hooksPath`; workflow doc covers setup.
+**Key files:** `.githooks/pre-commit`, `.githooks/commit-msg`, `justfile`, `docs/workflows.md`
 **Dependencies:** Items 2 to 7 (the checks it gates).
 **Size:** Small.
 
@@ -178,7 +178,7 @@ Add a **full mechanical-enforcement harness**, sharing one runner across a local
 **Design-critique note (retained per MP):** the deterministic validator (Item 4) plus prose lane (Item 7) already cover linkage, link-resolution, and AI-tells, so doc-garden is the heavier layer; kept per MP's Phase-5 decision for the agent-driven review pass.
 **Done when:** `/doc-garden audit` runs against nvim-lazy via its `policy.json` plus Vale config and writes an audit under `docs/generated/doc-garden/`.
 **Key files:** `guardrails/doc-history/policy.json`, `docs/generated/doc-garden/` (output), `docs/index.md`; cross-repo: claude-toolkit doc-garden skill
-**Dependencies:** Items 4 and 7 (deterministic floor plus Vale), Item 0 (`vale`); cross-repo: the doc-garden refactor and global Vale changes (`dotfiles/.plans/vale-config-improvements.md`).
+**Dependencies:** Items 4 and 7 (deterministic floor plus Vale), Item 0 (`vale`); cross-repo: confirm the post-refactor doc-garden consumer contract (`dotfiles/.plans/vale-config-improvements.md`).
 **Size:** Medium.
 
 ### Item 10: Add the GitHub Actions CI backstop
@@ -220,7 +220,7 @@ Task-specific checks the implementer runs before declaring done (beyond "it runs
 - **Full gate in pre-commit is slow** (headless nvim per commit): MP accepted this for no-drift confidence. Keep `just nvim` headless plus timeout-bounded; per-domain recipes let agents run a fast subset while iterating.
 - **Headless nvim in CI is bootstrap-heavy:** CI deliberately omits `just nvim` (decision in ADR-001); a cached lazy.nvim bootstrap is the follow-up if `nvim` is later added to the CI subset.
 - **Selene false-positives on Neovim globals:** the std must cover all injected globals (`vim`, `LazyVim`, `Snacks`, and so on), not just `vim`. Tune `selene.toml` plus the neovim std up front.
-- **Vale and doc-garden are mid-refactor cross-repo** (`dotfiles/.plans/vale-config-improvements.md`): Item 7's prose lane and one-pass cleanup must land after the global E-Prime-off plus vocab change (else noise drowns the AI-tells signal), and Item 9's consumer contract must be confirmed against the post-refactor doc-garden skill. Mitigation: sequence Items 7 and 9 after that work; cross-repo tool terms (`ast-grep`/`sg`, `just`, `gofmt`) go to the global named vocab (dotfiles), and nvim-lazy-specific Lua terms (`selene`, `stylua`) go in nvim-lazy's repo-local vocab.
+- **Vale and doc-garden were mid-refactor cross-repo** (`dotfiles/.plans/vale-config-improvements.md`): the original plan expected global Vale vocab coordination. The as-built contract supersedes that: `.vale.ini` uses `StylesPath = styles`, and `styles/config/vocabularies/` is nvim-lazy's accepted-term source, tracked directly in the repo. Item 9's Doc Garden consumer still points at `.vale.ini`.
 
 ## Considered from the reference repos, not adopted (with why)
 - **Knip dead-code analysis:** declined and intentionally not tracked as debt. Knip only analyzes JS/TS, but the repo is Lua plus a small Go tooling layer; Selene, LazyVim's auto-loader, `go vet`, and the Go compiler already cover the real dead-code surface.
@@ -233,7 +233,6 @@ Task-specific checks the implementer runs before declaring done (beyond "it runs
 
 ## Open Questions
 - **Selene std strictness and provenance:** a community neovim selene std versus a hand-rolled one, and which globals to include. Tactical; resolve when wiring `selene.toml`.
-- **Vale style strictness:** which AI-tell/em-dash rules error versus warn, and whether to reuse MP's existing Vale styles from dotfiles/claude-toolkit or keep a nvim-lazy-local config. Tactical; decide at implementation.
 - **`workflows.md` placement:** move into `design-docs/` (design) or keep at `docs/` root (operational runbook). Lean: keep at root as a runbook; confirm during Item 3.
 - **Go module location:** resolved — `scripts/go.mod`. Keeps root clean; separates harness tooling from `test-fixtures/go/`. Recorded in ADR-001.
 
