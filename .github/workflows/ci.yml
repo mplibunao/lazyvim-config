@@ -12,8 +12,6 @@ env:
   SELENE_VERSION: "0.27.1"
   VALE_VERSION: "3.14.1"
   SG_VERSION: "0.36.0"
-  # ai-tells is a GitHub release zip; pin alongside VALE_VERSION when upgrading prose rules.
-  AI_TELLS_VERSION: "1.11.0"
 
 jobs:
   gate:
@@ -70,37 +68,25 @@ jobs:
           tar -xzf /tmp/vale.tar.gz -C /tmp vale
           sudo mv /tmp/vale /usr/local/bin/vale
 
-      # Cache downloaded Vale style packages. config/vocabularies/ is excluded:
-      # setup-vale.sh copies it from vale-config/ on every run.
+      # Cache downloaded Vale style packages and the config-hash marker.
+      # styles/config/vocabularies/ is tracked in the repo and must not be cached
+      # (restoring it would overwrite the checked-out vocab with a stale snapshot).
+      # just ci owns Vale setup via the prose: setup-vale dependency; no separate step needed.
       - name: Cache Vale style packages
         id: cache-vale
         uses: actions/cache@v4
         with:
           path: |
-            .vale-styles/ai-tells
-            .vale-styles/write-good
-            .vale-styles/alex
-            .vale-styles/Vale
-          # Key includes VALE_VERSION and AI_TELLS_VERSION so a version bump
-          # invalidates the cache even if .vale.ini content is unchanged.
-          # setup-vale.sh owns the Packages line, so changes to it must also bust the cache.
-          key: vale-styles-${{ env.VALE_VERSION }}-${{ env.AI_TELLS_VERSION }}-${{ hashFiles('.vale.ini', 'scripts/ci/setup-vale.sh') }}
+            styles/ai-tells
+            styles/write-good
+            styles/alex
+            styles/.vale-config-hash
+          # Key includes the Vale version, Vale config, setup helper, and repo vocabulary.
+          key: vale-styles-${{ env.VALE_VERSION }}-${{ hashFiles('.vale.ini', 'scripts/setup-vale.sh', 'styles/config/vocabularies/**') }}
           restore-keys: |
-            vale-styles-${{ env.VALE_VERSION }}-${{ env.AI_TELLS_VERSION }}-
+            vale-styles-${{ env.VALE_VERSION }}-
             vale-styles-
 
-      # Generate .vale.ci.ini, copy vocab, and optionally sync style packages.
-      # See scripts/ci/setup-vale.sh and vale-config/README.md for the contract.
-      - name: Set up Vale for CI
-        run: |
-          if [ "${{ steps.cache-vale.outputs.cache-hit }}" != "true" ]; then
-            sh scripts/ci/setup-vale.sh --sync
-          else
-            sh scripts/ci/setup-vale.sh
-          fi
-
-      # VALE_CONFIG directs just prose to .vale.ci.ini. just nvim is excluded (ADR-001).
+      # just nvim is excluded from CI (ADR-001).
       - name: Run CI gate
-        env:
-          VALE_CONFIG: .vale.ci.ini
         run: just ci
