@@ -1,0 +1,14 @@
+[tools]
+stylua = "0.20.0"
+# mise's short-name registry does not include Selene here; use the suggested aqua backend explicitly.
+"aqua:Kampfkarren/selene" = "0.27.1"
+vale = "3.14.1"
+ast-grep = "0.36.0"
+go = "1.26"
+just = "1.51.0"
+
+[settings]
+lockfile = true
+
+[env]
+GOTOOLCHAIN = "local"
