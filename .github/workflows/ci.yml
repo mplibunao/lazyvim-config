@@ -14,7 +14,7 @@ jobs:
       MISE_FROZEN: "1"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # Repo-local harness tools come from mise.toml + mise.lock.
       - name: Install mise tools
@@ -29,7 +29,7 @@ jobs:
       # just ci owns Vale setup via the prose: setup-vale dependency; no separate step needed.
       - name: Cache Vale style packages
         id: cache-vale
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             styles/ai-tells
