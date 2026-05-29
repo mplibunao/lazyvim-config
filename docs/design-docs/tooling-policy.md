@@ -5,6 +5,10 @@ adapters) from two sources: Nix Home Manager and Mason. This doc defines which
 source owns what, so the split stops being ad-hoc and future changes know where
 each tool belongs.
 
+This policy covers Neovim language tooling only; harness gate tools such as
+`stylua`, `selene`, `vale`, `ast-grep`, Go, and `just` are governed by
+[ADR-003](../decisions/003-mise-harness-toolchain.md).
+
 ## Policy
 
 ### 1. Nix Home Manager is authoritative for committed languages

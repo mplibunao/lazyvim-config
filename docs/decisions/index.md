@@ -9,6 +9,7 @@ sections. See [`template.md`](template.md) for the blank form.
 |---|---|---|
 | [001](001-harness-enforcement-substrate.md) | Harness enforcement substrate | accepted |
 | [002](002-home-path-literals.md) | Home path literals | accepted |
+| [003](003-mise-harness-toolchain.md) | Mise harness toolchain | accepted |
 
 ## Historical / superseded
 
