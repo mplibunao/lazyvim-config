@@ -116,9 +116,9 @@ independently reversible.
 - **Headless nvim is slow in CI.** Mitigated by running a deterministic subset
   in CI (omitting `just nvim`) until a cached lazy.nvim bootstrap is stable;
   the full gate stays local.
-- **Go toolchain must be on PATH.** Already provisioned via
-  Nix (this repo targets Go via test-fixtures/go and gopls); confirmed during
-  toolchain provisioning.
+- **Go toolchain must be on PATH.** Repo-pinned via mise for harness behavior,
+  with Nix retained as the bootstrap fallback that provides mise and shim
+  activation.
 - **selene std false-positives.** The Neovim standard library definition must
   cover all injected globals (`vim`, `LazyVim`, `Snacks`, etc.). Addressed when
   wiring `selene.toml`.
