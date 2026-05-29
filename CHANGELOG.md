@@ -18,7 +18,7 @@ This repo is a personal Neovim config rather than a published library, so entrie
 
 ### Changed
 
-- Planned the migration of harness gate tools to repo-local mise pins so local checks and CI use one version source. See [`exec-plans/active/mise-tooling-and-changelog-2026-05-29.md`](exec-plans/active/mise-tooling-and-changelog-2026-05-29.md).
+- Completed the migration of harness gate tools to repo-local mise pins so local checks and CI use one version source. See [`exec-plans/completed/mise-tooling-and-changelog-2026-05-29.md`](exec-plans/completed/mise-tooling-and-changelog-2026-05-29.md).
 
 ## 2026-05-28: Harness engineering adoption
 

@@ -62,20 +62,20 @@ The generated Doc Garden Markdown audit table can break rows when a Vale token c
 
 ## TD-008: Migrate CI tool provisioning from manual installs to mise
 
-**Status:** Deferred; current manual installs in `.github/workflows/ci.yml` work and the PR shipped green. Switch is high-leverage but not urgent.
+**Status:** Closed, 2026-05-30. The mise migration shipped. Outcome summary: `mise.toml`/`mise.lock` are the local version source for harness tools. CI now provisions through `jdx/mise-action`. Local docs, ADR-003, and `CHANGELOG.md` record the operating model. PR #3 was green.
 **Deferred from:** PR review discussion, 2026-05-28.
-**Active plan:** `exec-plans/active/mise-tooling-and-changelog-2026-05-29.md`
+**Completed plan:** `exec-plans/completed/mise-tooling-and-changelog-2026-05-29.md`
 
-CI currently installs `selene`, `stylua`, `ast-grep`, `vale`, and `go` via per-tool curl/install blocks. Local versions come from Nix (`dotfiles/nix/home/mp/modules/`). The Nix module and the CI workflow can pin different versions. Drift causes "passes locally, fails CI" (or vice versa) bugs; the `41ccc8d` selene install-permissions fix was a symptom of this surface, not the last one we'll hit.
+Before closure, CI installed `selene`, `stylua`, `ast-grep`, `vale`, and `go` through per-tool curl/install blocks. Local versions came from Nix (`dotfiles/nix/home/mp/modules/`). The Nix module and the CI workflow could pin different versions. That drift created "passes locally, fails CI" risks; the `41ccc8d` selene install-permissions fix was an example of this surface.
 
-A `mise.toml` collapses both sides to one pinned version per tool, consumed by `jdx/mise-action` in CI and `mise install` locally. The result is a single version source with fewer install scripts, plus a lighter CI bootstrap than Nix-in-CI would give.
+The completed migration uses `mise.toml` to collapse both sides to one pinned version per tool, consumed by `jdx/mise-action` in CI and `mise install` locally. The result is a single version source with fewer install scripts, plus a lighter CI bootstrap than Nix-in-CI would give.
 
 The split heuristic recorded for future tool decisions:
 - **mise** owns tools whose exact version determines a CI gate's behavior or output (formatters, linters, prose checkers, language toolchains used by repo scripts).
 - **Nix** owns machine-baseline tools by default (`gh`, shell, editors, window manager). Repo gate runners such as `just` may be pinned by mise when their version affects the harness or when repo isolation is explicitly desired.
 - **Edge case (Vale):** Vale is consumed by repos without repo-local config too (via the `doc-garden` skill running against arbitrary repos). Vale needs to be available globally via Nix and pinned per-repo via mise. mise shims win inside this repo; Nix Vale is the fallback elsewhere. Same pattern applies to `ast-grep` for ad-hoc cross-repo searches.
 
-**Original trigger conditions:** These conditions started the migration plan; keep them here as history until TD-008 is closed during plan closeout.
+**Original trigger conditions:** Retained as original trigger history.
 - A 6th tool is about to be added to `ci.yml`'s install steps.
 - A CI/local version mismatch produces a "passes locally, fails CI" failure.
 - A Nix package version bumps in dotfiles and we forget to update the CI install URL (or vice versa).

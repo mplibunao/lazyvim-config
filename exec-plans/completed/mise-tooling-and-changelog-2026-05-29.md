@@ -1,3 +1,7 @@
+# Completion note
+
+Completed on 2026-05-30 after Item 6 validation. The migration now uses `mise.toml`/`mise.lock` for local harness pins, `jdx/mise-action` for CI provisioning, and local docs/ADR/changelog updates for operator guidance. Local validation evidence from the orchestrator run: `just ci` and `just check` passed under a mise-first PATH. CI evidence: PR #3 was green in workflow job `Gate (just ci)`, run/job URL <https://github.com/mplibunao/lazyvim-config/actions/runs/26651770519/job/78551711321>. This plan was archived from `exec-plans/active/` to `exec-plans/completed/`.
+
 # Migrate harness tooling to mise + add CHANGELOG.md: Plan
 
 > Plan location note: rp-deep-plan defaults to `docs/plans/`, but this repo's
@@ -212,7 +216,7 @@ Decisions:
 ### Item 7: Close TD-008 + archive this plan
 **Goal:** Mark the deferred debt complete and move the plan to completed.
 **Done when:** TD-008 status is Closed with an outcome summary; this plan lives under `exec-plans/completed/`.
-**Key files:** `exec-plans/tech-debt-tracker.md:61-80`, `exec-plans/active/mise-tooling-and-changelog-2026-05-29.md` → `exec-plans/completed/`
+**Key files:** `exec-plans/tech-debt-tracker.md:61-80`; during closeout, this plan was archived from `exec-plans/active/mise-tooling-and-changelog-2026-05-29.md` to `exec-plans/completed/mise-tooling-and-changelog-2026-05-29.md`.
 **Dependencies:** Item 6 (do not close/archive until validation is green).
 **Size:** Small.
 **Details:** Flip TD-008 Status Deferred → Closed; summarize outcome (`mise.toml` + `mise.lock`, mise CI action, docs, changelog). Move the plan file and add a completion note at its top.
