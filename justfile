@@ -11,9 +11,10 @@
 #   just test    — Go tooling tests (scripts/)
 #   just vet     — Go tooling vet (scripts/)
 #
-# Harness gate tools come from Nix Home Manager (Item 0); language-server ownership follows
-# docs/design-docs/tooling-policy.md, where Mason still owns selected language helpers.
-# If selene, stylua, vale, or just are absent, activate your Nix profile first.
+# Repo-local harness gate tools come from mise; Nix remains the bootstrap/global fallback.
+# Language-server ownership follows docs/design-docs/tooling-policy.md, where Mason still
+# owns selected language helpers.
+# If selene, stylua, vale, go, sg, or just are absent, run `mise install` first.
 
 # Full gate: format → lint → docs → guard → prose → Go tests/vet → headless nvim. Fail-fast.
 check: fmt lint docs guard prose test vet nvim
@@ -29,7 +30,7 @@ install-hooks:
     @test -x .githooks/pre-commit || { printf '.githooks/pre-commit is not executable; run chmod +x .githooks/pre-commit.\n' >&2; exit 1; }
     @test -f .githooks/commit-msg || { printf 'Missing .githooks/commit-msg; refusing to install hooks.\n' >&2; exit 1; }
     @test -x .githooks/commit-msg || { printf '.githooks/commit-msg is not executable; run chmod +x .githooks/commit-msg.\n' >&2; exit 1; }
-    @command -v go >/dev/null || { printf 'go is required by .githooks/commit-msg. Install it through Nix/Home Manager.\n' >&2; exit 1; }
+    @command -v go >/dev/null || { printf 'go is required by .githooks/commit-msg. Run mise install to install repo-local harness tools.\n' >&2; exit 1; }
     git config --local core.hooksPath .githooks
     @printf 'Git hooks installed: core.hooksPath=%s\n' "$(git config --local core.hooksPath)"
 
