@@ -7,13 +7,17 @@ just check   # full gate, fail-fast; the justfile owns the current recipe sequen
 just --list  # authoritative recipe list and available targeted checks
 ```
 
-Tools come from Nix Home Manager. If `just` is missing, activate your Nix profile first (see `docs/design-docs/tooling-policy.md`).
+Repo-local harness gate tools come from mise. Nix remains the bootstrap/global fallback that provides baseline tools such as `mise`, while mise owns this repo's pinned `just`, `go`, `vale`, `stylua`, `selene`, and `ast-grep` versions.
 
-Fresh clones should enable the repo-local Git hook once:
+Fresh clones should trust this repo's mise config, install the pinned harness tools, then enable the repo-local Git hook once:
 
 ```bash
+mise trust
+mise install
 just install-hooks
 ```
+
+If `just`, `go`, `vale`, `stylua`, `selene`, or `sg` is missing, run `mise install` from the repo root.
 
 The installed pre-commit hook delegates to `just check`, so manual and commit-time validation use the same gate. The installed commit-message hook delegates policy to `scripts/commitmsg`, which enforces conventional commit subjects without emoji and runs Vale on the message text.
 
