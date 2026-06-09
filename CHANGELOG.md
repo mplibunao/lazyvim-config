@@ -19,7 +19,7 @@ This repo is a personal Neovim config rather than a published library, so entrie
 ### Changed
 
 - Completed the migration of harness gate tools to repo-local mise pins so local checks and CI use one version source. See [`exec-plans/completed/mise-tooling-and-changelog-2026-05-29.md`](exec-plans/completed/mise-tooling-and-changelog-2026-05-29.md) and [PR #3](https://github.com/mplibunao/lazyvim-config/pull/3).
-- Updated GitHub Actions to run on the current runtime while provisioning harness tools through mise.
+- Updated GitHub Actions to run on `ubuntu-latest` while provisioning harness tools through mise.
 
 ## 2026-05-28: Harness engineering adoption
 
