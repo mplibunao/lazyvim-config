@@ -93,8 +93,9 @@ prose: setup-vale
 # Headless Neovim: config load + per-fixture filetype assertions + Nix invariants.
 # Optional LSP checks skip gracefully when the binary is absent (tooling-policy.md).
 # Driven by scripts/check-nvim.lua; replaces the inline snippets in docs/workflows.md.
+# NVIM_CHECK_SMOKE=0 keeps a flag exported in the shell from turning on smoke assertions in the gate.
 nvim:
-    NVIM_APPNAME=nvim-lazy nvim --headless -c "luafile scripts/check-nvim.lua"
+    NVIM_APPNAME=nvim-lazy NVIM_CHECK_SMOKE=0 nvim --headless -c "luafile scripts/check-nvim.lua"
 
 # Smoke: the `nvim` checks plus attach assertions for Mason-managed language servers.
 # Run after plugin updates. Kept out of `check` so a broken upstream server cannot block a commit.

@@ -41,7 +41,7 @@ This config uses `NVIM_APPNAME=nvim-lazy`. Always set this when launching Neovim
 
 After updating plugins (`:Lazy update`), validate that plugin chains still load using the fixtures in `test-fixtures/`. Always run `:TSUpdate` after any treesitter plugin update.
 
-Run `just smoke` first. It runs the `just nvim` checks and also asserts that each Mason-managed language server attaches to its fixture. `just check` leaves those servers out so that a broken upstream server cannot block a commit. The checklist below covers what needs a live session.
+Run `just smoke` first, once Mason has finished installing any new servers. It runs the `just nvim` checks and also asserts that the Mason-managed language server named for each fixture in `scripts/check-nvim.lua` attaches. `just check` opens the same fixtures but skips those attach assertions, so that a broken upstream server cannot block a commit. The checklist below covers what needs a live session.
 
 ### Update clusters
 

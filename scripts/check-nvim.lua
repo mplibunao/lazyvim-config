@@ -31,9 +31,10 @@ local LSP_TIMEOUT_MS = 8000
 -- phase before any fixture is opened. Mirrors the defer used in the manual
 -- snippets in docs/workflows.md.
 local STARTUP_DELAY_MS = 3000
--- The gate asserts this repo's config invariants, so it leaves Mason-managed
--- servers alone: a broken upstream server must not block a commit. Smoke mode
--- asserts them as well, for validating plugin updates.
+-- The gate asserts this repo's config invariants. It opens every fixture but
+-- does not assert that a Mason-managed server attaches: a broken upstream
+-- server must not block a commit. Smoke mode asserts those as well, for
+-- validating plugin updates.
 local SMOKE = vim.env.NVIM_CHECK_SMOKE == "1"
 
 -- ---------------------------------------------------------------------------
@@ -225,32 +226,43 @@ end
 
 local done = false
 
+local function check_fixture(fixture)
+  -- :edit on a missing path opens an empty buffer whose name still sets the
+  -- filetype, so a deleted or renamed fixture would pass every check below.
+  if vim.fn.filereadable(fixture.path) == 0 then
+    fail(("%s: fixture file is missing"):format(fixture.path))
+    return
+  end
+
+  -- Opening the file fires BufRead/BufReadPost/FileType autocmds
+  -- synchronously, triggering lazy.nvim to load filetype-specific plugins.
+  vim.cmd("edit " .. vim.fn.fnameescape(fixture.path))
+  local buf = vim.api.nvim_get_current_buf()
+
+  -- Phase 1: filetype detection (synchronous, part of BufReadPost chain).
+  local ft = vim.bo[buf].filetype
+  if ft ~= fixture.filetype then
+    fail(("%s: filetype=%s want=%s"):format(fixture.path, ft == "" and "(empty)" or ft, fixture.filetype))
+  else
+    ok(("%s: filetype=%s"):format(fixture.path, ft))
+  end
+
+  -- Phase 2: fixture-specific pre-LSP checks (e.g. linter wiring).
+  if fixture.before_lsp then
+    fixture.before_lsp(buf)
+  end
+
+  -- Phase 3: LSP phase — attach wait (or skip) then after_lsp_settle.
+  run_lsp_phase(buf, fixture)
+end
+
 vim.defer_fn(function()
   -- Wrap the entire body so a Lua error cannot silently pass the checker.
   -- Any crash is recorded as a failure, and done is always set so the outer
-  -- vim.wait does not block for the full 120 s ceiling.
+  -- vim.wait does not block for its full budget.
   local ok_pcall, err = pcall(function()
     for _, fixture in ipairs(fixtures) do
-      -- Opening the file fires BufRead/BufReadPost/FileType autocmds
-      -- synchronously, triggering lazy.nvim to load filetype-specific plugins.
-      vim.cmd("edit " .. vim.fn.fnameescape(fixture.path))
-      local buf = vim.api.nvim_get_current_buf()
-
-      -- Phase 1: filetype detection (synchronous, part of BufReadPost chain).
-      local ft = vim.bo[buf].filetype
-      if ft ~= fixture.filetype then
-        fail(("%s: filetype=%s want=%s"):format(fixture.path, ft == "" and "(empty)" or ft, fixture.filetype))
-      else
-        ok(("%s: filetype=%s"):format(fixture.path, ft))
-      end
-
-      -- Phase 2: fixture-specific pre-LSP checks (e.g. linter wiring).
-      if fixture.before_lsp then
-        fixture.before_lsp(buf)
-      end
-
-      -- Phase 3: LSP phase — attach wait (or skip) then after_lsp_settle.
-      run_lsp_phase(buf, fixture)
+      check_fixture(fixture)
     end
   end)
 
@@ -262,15 +274,32 @@ vim.defer_fn(function()
   done = true
 end, STARTUP_DELAY_MS)
 
--- Keep the event loop alive until all checks complete.
--- 120 s hard ceiling; a false return means the deferred callback never fired.
-local completed = vim.wait(120000, function()
+-- Keep the event loop alive until all checks complete. A wait that is already
+-- running cannot be interrupted, so the budget has to outlast the deferred
+-- callback: the startup delay plus every wait a fixture can run, with headroom
+-- for opening files. A false return then means the callback never finished.
+local function wait_budget_ms()
+  local total = STARTUP_DELAY_MS + 60000
+  for _, fixture in ipairs(fixtures) do
+    local optional = fixture.optional_lsp
+    if optional then
+      local timeout = optional.timeout_ms or LSP_TIMEOUT_MS
+      total = total + math.max(timeout, optional.settle_ms or timeout)
+    end
+    if SMOKE and fixture.smoke_lsp then
+      total = total + (fixture.smoke_lsp.timeout_ms or LSP_TIMEOUT_MS)
+    end
+  end
+  return total
+end
+
+local budget_ms = wait_budget_ms()
+local completed = vim.wait(budget_ms, function()
   return done
 end, 100)
 
 if not completed then
-  -- done was never set: deferred callback did not run within the ceiling.
-  fail("check timed out after 120 s — deferred callback did not complete (lazy.nvim startup stalled?)")
+  fail(("check did not finish within %d s (lazy.nvim startup stalled?)"):format(budget_ms / 1000))
 end
 
 -- ---------------------------------------------------------------------------
