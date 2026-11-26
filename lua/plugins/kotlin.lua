@@ -51,6 +51,14 @@ return {
     opts = {
       servers = {
         kotlin_language_server = {
+          -- nvim-lspconfig derives storagePath from whichever buffer is current
+          -- when its server config loads. Outside a Kotlin project that leaves
+          -- the options empty, Neovim sends an empty table as a JSON array, and
+          -- the server rejects the array. The client's own root is always the
+          -- Kotlin project, and an explicit empty dict is sent as an object.
+          before_init = function(params, config)
+            params.initializationOptions = config.root_dir and { storagePath = config.root_dir } or vim.empty_dict()
+          end,
           settings = {
             kotlin = {
               compiler = {
