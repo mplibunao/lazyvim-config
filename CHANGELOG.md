@@ -14,6 +14,7 @@ This repo is a personal Neovim config rather than a published library, so entrie
 ### Changed
 
 - Updated 33 plugins to their latest versions, including LazyVim 15.15.0 to 16.0.2.
+- Updated Vale from 3.14.1 to 3.28.1 and the write-good, alex, and ai-tells style packages to their current releases, and reworded the docs that the newer rules flagged.
 
 ## 2026-05-29: Mise harness toolchain + changelog
 
