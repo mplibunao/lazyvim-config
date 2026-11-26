@@ -26,7 +26,7 @@ nvim-config lazy     # Set to use ~/.config/nvim-lazy/
 nvim-config default  # Reset to default ~/.config/nvim/
 ```
 
-**How it works:** Neovim uses `$NVIM_APPNAME` to locate config in `~/.config/$NVIM_APPNAME/`. The variable is set as a Fish universal+exported variable, persisting across sessions.
+**How it works:** `$NVIM_APPNAME` tells Neovim to load its config from `~/.config/$NVIM_APPNAME/`. The variable is set as a Fish universal+exported variable, persisting across sessions.
 
 The `lv` abbreviation maps to `nvim-lua`, not `nvim-lazy`. Use `nvim-config lazy` then `nvim` directly for LazyVim.
 
@@ -49,7 +49,7 @@ Loading order, each key file, and the extras system: [lazyvim-architecture.md](r
 
 ## Validation
 
-Prefer headless checks; they need no terminal and fit agent workflows:
+Prefer headless checks. They don't need a terminal and fit agent workflows:
 
 ```bash
 nvim --headless -c 'lua print("ok")' -c 'qa'                               # Syntax errors

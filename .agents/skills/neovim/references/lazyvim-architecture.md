@@ -126,10 +126,10 @@ return {
 
 LazyVim extras are pre-configured plugin collections:
 
-- **Lang extras**: Language support (typescript, python, etc.)
-- **Editor extras**: Editor features (mini.files, telescope, etc.)
+- **Lang extras**: language support (typescript, python, etc.)
+- **Editor extras**: editor features (mini.files, telescope, etc.)
 - **AI extras**: AI integrations (copilot, codeium, etc.)
-- **Util extras**: Utilities (dot files, mini-hipatterns, etc.)
+- **Util extras**: utilities (dot files, mini-hipatterns, etc.)
 
 ### Managing Extras
 

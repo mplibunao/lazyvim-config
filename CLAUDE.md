@@ -15,7 +15,7 @@ LazyVim configuration repo. Plugins are managed by lazy.nvim, extras are declare
 - **One plugin per concern.** Each file in `lua/plugins/` should return a table of plugin specs for a coherent feature area.
 - **Format with `stylua`.** Settings are in `stylua.toml`. Do not duplicate them here.
 - **No manual AGENTS.md edits.** It is a symlink to `CLAUDE.md`.
-- **Topic docs go in `docs/`.** Per-area design and policy go in `docs/design-docs/`; architecture notes go in `ARCHITECTURE.md`; single decisions go in `docs/decisions/`.
+- **Topic docs go in `docs/`.** Per-area design and policy go in `docs/design-docs/`, architecture notes go in `ARCHITECTURE.md`, and single decisions go in `docs/decisions/`.
 - **Implementation plans go in `exec-plans/`.** Use `exec-plans/active/` for in-progress plans, `exec-plans/completed/` for finished ones. Deferred work items go in `exec-plans/tech-debt-tracker.md`. Architectural decisions (ADRs) go in `docs/decisions/`.
 
 ## Repo map
@@ -53,7 +53,7 @@ LazyVim configuration repo. Plugins are managed by lazy.nvim, extras are declare
 ## Plugin patterns
 
 Adding, overriding, and disabling plugins all follow standard LazyVim conventions.
-See existing files in `lua/plugins/` for working examples; they are the best reference.
+See existing files in `lua/plugins/` for working examples. They are the best reference.
 
 To disable a LazyVim plugin, add it to `lua/plugins/disabled.lua` with `enabled = false`.
 

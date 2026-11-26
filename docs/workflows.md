@@ -7,9 +7,9 @@ just check   # full gate, fail-fast; the justfile owns the current recipe sequen
 just --list  # authoritative recipe list and available targeted checks
 ```
 
-Repo-local harness gate tools come from mise. Nix remains the bootstrap/global fallback that provides baseline tools such as `mise`, while mise owns this repo's pinned `just`, `go`, `vale`, `stylua`, `selene`, and `ast-grep` versions.
+Repo-local harness gate tools come from mise. Nix remains the bootstrap/global fallback that provides baseline tools such as `mise`, while mise provides this repo's pinned `just`, `go`, `vale`, `stylua`, `selene`, and `ast-grep` versions.
 
-Fresh clones should trust this repo's mise config, install the pinned harness tools, then enable the repo-local Git hook once:
+In a fresh clone, trust this repo's mise config and install the pinned harness tools. Then enable the repo-local Git hook once:
 
 ```bash
 mise trust
@@ -34,7 +34,7 @@ This config uses `NVIM_APPNAME=nvim-lazy`. Always set this when launching Neovim
 | `lua/config/*.lua` or `lua/plugins/*.lua` (existing plugins) | `just fmt` + `just nvim` |
 | New/removed plugins or extras (any file) | `just nvim` + `:Lazy sync` + lockfile review |
 | `lazyvim.json` changes | `just nvim` + `:Lazy sync` + lockfile review |
-| Any tracked hand-authored Markdown | `just docs` + `just prose`; the justfile owns exact prose-scope exclusions. Manually spot-check claim accuracy against source files. |
+| Any tracked hand-authored Markdown | `just docs` + `just prose`. The justfile defines the exact prose-scope exclusions. Manually spot-check claim accuracy against source files. |
 | Interactive UI / plugin behavior | tmux-backed visual validation |
 
 ## Plugin update validation
@@ -104,4 +104,4 @@ tmux kill-session -t nvim-check
 Use `vim.defer_fn` with a delay (e.g., 3000ms) to let plugins load before checking values.
 
 For assertion patterns (filetype, LSP attach, linter wiring), `scripts/check-nvim.lua` is the
-reference; `just nvim` runs the full harness and covers all current fixtures.
+reference. `just nvim` runs the full harness on every fixture listed there.

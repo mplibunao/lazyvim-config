@@ -1,6 +1,6 @@
 # Neovim Debugging and Logs
 
-Comprehensive guide to debugging Neovim issues and finding logs.
+Guide to debugging Neovim issues and finding logs.
 
 ## Quick Diagnostics
 

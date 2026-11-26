@@ -33,8 +33,8 @@ Use mise as the repo-local source of truth for harness gate tools:
 - `just`
 
 Nix remains responsible for baseline machine availability, including installing
-mise and putting mise shims on PATH. Inside this repo, mise shims should win so
-local hooks, local `just` runs, and CI all resolve the same tool versions.
+mise and putting mise shims on PATH. Inside this repo, mise shims should win.
+Local hooks, local `just` runs, and CI then all resolve the same tool versions.
 
 Pin Go to `1.26` in mise, raise the harness Go module floor to `go 1.26`, and
 set `GOTOOLCHAIN=local`. `GOTOOLCHAIN=local` keeps the mise-managed Go version
@@ -52,14 +52,14 @@ workflow shape but leaves two version authorities. It also keeps CI provisioning
 spread across curl, npm, setup-go, and setup-just steps. Rejected because the
 harness gate needs one repo-local source of truth.
 
-**Use Nix in CI for all gate tools.** This would align CI with the user's machine
+**Use Nix in CI for all gate tools.** This would align CI with my machine
 profile, but it makes a personal system flake the gate's version authority and
 adds more CI bootstrap weight than this repo needs. Rejected because the harness
 should be portable from the repo checkout.
 
 **Use a `.tool-versions` plus lockfile-only `mise.toml` split.** This matches
 another private repo pattern and is compatible with mise, but it spreads a small
-toolchain across two config files. Rejected in favor of a single `mise.toml` with
+toolchain across two config files. Rejected in favor of one `mise.toml` with
 a committed `mise.lock`.
 
 ## Consequences
@@ -71,7 +71,7 @@ a committed `mise.lock`.
   shims.
 - `gofmt`, `go vet`, and `go test` follow the repo-pinned Go SDK instead of a
   global Go installation.
-- Go 1.26 may surface new `gofmt`, `go vet`, or test behavior. That is accepted
+- Go 1.26 may introduce new `gofmt`, `go vet`, or test behavior. That is accepted
   because the harness should track a supported toolchain.
 - Vale style package behavior remains separate from the Vale binary pin, so
   style cache invalidation still follows `.vale.ini`, the setup script, and the
@@ -84,7 +84,7 @@ and commit `mise.lock` from mise. Run `mise install` locally and configure CI to
 install from the same files with frozen lockfile behavior.
 
 Update `scripts/go.mod` to `go 1.26` and set `GOTOOLCHAIN=local` in the mise
-environment. Keep `gofmt` implicit because it ships with the Go SDK.
+environment. Keep `gofmt` implicit because it comes with the Go SDK.
 
 Update local setup guidance to say `mise trust` and `mise install` prepare the
 repo-local gate tools. Keep Nix guidance only as the bootstrap path for mise and

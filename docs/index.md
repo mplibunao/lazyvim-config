@@ -1,7 +1,7 @@
 # Documentation Index
 
 This directory holds durable, topic-specific docs for this LazyVim config.
-`CLAUDE.md` is the router. It points here; it does not duplicate content.
+`CLAUDE.md` is the router. It points here and does not duplicate content.
 
 ## Doc taxonomy
 
@@ -21,14 +21,14 @@ Maps harness-engineering doc concepts to where they live in this repo:
 
 ## Placement rules
 
-- If it describes **how the config loads or who owns what**, it belongs in `ARCHITECTURE.md`.
+- If it describes **how the config loads or which file is responsible for what**, it belongs in `ARCHITECTURE.md`.
 - If it describes **how to validate changes**, it belongs in `workflows.md`.
 - If it covers a **specific language, toolchain, or design policy**, it belongs in `docs/design-docs/`.
-- If it records a **single architectural decision** with context and alternatives, it belongs in `docs/decisions/`.
+- If it records **one architectural decision** with context and alternatives, it belongs in `docs/decisions/`.
 - If it just restates what a code file already says, **delete it**: the code is the source of truth.
-- For **external material**: verbatim copies go in `docs/references/`; hand-authored distillations go in `docs/design-docs/`. See [`docs/references/index.md`](references/index.md) for the prose-scope policy.
+- For **external material**: verbatim copies go in `docs/references/`, and hand-authored distillations go in `docs/design-docs/`. See [`docs/references/index.md`](references/index.md) for the prose-scope policy.
 - Every hand-authored doc must be linked from this index or from a directory-level `index.md`.
-  Artifact directories (`docs/generated/`, `docs/reviews/`) are excluded; see the taxonomy above.
+  Artifact directories (`docs/generated/`, `docs/reviews/`) are excluded. See the taxonomy above.
 
 ## Docs
 

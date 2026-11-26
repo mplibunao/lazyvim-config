@@ -1,9 +1,9 @@
 # References
 
 Local copies of external material included for agent context. The index and framing notes are
-hand-authored prose; copied payload files are not.
+hand-authored prose. Copied payload files are not.
 
-> **Prose gate:** Each verbatim external payload file is excluded from `just prose` by an
+> **Prose gate:** each verbatim external payload file is excluded from `just prose` by an
 > explicit entry in the `justfile` prose recipe. Currently excluded: `harness-engineering.md`.
 > Adding a new payload requires a new targeted exclusion in the `justfile`; the directory is not
 > blanket-excluded. This index is prose-checked as normal.

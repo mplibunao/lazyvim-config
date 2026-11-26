@@ -215,7 +215,7 @@ nvim --headless -c 'lua for k,_ in pairs(package.loaded) do print(k) end' -c 'qa
 
 ### What Headless Cannot Do
 
-1. **Visual feedback** - No UI to see results
+1. **Visual feedback** - you can't see results in a UI
 2. **Interactive commands** - `:Lazy` UI, `:Mason` browser
 3. **User input** - Prompts, confirmations
 4. **Full LSP testing** - Needs actual file buffers
