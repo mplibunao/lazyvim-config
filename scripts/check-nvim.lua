@@ -5,6 +5,7 @@
 -- Run via `just nvim` (or directly):
 --   cd <repo> && NVIM_APPNAME=nvim-lazy nvim --headless \
 --       -c "luafile scripts/check-nvim.lua"
+-- `just smoke` runs the same checks in smoke mode (NVIM_CHECK_SMOKE=1).
 --
 -- Fixture table contract:
 --   path              string   — path relative to repo root
@@ -15,6 +16,8 @@
 --                                timeout_ms: positive client attach wait (default LSP_TIMEOUT_MS).
 --                                settle_ms: after_lsp_settle window when binary absent
 --                                (default timeout_ms). Keeps attach and settle concepts separate.
+--   smoke_lsp?        table    — { client, timeout_ms? }. A Mason-managed server whose
+--                                attach is asserted only in smoke mode.
 --   before_lsp?       fn(buf)  — called after filetype check, before any LSP wait
 --   after_lsp_settle? fn(buf)  — invoked by run_lsp_phase after the settle window
 --                                (after attach completes, or after settle_ms when
@@ -28,6 +31,10 @@ local LSP_TIMEOUT_MS = 8000
 -- phase before any fixture is opened. Mirrors the defer used in the manual
 -- snippets in docs/workflows.md.
 local STARTUP_DELAY_MS = 3000
+-- The gate asserts this repo's config invariants, so it leaves Mason-managed
+-- servers alone: a broken upstream server must not block a commit. Smoke mode
+-- asserts them as well, for validating plugin updates.
+local SMOKE = vim.env.NVIM_CHECK_SMOKE == "1"
 
 -- ---------------------------------------------------------------------------
 -- Output helpers
@@ -105,18 +112,19 @@ local fixtures = {
     filetype = "kotlin",
     -- kotlin_language_server is Mason-managed (predates the Nix policy) and its
     -- Mason-installed binary is visible to nvim but not to the shell. The server
-    -- has known crash bugs in some Mason versions. Asserting attach here would
-    -- gate just check on Mason LSP health rather than this repo's config
-    -- invariants, so we test filetype only.
+    -- has known crash bugs in some Mason versions, and the JVM is slow to start.
+    smoke_lsp = { client = "kotlin_language_server", timeout_ms = 30000 },
   },
   {
     -- LazyVim maps tsconfig*.json → jsonc via Neovim's built-in filetype.lua.
     path = "test-fixtures/json/tsconfig.json",
     filetype = "jsonc",
+    smoke_lsp = { client = "jsonls" },
   },
   {
     path = "test-fixtures/markdown/sample.md",
     filetype = "markdown",
+    smoke_lsp = { client = "marksman" },
   },
   {
     path = "test-fixtures/nix/default.nix",
@@ -128,14 +136,41 @@ local fixtures = {
     before_lsp = check_nix_linters,
     after_lsp_settle = check_nil_ls_absent,
   },
+  {
+    path = "test-fixtures/terraform/main.tf",
+    filetype = "terraform",
+    smoke_lsp = { client = "terraformls" },
+  },
+  {
+    path = "test-fixtures/toml/sample.toml",
+    filetype = "toml",
+    smoke_lsp = { client = "taplo" },
+  },
+  {
+    path = "test-fixtures/typescript/sample.ts",
+    filetype = "typescript",
+    smoke_lsp = { client = "vtsls", timeout_ms = 20000 },
+  },
+  {
+    path = "test-fixtures/yaml/sample.yaml",
+    filetype = "yaml",
+    smoke_lsp = { client = "yamlls" },
+  },
 }
 
 -- ---------------------------------------------------------------------------
 -- Generic LSP phase runner
 -- ---------------------------------------------------------------------------
 
+local function client_attached(buf, client, timeout)
+  return vim.wait(timeout, function()
+    return #vim.lsp.get_clients({ bufnr = buf, name = client }) > 0
+  end, 100)
+end
+
 -- Runs the complete LSP phase for a fixture: optional client attach wait
--- (or graceful skip when binary absent), then after_lsp_settle callback.
+-- (or graceful skip when binary absent), the smoke-mode attach assertion,
+-- then after_lsp_settle callback.
 --
 -- Owning both the wait and the callback here makes the timing contract
 -- unambiguous: after_lsp_settle always observes the settle window regardless
@@ -161,14 +196,21 @@ local function run_lsp_phase(buf, fixture)
         end, 100)
       end
     else
-      local attached = vim.wait(timeout, function()
-        return #vim.lsp.get_clients({ bufnr = buf, name = client }) > 0
-      end, 100)
-      if attached then
+      if client_attached(buf, client, timeout) then
         ok(("%s: LSP %s attached"):format(fixture.path, client))
       else
         fail(("%s: LSP %s: binary present but did not attach within %dms"):format(fixture.path, client, timeout))
       end
+    end
+  end
+
+  if SMOKE and fixture.smoke_lsp then
+    local client = fixture.smoke_lsp.client
+    local timeout = fixture.smoke_lsp.timeout_ms or LSP_TIMEOUT_MS
+    if client_attached(buf, client, timeout) then
+      ok(("%s: LSP %s attached"):format(fixture.path, client))
+    else
+      fail(("%s: LSP %s did not attach within %dms"):format(fixture.path, client, timeout))
     end
   end
 
