@@ -44,8 +44,8 @@ The function uses Fish universal variables (`-U`) and exports them (`-x`):
 set -Ux NVIM_APPNAME "nvim-$argv[1]"
 ```
 
-- `-U`: Universal variable - persists across sessions
-- `-x`: Exported - available to child processes (including nvim)
+- `-U`: universal variable - persists across sessions
+- `-x`: exported - available to child processes (including nvim)
 
 Once set, the configuration persists until explicitly changed.
 
@@ -85,7 +85,7 @@ nvim  # or use 'v' abbreviation
 
 ## Running with Specific Config (One-off)
 
-For a single invocation without changing the persistent setting:
+For one invocation without changing the persistent setting:
 
 ```bash
 # Run with specific config

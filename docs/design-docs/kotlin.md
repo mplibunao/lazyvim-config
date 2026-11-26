@@ -39,8 +39,8 @@ The diagnostic message in Neovim shows the rule ID in brackets, e.g. `[standard:
 
 Configured in `lua/plugins/kotlin.lua`. Uses `kotlin-language-server` (not the official `kotlin-lsp` which is still pre-alpha).
 
-- **JVM target:** Set to `17`. Change it if your project targets a different version
-- **Inlay hints:** Parameter hints and type hints enabled as a learning aid while ramping up on Kotlin. Disable `typeHints` later if they become noisy
+- **JVM target:** set to `17`. Change it if your project targets a different version
+- **Inlay hints:** parameter hints and type hints enabled as a learning aid while ramping up on Kotlin. Disable `typeHints` later if they get in the way
 
 ### Switching JVM target
 
@@ -51,8 +51,8 @@ Edit `lua/plugins/kotlin.lua` and change `target = "17"` to match your project (
 Requires `dap.core` extra (enabled in `lazyvim.json`) and `kotlin-debug-adapter` (auto-installed via Mason).
 
 LazyVim's Kotlin extra provides two DAP configs:
-- **"Kotlin: This file"** (run/debug the current file)
-- **"Kotlin: Attach"** (attach to a running JVM debug port)
+- **`Kotlin: This file`** (run/debug the current file)
+- **`Kotlin: Attach`** (attach to a running JVM debug port)
 
 ### Debugging tests with Maven
 
@@ -63,7 +63,7 @@ mvnDebug test
 mvn -Dmaven.surefire.debug test
 ```
 
-Then in Neovim: `<leader>dc` (continue/start) → select "Kotlin: Attach" from the config picker → connect to port 5005 (or 8000 for `mvnDebug`).
+Then in Neovim: `<leader>dc` (continue/start) → select `Kotlin: Attach` from the config picker → connect to port 5005 (or 8000 for `mvnDebug`).
 
 ## Useful keymaps
 

@@ -28,7 +28,7 @@ do not double-format.
 
 ## Linting (statix and deadnix)
 
-Two linters run via nvim-lint:
+nvim-lint runs `statix` and `deadnix`:
 
 - `statix` catches Nix anti-patterns and can auto-fix with `statix fix`. It is
   wired by the `lang.nix` extra.

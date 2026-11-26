@@ -17,6 +17,9 @@ var conventionalSubject = regexp.MustCompile(`^(` + strings.Join(allowedTypes, `
 
 var emojiPattern = regexp.MustCompile(`(?:[\x{1F1E6}-\x{1F1FF}]{2}|[#*0-9]\x{FE0F}?\x{20E3}|[\x{1F300}-\x{1FAFF}\x{2700}-\x{27BF}\x{2600}-\x{26FF}]\x{FE0F}?)`)
 
+// trailerLine matches a git trailer such as "Signed-off-by: Name <address>".
+var trailerLine = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9-]*: \S`)
+
 type commitMessage struct {
 	Subject string
 	// Text is the full non-comment message content (subject + blank line + body).
@@ -38,6 +41,21 @@ func parseCommitMessage(input string) commitMessage {
 		subject = nonComment[0]
 	}
 	return commitMessage{Subject: subject, Text: strings.Join(nonComment, "\n")}
+}
+
+// proseText returns the message without its trailing trailer block. Trailers
+// are metadata in a fixed "Token: value" form, and prose rules misread them.
+func proseText(text string) string {
+	paragraphs := strings.Split(strings.TrimRight(text, "\n"), "\n\n")
+	if len(paragraphs) < 2 {
+		return text
+	}
+	for _, line := range strings.Split(paragraphs[len(paragraphs)-1], "\n") {
+		if !trailerLine.MatchString(line) {
+			return text
+		}
+	}
+	return strings.Join(paragraphs[:len(paragraphs)-1], "\n\n")
 }
 
 func validateMessage(message commitMessage) error {
@@ -66,6 +84,7 @@ func run(name string, args ...string) error {
 // runVale lints the commit message through Vale using the repo-local .vale.ini.
 // The message is written to a temp *.md file so [*.md] rules from .vale.ini apply.
 // There is no [COMMIT_EDITMSG] section; ai-tells-commits is intentionally not loaded.
+// Trailers are left out of the linted text.
 func runVale(repoRoot string, message commitMessage) error {
 	tmp, err := os.CreateTemp("", "nvim-lazy-commit-msg-*.md")
 	if err != nil {
@@ -73,7 +92,7 @@ func runVale(repoRoot string, message commitMessage) error {
 	}
 	defer os.Remove(tmp.Name())
 
-	if _, err := tmp.WriteString(message.Text + "\n"); err != nil {
+	if _, err := tmp.WriteString(proseText(message.Text) + "\n"); err != nil {
 		tmp.Close()
 		return err
 	}

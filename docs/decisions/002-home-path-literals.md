@@ -35,8 +35,8 @@ one owner. Do not create that module until such a path exists.
 config is reused under a different account name or on a Linux machine. Rejected.
 
 **Use environment variables for every external checkout.** Flexible, but it
-turns common local defaults into setup burden. `vim.fn.expand("~/...")` keeps
-the current behavior while removing the brittle prefix. Rejected as the default.
+turns common local defaults into setup burden. `vim.fn.expand("~/...")` gives
+the same behavior without the hardcoded prefix. Rejected as the default.
 
 **Create `lua/config/paths.lua` immediately.** Useful for non-home-relative
 machine-specific values, but unnecessary indirection for the current paths. The

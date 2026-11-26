@@ -13,3 +13,5 @@ kls_database.db
 # styles/config/ (repo-owned vocab) is tracked; downloaded package dirs are not.
 styles/*
 !styles/config/
+# The ai-tells package writes its output templates into styles/config/ as well.
+styles/config/templates/

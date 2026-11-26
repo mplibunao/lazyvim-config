@@ -1,9 +1,9 @@
 # Tooling provisioning policy: Nix vs Mason
 
 This config draws language tooling (LSP servers, formatters, linters, debug
-adapters) from two sources: Nix Home Manager and Mason. This doc defines which
-source owns what, so the split stops being ad-hoc and future changes know where
-each tool belongs.
+adapters) from two sources, Nix Home Manager and Mason. This doc defines which
+source provides each tool. With that written down, the split is no longer
+ad-hoc, and future changes know where each tool belongs.
 
 This policy covers Neovim language tooling only; harness gate tools such as
 `stylua`, `selene`, `vale`, `ast-grep`, Go, and `just` are governed by
@@ -16,11 +16,11 @@ This policy covers Neovim language tooling only; harness gate tools such as
 A language is *committed* when it has a `lang.*` extra enabled in `lazyvim.json`
 and a `lua/plugins/<lang>.lua` file. For committed languages, the LSP server,
 formatter, and linter binaries come from Nix Home Manager, declared in the
-dotfiles flake. Nix is the single source of truth for those binaries. The
-Neovim side only tunes behavior (LSP settings, conform and nvim-lint routing);
-it does not fetch the binaries.
+dotfiles flake. Nix is the only source of truth for those binaries. The
+Neovim side only tunes behavior (LSP settings, conform and nvim-lint routing).
+It does not fetch the binaries.
 
-The user's machine provisions dev tooling declaratively through Nix. Pinning
+Dev tooling on this machine is provisioned declaratively through Nix. Pinning
 tool versions in the flake gives reproducible,
 version-locked tooling that matches the rest of the system, rather than a
 second, drifting copy managed by Mason.
@@ -30,17 +30,17 @@ second, drifting copy managed by Mason.
 Mason remains enabled (only `bufferline.nvim` is disabled, in
 `lua/plugins/disabled.lua`). Its role is a scratchpad for languages not yet
 committed to the flake: trying a new language, or reaching for a one-off tool
-not worth a rebuild.
+that does not justify a rebuild.
 
-Mason must never shadow a Nix-provided server. When a language's tooling moves
-to Nix, fence Mason off for that server with `mason = false` in the
+Mason must never shadow a Nix-provided server. When the tooling for a language
+moves to Nix, fence Mason off for that server with `mason = false` in the
 `nvim-lspconfig` `opts.servers.<server>` entry. That stops Mason from
 auto-installing a duplicate that competes with the Nix binary on PATH. The Nix
 support added by the Nix tooling work is the first language built to this rule
 (`opts.servers.nixd = { mason = false }`, plus `nil_ls = { enabled = false }`
 to keep the extra's default server from attaching).
 
-### 3. Graceful degradation is the portability story
+### 3. Graceful degradation makes the config portable
 
 A missing tool binary does not break the config. If a Nix-provided binary is
 absent (as on a machine without this Nix setup), the affected LSP does
@@ -48,9 +48,10 @@ not attach, and conform or nvim-lint cannot run that tool. The config keeps load
 the affected LSP, formatter, or linter is simply unavailable and may emit a
 tool-specific diagnostic when invoked. Editing still works in a reduced form.
 
-This is what keeps the config portable despite leaning on Nix. A non-Nix
-machine gets a degraded but functional editor (treesitter, keymaps, and any
-Mason-installed tools still work), rather than a hard failure. conform and
+Graceful degradation lets the config work on other machines even though it
+depends on Nix.
+A non-Nix machine gets a degraded but functional editor: treesitter, keymaps,
+and any Mason-installed tools still work. conform and
 nvim-lint formatter and linter entries use `optional = true` for this reason,
 and an LSP with no binary on PATH stays detached without breaking startup.
 
@@ -61,9 +62,9 @@ means editing the flake and running `darwin-rebuild switch`, which is slower and
 heavier than Mason's `:MasonInstall`. Tool changes are coupled to a system
 rebuild instead of an in-editor action.
 
-This is the accepted price for reproducibility and a single source of truth.
-Mason stays available so experimental work can skip the rebuild tax until a
-language is worth committing.
+This is the accepted price for reproducibility and one source of truth.
+Mason remains available so experimental work can skip the rebuild tax until a
+language is committed.
 
 ## Current state inventory
 
@@ -91,8 +92,8 @@ Committed languages and where each tool comes from today:
 | Nix | nixfmt | Formatter | Nix `neovim.nix` |
 | Nix | statix, deadnix | Linter | Nix `nix-ops-tools.nix` |
 
-The JSON, Markdown, Terraform, TOML, TypeScript, and YAML extras are enabled but carry
-no local tool overrides; their tooling comes from Mason via the stock extras.
+The JSON, Markdown, Terraform, TOML, TypeScript, and YAML extras are enabled but have
+no local tool overrides. Their tooling comes from Mason via the stock extras.
 
 ## Go: a sanctioned partial
 
@@ -115,8 +116,8 @@ When committing a language to this config:
    not Mason.
 2. Enable the `lang.*` extra in `lazyvim.json` for treesitter, filetype
    detection, and baseline wiring.
-3. In `lua/plugins/<lang>.lua`, set `mason = false` on each Nix-provided server
-   so Mason does not install a duplicate. Disable any extra-wired server you are
-   replacing with `enabled = false`.
+3. In `lua/plugins/<lang>.lua`, set `mason = false` on each Nix-provided
+   server so Mason does not install a duplicate. Disable any extra-wired server
+   you are replacing with `enabled = false`.
 4. Keep conform and nvim-lint entries `optional = true` so the config degrades
    gracefully where the binary is absent.

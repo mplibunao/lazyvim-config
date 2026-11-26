@@ -5,22 +5,22 @@
 
 ## Context
 
-nvim-lazy was convention-rich but enforcement-free: a clean router `CLAUDE.md`,
-indexed docs, and manually-run snippets in `docs/workflows.md`, but no
-automated validation runner, no Lua linter, no doc validator, no git hook, and
-no CI. Every rule was prose-only.
+nvim-lazy was convention-rich but enforcement-free. It had a clean router
+`CLAUDE.md`, indexed docs, and manually-run snippets in `docs/workflows.md`. It
+lacked an automated validation runner, a Lua linter, a doc validator, a git
+hook, and CI. Every rule was prose-only.
 
 The harness engineering adoption plan
 (`exec-plans/active/harness-engineering-adoption-2026-05-27.md`) adds the
-missing enforcement layer. Before writing a single script, four core
+missing enforcement layer. Before writing any script, four core
 choices needed locking:
 
 1. **Runner:** what orchestrates all checks locally and in CI?
 2. **Logic check language:** where do checks with real parsing or validation
    logic live?
 3. **Hook strategy:** what runs at commit time, and how much?
-4. **CI strategy:** is a CI backstop worth the overhead for a personal config
-   repo?
+4. **CI strategy:** does a CI backstop justify its overhead for a personal
+   config repo?
 
 ## Decision
 
@@ -30,17 +30,17 @@ recipes (`just fmt`, `just lint`, `just docs`, `just guard`, `just prose`,
 tool-wrappers are inline recipes; only logic-heavy checks get their own files
 under `scripts/`.
 
-**Logic checks: Go (stdlib-only), module at `scripts/`.** Checks with real
+**Logic checks in Go (stdlib-only), module at `scripts/`.** Checks with real
 parsing logic (the doc validator, future structural checks) are written in Go.
-`go.mod` lives under `scripts/` (not at repo root), keeping the root clean
-and separating harness tooling from the `test-fixtures/go/` fixture module.
+`go.mod` lives under `scripts/` (not at repo root). That leaves the root clean
+and separates harness tooling from the `test-fixtures/go/` fixture module.
 No external deps, no `go.sum`. `gofmt`, `go vet`, and `go test` are bundled in
 the toolchain, so the logic layer is formatted, linted, and tested with zero
-additional tooling. Validator `_test.go` files wire into `just test`, so the
+additional tooling. Validator `_test.go` files wire into `just test`. The
 harness tests its own tooling.
 
 **Hooks: full gate plus commit-message policy.** `.githooks/pre-commit` delegates to
-`just check` with no independent logic. `.githooks/commit-msg` enforces conventional commit subjects without emoji and runs Vale on the message text. The pre-commit hook runs every named recipe on every commit. The no-drift guarantee is structural: both
+`just check` with no independent logic. `.githooks/commit-msg` enforces conventional commit subjects without emoji and runs Vale on the message text. The pre-commit hook runs every recipe in `just check` on every commit. The no-drift guarantee is structural: both
 local and CI invoke the same `just` recipe definitions. CI may omit `just nvim`
 by deliberate scoping (see CI decision below and Risks); that is an explicit
 subset choice, not silent parity drift.
@@ -48,7 +48,7 @@ subset choice, not silent parity drift.
 **CI: deliberate backstop.** `.github/workflows/ci.yml` runs a deterministic
 subset on push/PR, explicitly omitting `just nvim` until headless nvim is
 stable in CI. CI catches commits that bypassed the local hook. The subset is a
-named decision, not silent drift; both surfaces share the same `just` recipe
+named decision, not silent drift. Local runs and CI share the same `just` recipe
 definitions. Kept as best-practice regardless of repo size.
 
 **Remediation-first failures.** Every check prints what to fix, where, and why.
@@ -79,7 +79,7 @@ immediate feedback without manual CI triggers.
 **Product-scale machinery** (observability stacks, per-worktree app boot,
 Chrome DevTools runtime, ports-and-adapters architecture, agent-to-agent PR
 review) solves problems a personal config repo does not have. Rejected as out
-of scope; not deferred.
+of scope, not deferred.
 
 ## Consequences
 
@@ -87,35 +87,35 @@ of scope; not deferred.
   file.
 - `gofmt`, `go vet`, and `go test` are all built-in; the logic layer's quality
   bar is enforced without adding tools.
-- The full pre-commit gate adds per-commit latency (especially the headless nvim
-  check). The commit-message hook adds a smaller Vale pass over the message text.
+- The full gate at pre-commit adds latency to every commit (especially the
+  headless nvim check). The commit-message hook adds a smaller Vale pass over the message text.
   Accepted cost for complete local validation on every commit.
 - CI deliberately omits `just nvim` until a cached lazy.nvim bootstrap is
-  stable in CI. This is an explicit scope decision recorded here; both surfaces
-  use the same named recipe definitions.
+  stable in CI. This is an explicit scope decision recorded here. Local runs and
+  CI use the same recipe definitions.
 - Per-domain recipes (`just lint`, `just docs`, etc.) let agents and humans run
-  fast subsets while iterating; `just check` remains the final local gate.
-- All future checks wire into `just check` first; the hook inherits them
+  fast subsets while iterating. `just check` remains the final local gate.
+- All future checks wire into `just check` first, and the hook inherits them
   automatically. CI runs a deliberate subset via `just ci` (`fmt lint docs guard
-  prose test vet`); any new check that belongs in CI must be added to that
-  recipe deliberately, keeping the subset declaration in the justfile rather
-  than duplicated in the workflow YAML.
+  prose test vet`). Any new check that belongs in CI must be added to that
+  recipe deliberately. The justfile then declares the subset, and the workflow YAML
+  does not duplicate it.
 
 ## Migration
 
 Rollout sequence is owned by the adoption plan
 (`exec-plans/active/harness-engineering-adoption-2026-05-27.md`).
 
-Shape in brief: toolchain provisioned first; `justfile` and `go.mod` added as
-the runner spine; per-gate recipes wired in one at a time; pre-commit and
-commit-message hooks added locally; CI added as the push backstop. Each step is
-independently reversible.
+In brief: the toolchain is provisioned first, then `justfile` and `go.mod` are
+added as the runner spine, per-gate recipes are wired in one at a time,
+pre-commit and commit-message hooks are added locally, and CI is added as the
+push backstop. Each step is independently reversible.
 
 ## Risks
 
 - **Headless nvim is slow in CI.** Mitigated by running a deterministic subset
-  in CI (omitting `just nvim`) until a cached lazy.nvim bootstrap is stable;
-  the full gate stays local.
+  in CI (omitting `just nvim`) until a cached lazy.nvim bootstrap is stable.
+  The full gate runs only locally.
 - **Go toolchain must be on PATH.** Repo-pinned via mise for harness behavior,
   with Nix retained as the bootstrap fallback that provides mise and shim
   activation.

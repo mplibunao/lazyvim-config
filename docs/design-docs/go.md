@@ -11,7 +11,7 @@ Both are auto-installed via Mason.
 
 ## Linting
 
-Uses `golangci-lint` via nvim-lint. This is an umbrella linter that runs multiple Go linters in a single pass.
+Uses `golangci-lint` via nvim-lint. This is an umbrella linter that runs multiple Go linters in one pass.
 
 Lint policy should live in the project's `.golangci.yml`, not in Neovim config. `golangci-lint` searches upward for config files automatically.
 
@@ -53,7 +53,7 @@ Uses `nvim-dap-go` + Delve (auto-installed via Mason). LazyVim's Go extra handle
 LazyVim's Go extra configures gopls with good defaults (gofumpt, staticcheck, analyses, inlay hints, code lenses, semantic tokens).
 
 One additional setting in `lua/plugins/go.lua`:
-- **`vulncheck = "Imports"`**: lightweight always-on vulnerability diagnostics against your imports
+- **`vulncheck = "Imports"`**: lightweight vulnerability diagnostics against your imports, always on
 
 The `gopls` binary comes from Nix Home Manager (the dotfiles flake's
 `nix/home/mp/packages/tier2.nix`), not Mason. The
