@@ -19,7 +19,7 @@ just install-hooks
 
 If `just`, `go`, `vale`, `stylua`, `selene`, or `sg` is missing, run `mise install` from the repo root.
 
-The installed pre-commit hook delegates to `just check`, so manual and commit-time validation use the same gate. The installed commit-message hook delegates policy to `scripts/commitmsg`, which enforces conventional commit subjects without emoji and runs Vale on the message text.
+The installed pre-commit hook delegates to `just check`, so manual and commit-time validation use the same gate. The installed commit-message hook delegates policy to `scripts/commitmsg`, which enforces conventional commit subjects without emoji and runs Vale on the message text, leaving out trailers such as `Co-Authored-By`.
 
 ---
 

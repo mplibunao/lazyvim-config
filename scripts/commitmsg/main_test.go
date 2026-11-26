@@ -62,3 +62,32 @@ func TestParseCommitMessageIgnoresComments(t *testing.T) {
 		t.Fatalf("text = %q", message.Text)
 	}
 }
+
+func TestProseTextDropsOnlyTrailingTrailers(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		want  string
+	}{
+		{
+			name:  "trailer block is dropped",
+			input: "docs: update guide\n\nBody kept.\n\nCo-Authored-By: Some Name <some@example.com>\nSigned-off-by: Other Name <other@example.com>",
+			want:  "docs: update guide\n\nBody kept.",
+		},
+		{
+			name:  "body paragraph with a prose line is kept",
+			input: "docs: update guide\n\nBody kept.\nNote: still prose",
+			want:  "docs: update guide\n\nBody kept.\nNote: still prose",
+		},
+		{
+			name:  "subject alone is kept",
+			input: "docs: update guide",
+			want:  "docs: update guide",
+		},
+	}
+	for _, test := range tests {
+		if got := proseText(test.input); got != test.want {
+			t.Fatalf("%s: proseText = %q, want %q", test.name, got, test.want)
+		}
+	}
+}
