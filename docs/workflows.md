@@ -47,7 +47,7 @@ Plugins form two coupled clusters. Keep each cluster internally consistent when 
 
 - **LSP cluster**: `mason.nvim`, `mason-lspconfig.nvim`, `nvim-lspconfig`
 - **Treesitter cluster**: `nvim-treesitter`, `nvim-treesitter-textobjects`, `render-markdown.nvim`, `neotest`, `neotest-golang`
-- **Independent** (safe anytime): `copilot.lua`, `gitsigns.nvim`, `SchemaStore.nvim`
+- **Independent** (safe anytime): `gitsigns.nvim`, `SchemaStore.nvim`
 
 Updating `LazyVim` itself should trigger the full smoke-test path: it can change how all clusters are wired.
 
@@ -62,7 +62,6 @@ Open each fixture and verify the relevant plugin chain loads:
 | `test-fixtures/json/tsconfig.json` | JSON LSP attaches, completion offers `compilerOptions` fields (verifies JSON schema/completion works) |
 | `test-fixtures/markdown/sample.md` | `render-markdown.nvim` renders headings and code blocks (this does not cover `markdown-preview.nvim` browser preview, so test that separately with `:MarkdownPreview` on any `.md` file if that plugin was updated) |
 | `test-fixtures/nix/default.nix` | `nixd` attaches (NOT `nil_ls`) via `:LspInfo`, treesitter highlights, nvim-lint lists `statix` and `deadnix` for `nix`, and `<leader>cf` formats with `nixfmt` (confirm via `:ConformInfo`) |
-| Any file (optional, requires auth) | Copilot suggestions appear (skip if not authenticated) |
 | `:checkhealth` | General sweep for errors |
 
 ---

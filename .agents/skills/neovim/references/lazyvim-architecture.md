@@ -76,7 +76,7 @@ Tracks which LazyVim "extras" are enabled:
 ```json
 {
   "extras": [
-    "lazyvim.plugins.extras.ai.copilot",
+    "lazyvim.plugins.extras.editor.mini-files",
     "lazyvim.plugins.extras.lang.typescript"
   ]
 }
@@ -143,7 +143,6 @@ Or edit `lazyvim.json` directly.
 
 From the config's lazyvim.json:
 
-- `lazyvim.plugins.extras.ai.copilot`
 - `lazyvim.plugins.extras.editor.dial`
 - `lazyvim.plugins.extras.editor.inc-rename`
 - `lazyvim.plugins.extras.editor.mini-files`
