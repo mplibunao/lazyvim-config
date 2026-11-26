@@ -9,6 +9,7 @@ This repo is a personal Neovim config rather than a published library, so entrie
 ### Added
 
 - Added this changelog as the root history file for repo-wide milestones.
+- Added `just smoke`, which runs the headless Neovim harness and also asserts that each Mason-managed language server attaches to its fixture. See [`docs/workflows.md`](docs/workflows.md).
 
 ## 2026-05-29: Mise harness toolchain + changelog
 
