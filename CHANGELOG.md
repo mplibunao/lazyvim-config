@@ -11,6 +11,10 @@ This repo is a personal Neovim config rather than a published library, so entrie
 - Added this changelog as the root history file for repo-wide milestones.
 - Added `just smoke`, which runs the headless Neovim harness and also asserts that the Mason-managed language server named for each fixture attaches. See [`docs/workflows.md`](docs/workflows.md).
 
+### Changed
+
+- Updated 33 plugins to their latest versions, including LazyVim 15.15.0 to 16.0.2.
+
 ## 2026-05-29: Mise harness toolchain + changelog
 
 ### Added
