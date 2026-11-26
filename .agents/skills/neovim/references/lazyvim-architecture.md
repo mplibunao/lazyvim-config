@@ -76,7 +76,7 @@ Tracks which LazyVim "extras" are enabled:
 ```json
 {
   "extras": [
-    "lazyvim.plugins.extras.ai.copilot",
+    "lazyvim.plugins.extras.editor.mini-files",
     "lazyvim.plugins.extras.lang.typescript"
   ]
 }
@@ -141,18 +141,11 @@ Or edit `lazyvim.json` directly.
 
 ### Current Enabled Extras
 
-From the config's lazyvim.json:
+`lazyvim.json` is the only list of enabled extras. Print it with:
 
-- `lazyvim.plugins.extras.ai.copilot`
-- `lazyvim.plugins.extras.editor.dial`
-- `lazyvim.plugins.extras.editor.inc-rename`
-- `lazyvim.plugins.extras.editor.mini-files`
-- `lazyvim.plugins.extras.lang.json`
-- `lazyvim.plugins.extras.lang.markdown`
-- `lazyvim.plugins.extras.lang.toml`
-- `lazyvim.plugins.extras.lang.typescript`
-- `lazyvim.plugins.extras.util.dot`
-- `lazyvim.plugins.extras.util.mini-hipatterns`
+```bash
+jq -r '.extras[]' ~/.config/nvim-lazy/lazyvim.json
+```
 
 ## Overriding LazyVim Defaults
 

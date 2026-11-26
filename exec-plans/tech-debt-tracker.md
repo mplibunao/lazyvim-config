@@ -19,7 +19,7 @@ declined vs. deferred.
 
 The current `docs/workflows.md` smoke-test checklist is interactive (opens
 fixtures in a live Neovim session). Automating the visual parts of that
-checklist (render-markdown rendering, Copilot suggestions, DAP UI) is
+checklist (render-markdown rendering, DAP UI) is
 desirable but not cost-justified until the headless harness (Item 2) lands and
 its coverage is known.
 

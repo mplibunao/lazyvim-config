@@ -8,6 +8,7 @@
 #   just guard   — ast-grep structural guardrails
 #   just prose   — Vale AI-tells and em-dash check over all tracked hand-authored Markdown
 #   just nvim    — headless Neovim: config load + fixture filetypes + Nix invariants
+#   just smoke   — the nvim checks plus LSP attach for Mason-managed servers; run after plugin updates
 #   just test    — Go tooling tests (scripts/)
 #   just vet     — Go tooling vet (scripts/)
 #
@@ -92,8 +93,14 @@ prose: setup-vale
 # Headless Neovim: config load + per-fixture filetype assertions + Nix invariants.
 # Optional LSP checks skip gracefully when the binary is absent (tooling-policy.md).
 # Driven by scripts/check-nvim.lua; replaces the inline snippets in docs/workflows.md.
+# NVIM_CHECK_SMOKE=0 keeps a flag exported in the shell from turning on smoke assertions in the gate.
 nvim:
-    NVIM_APPNAME=nvim-lazy nvim --headless -c "luafile scripts/check-nvim.lua"
+    NVIM_APPNAME=nvim-lazy NVIM_CHECK_SMOKE=0 nvim --headless -c "luafile scripts/check-nvim.lua"
+
+# Smoke: the `nvim` checks plus attach assertions for Mason-managed language servers.
+# Run after plugin updates. Kept out of `check` so a broken upstream server cannot block a commit.
+smoke:
+    NVIM_APPNAME=nvim-lazy NVIM_CHECK_SMOKE=1 nvim --headless -c "luafile scripts/check-nvim.lua"
 
 # Go tests for tooling scripts (scripts/).
 test:

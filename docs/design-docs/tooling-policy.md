@@ -91,7 +91,7 @@ Committed languages and where each tool comes from today:
 | Nix | nixfmt | Formatter | Nix `neovim.nix` |
 | Nix | statix, deadnix | Linter | Nix `nix-ops-tools.nix` |
 
-The JSON, Markdown, Terraform, TOML, and TypeScript extras are enabled but carry
+The JSON, Markdown, Terraform, TOML, TypeScript, and YAML extras are enabled but carry
 no local tool overrides; their tooling comes from Mason via the stock extras.
 
 ## Go: a sanctioned partial
